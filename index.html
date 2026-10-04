@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AURA • UdA Chieti Pescara</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #050407;
+      --card-bg: rgba(18, 14, 24, 0.72);
+      --card-border: rgba(226, 180, 154, 0.16);
+      --card-border-hover: rgba(232, 121, 249, 0.45);
+      --rose-gold: #E2B49A;
+      --rose-gold-light: #FDE8E1;
+      --rose-gold-dark: #96614D;
+      --aura-purple: #C084FC;
+      --aura-magenta: #E879F9;
+      --text-main: #FBF8FA;
+      --text-muted: #A39BA8;
+      --font-serif: 'Cinzel', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      padding-bottom: 90px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(ellipse 70% 380px at 50% 0%, rgba(217, 70, 239, 0.16) 0%, transparent 80%),
+        radial-gradient(circle 320px at 80% 25%, rgba(226, 180, 154, 0.07) 0%, transparent 70%),
+        radial-gradient(circle 280px at 15% 55%, rgba(147, 51, 234, 0.08) 0%, transparent 65%);
+      background-attachment: fixed;
+    }
+
+    /* HEADER & LOGO SFUMATO SENZA TAGLIO */
+    header {
+      position: relative;
+      padding: 38px 16px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .aura-ambient-glow {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(232, 121, 249, 0.28) 0%, rgba(192, 132, 252, 0.12) 45%, transparent 75%);
+      filter: blur(32px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .logo-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* Fusione completa del logo: elimina lo squadro nero del PNG */
+    .logo-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      mix-blend-mode: screen;
+      -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 75%);
+      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 75%);
+      filter: drop-shadow(0 0 18px rgba(232, 121, 249, 0.28)) contrast(1.08) brightness(1.04);
+      user-select: none;
+    }
+
+    .brand-subline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 9px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--rose-gold-light);
+      opacity: 0.85;
+      position: relative;
+      z-index: 2;
+    }
+    .brand-subline::before, .brand-subline::after {
+      content: "";
+      height: 1px;
+      width: 28px;
+      background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.6), transparent);
+    }
+
+    /* CONTROLLI & RICERCA */
+    .controls-wrapper {
+      max-width: 980px;
+      margin: 22px auto 14px;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .input-box {
+      flex: 1;
+      position: relative;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      background: rgba(18, 14, 25, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 13px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--rose-gold);
+      box-shadow: 0 0 18px rgba(226, 180, 154, 0.22);
+    }
+
+    .select-polo {
+      width: auto;
+      min-width: 145px;
+      cursor: pointer;
+    }
+
+    .btn-create {
+      background: linear-gradient(135deg, #FDE8E1 0%, #E2B49A 50%, #96614D 100%);
+      color: #08060A;
+      border: none;
+      font-weight: 700;
+      padding: 13px 22px;
+      border-radius: 12px;
+      font-size: 13px;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 18px rgba(226, 180, 154, 0.3);
+    }
+    .btn-create:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(232, 121, 249, 0.38);
+    }
+    .btn-create:active { transform: scale(0.97); }
+
+    /* FILTRI CATEGORIA */
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0 6px;
+      scrollbar-width: none;
+    }
+    .filter-pills::-webkit-scrollbar { display: none; }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(226, 180, 154, 0.14);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .pill:hover { border-color: var(--rose-gold); color: #fff; }
+    .pill.active {
+      background: linear-gradient(135deg, rgba(226, 180, 154, 0.2), rgba(232, 121, 249, 0.18));
+      border-color: var(--rose-gold);
+      color: var(--rose-gold-light);
+      box-shadow: 0 0 14px rgba(226, 180, 154, 0.22);
+    }
+
+    /* GRIGLIA ANNUNCI */
+    .listings-container {
+      max-width: 980px;
+      margin: 18px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+      gap: 18px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-border-hover);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(232, 121, 249, 0.18);
+    }
+
+    .card-cover-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 104%;
+      background: #09070D;
+      overflow: hidden;
+    }
+    .card-cover {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .card:hover .card-cover { transform: scale(1.04); }
+
+    .tag-campus {
+      position: absolute;
+      top: 9px; left: 9px;
+      background: rgba(7, 5, 10, 0.82);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(226, 180, 154, 0.35);
+      color: var(--rose-gold-light);
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .card-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-price {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--rose-gold-light);
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 400;
+      color: #E7DEEA;
+      line-height: 1.4;
+      margin-bottom: 14px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .btn-contact {
+      display: block;
+      text-align: center;
+      background: rgba(226, 180, 154, 0.08);
+      border: 1px solid rgba(226, 180, 154, 0.28);
+      color: var(--rose-gold-light);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 10px 0;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .btn-contact:hover {
+      background: linear-gradient(135deg, #FDE8E1, #E2B49A);
+      color: #07050A;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(226, 180, 154, 0.3);
+    }
+
+    /* MODALE POPUP */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(3, 2, 5, 0.88);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 9999;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal-window {
+      background: #110D17;
+      border: 1px solid var(--rose-gold);
+      box-shadow: 0 10px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(226, 180, 154, 0.2);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 430px;
+      padding: 26px;
+      position: relative;
+    }
+
+    .modal-header-title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--rose-gold-light);
+      text-align: center;
+      letter-spacing: 1.5px;
+      margin-bottom: 18px;
+    }
+
+    .form-row {
+      margin-bottom: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .form-row label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--rose-gold);
+      letter-spacing: 0.3px;
+    }
+
+    .btn-close-modal {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+      .search-row { flex-direction: column; align-items: stretch; }
+      .select-polo { width: 100%; }
+      .listings-container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .card-price { font-size: 16px; }
+      .card-title { font-size: 12px; }
+      .logo-container { max-width: 250px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="aura-ambient-glow"></div>
+    <div class="logo-container">
+      <img src="logo.png" alt="AURA UDA CHIETI PESCARA" class="logo-img" onerror="this.style.display='none'; document.getElementById('svgFallback').style.display='block';">
+      <!-- Fallback vettoriale nel caso logo.png manchi sul server -->
+      <div id="svgFallback" style="display:none; text-align:center; padding: 20px 0;">
+        <div style="font-family: var(--font-serif); font-size: 32px; font-weight: 700; letter-spacing: 12px; color: var(--rose-gold-light);">AURA</div>
+        <div style="font-size: 10px; letter-spacing: 5px; color: var(--rose-gold); margin-top: 4px;">UDA CHIETI PESCARA</div>
+      </div>
+    </div>
+    <div class="brand-subline">Campus Chieti • Polo Pescara • Scambio 0€</div>
+  </header>
+
+  <section class="controls-wrapper">
+    <div class="search-row">
+      <div class="input-box">
+        <input type="text" id="searchInput" placeholder="Cerca libro, sbobina, abbigliamento...">
+      </div>
+      <select id="poloFilter" class="select-polo">
+        <option value="ALL">Tutti i Poli</option>
+        <option value="Chieti Scalo">Campus Chieti</option>
+        <option value="Pescara">Polo Pescara</option>
+      </select>
+      <button class="btn-create" id="btnOpenModal">
+        <span>+</span> Vendi / Scambia
+      </button>
+    </div>
+
+    <div class="filter-pills">
+      <div class="pill active" data-cat="ALL">Tutti gli Annunci</div>
+      <div class="pill" data-cat="Libri">Libri & Sbobine</div>
+      <div class="pill" data-cat="Abbigliamento">Abbigliamento</div>
+      <div class="pill" data-cat="Tech">Tech & Calcolatrici</div>
+      <div class="pill" data-cat="Altro">Altro</div>
+    </div>
+  </section>
+
+  <main class="listings-container" id="listingsGrid">
+    <!-- Popolato dinamicamente da Supabase -->
+  </main>
+
+  <!-- MODALE INSERIMENTO ANNUNCIO -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseModal">&times;</button>
+      <div class="modal-header-title">NUOVO ANNUNCIO AURA</div>
+      <form id="createListingForm">
+        <div class="form-row">
+          <label>Cosa vuoi vendere o scambiare?</label>
+          <input type="text" id="fTitolo" required placeholder="Es. Manuale Anatomia I (Edi-Ermes)">
+        </div>
+        <div class="form-row">
+          <label>Prezzo (es. 25€ oppure 'Scambio')</label>
+          <input type="text" id="fPrezzo" required placeholder="25€">
+        </div>
+        <div class="form-row">
+          <label>Categoria</label>
+          <select id="fCategoria">
+            <option value="Libri">Libri & Sbobine</option>
+            <option value="Abbigliamento">Abbigliamento</option>
+            <option value="Tech">Tech & Strumenti</option>
+            <option value="Altro">Altro</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Punto di Incontro</label>
+          <select id="fPolo">
+            <option value="Chieti Scalo">Campus Chieti Scalo</option>
+            <option value="Pescara">Polo Pindaro (Pescara)</option>
+            <option value="Entrambi">Entrambi i Poli</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Tuo Username Instagram (senza @)</label>
+          <input type="text" id="fIg" required placeholder="mariorossi">
+        </div>
+        <div class="form-row">
+          <label>Foto Articolo</label>
+          <input type="file" id="fFoto" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn-create" id="btnSubmitForm" style="width: 100%; justify-content: center; margin-top: 14px;">
+          Pubblica Subito (Gratis)
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let listings = [];
+    let activeCategory = "ALL";
+
+    function renderCards() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const selectedPolo = document.getElementById("poloFilter").value;
+      const grid = document.getElementById("listingsGrid");
+
+      const filtered = listings.filter(item => {
+        const catMatch = (activeCategory === "ALL" || item.categoria === activeCategory);
+        const poloMatch = (selectedPolo === "ALL" || item.polo === selectedPolo || item.polo === "Entrambi");
+        const queryMatch = item.titolo.toLowerCase().includes(query);
+        return catMatch && poloMatch && queryMatch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
+            <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
+            <p>Nessun articolo trovato. Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <article class="card">
+          <div class="card-cover-wrap">
+            <span class="tag-campus">${item.polo}</span>
+            <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
+          </div>
+          <div class="card-content">
+            <div class="card-price">${item.prezzo}</div>
+            <div class="card-title">${item.titolo}</div>
+            <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
+              Contatta @${item.contatto_ig.replace('@','')}
+            </a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    async function loadData() {
+      const { data, error } = await supabase
+        .from('annunci')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        listings = data;
+        renderCards();
+      }
+    }
+
+    // Filtri pillola
+    document.querySelectorAll('.pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeCategory = pill.dataset.cat;
+        renderCards();
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", renderCards);
+    document.getElementById("poloFilter").addEventListener("change", renderCards);
+
+    // Gestione Modale
+    const modal = document.getElementById("modalBackdrop");
+    document.getElementById("btnOpenModal").onclick = () => modal.classList.add("open");
+    document.getElementById("btnCloseModal").onclick = () => modal.classList.remove("open");
+
+    // Invio Form & Upload
+    document.getElementById("createListingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("btnSubmitForm");
+      submitBtn.innerText = "Caricamento in corso...";
+      submitBtn.disabled = true;
+
+      const file = document.getElementById("fFoto").files[0];
+      const titolo = document.getElementById("fTitolo").value;
+      const prezzo = document.getElementById("fPrezzo").value;
+      const categoria = document.getElementById("fCategoria").value;
+      const polo = document.getElementById("fPolo").value;
+      const contatto_ig = document.getElementById("fIg").value;
+
+      try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('foto_annunci')
+          .upload(fileName, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: urlData } = supabase.storage
+          .from('foto_annunci')
+          .getPublicUrl(fileName);
+
+        const { error: dbError } = await supabase
+          .from('annunci')
+          .insert([{
+            titolo,
+            prezzo,
+            categoria,
+            polo,
+            contatto_ig,
+            foto_url: urlData.publicUrl
+          }]);
+
+        if (dbError) throw dbError;
+
+        document.getElementById("createListingForm").reset();
+        modal.classList.remove("open");
+        await loadData();
+      } catch (err) {
+        alert("Si è verificato un errore: " + err.message);
+      } finally {
+        submitBtn.innerText = "Pubblica Subito (Gratis)";
+        submitBtn.disabled = false;
+      }
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
