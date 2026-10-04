@@ -43,7 +43,6 @@
       background-attachment: fixed;
     }
 
-    /* TOP BANNER ANTEPRIMA INIZIATIVE */
     .promo-banner {
       background: linear-gradient(90deg, rgba(226, 180, 154, 0.12), rgba(232, 121, 249, 0.18), rgba(226, 180, 154, 0.12));
       border-bottom: 1px solid rgba(226, 180, 154, 0.2);
@@ -55,7 +54,6 @@
       font-weight: 500;
     }
 
-    /* HEADER & BRAND IDENTITY */
     header {
       position: relative;
       padding: 34px 16px 20px;
@@ -119,7 +117,6 @@
       background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.5), transparent);
     }
 
-    /* CONTROLLI E RICERCA */
     .controls-wrapper {
       max-width: 1050px;
       margin: 18px auto 10px;
@@ -182,7 +179,6 @@
       box-shadow: 0 6px 22px rgba(232, 121, 249, 0.35);
     }
 
-    /* FILTRI CATEGORIA */
     .filter-pills {
       display: flex;
       gap: 8px;
@@ -212,7 +208,6 @@
       box-shadow: 0 0 14px rgba(226, 180, 154, 0.2);
     }
 
-    /* AVVISO DI SICUREZZA PER I BIGLIETTI */
     .ticket-safety-box {
       display: none;
       background: rgba(232, 121, 249, 0.08);
@@ -225,7 +220,6 @@
     }
     .ticket-safety-box.active { display: block; }
 
-    /* BARRA STATO ADMIN */
     .admin-bar {
       display: none;
       max-width: 1050px;
@@ -250,7 +244,6 @@
       cursor: pointer;
     }
 
-    /* GRIGLIA ANNUNCI */
     .listings-container {
       max-width: 1050px;
       margin: 16px auto;
@@ -419,7 +412,6 @@
     }
     body.is-admin .btn-admin-delete { display: block; }
 
-    /* FOOTER */
     footer {
       text-align: center;
       padding: 34px 16px 20px;
@@ -445,7 +437,6 @@
     }
     .admin-trigger:hover { opacity: 0.8; }
 
-    /* MODALI */
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -507,7 +498,6 @@
 </head>
 <body>
 
-  <!-- BANNER PROMOZIONALE DISCRETO -->
   <div class="promo-banner">
     ✨ In arrivo l'AURA Pass • Convenzioni ed eventi esclusivi per gli studenti UdA
   </div>
@@ -524,7 +514,6 @@
     <div class="brand-subline">Compra, Vendi e Scambia tra Studenti UdA</div>
   </header>
 
-  <!-- BANNER MODERAZIONE ATTIVO -->
   <div class="admin-bar" id="adminBar">
     <span>🛡️ <strong>Modalità Amministratore:</strong> puoi eliminare qualsiasi annuncio dal circuito.</span>
     <button class="btn-exit-admin" id="btnExitAdmin">Esci</button>
@@ -533,7 +522,7 @@
   <section class="controls-wrapper">
     <div class="search-row">
       <div class="input-box">
-        <input type="text" id="searchInput" placeholder="Cerca libro, felpa, biglietto, iPad...">
+        <input type="text" id="searchInput" placeholder="Cerca libro, stanza, felpa, biglietto, iPad...">
       </div>
       <select id="poloFilter" class="select-polo">
         <option value="ALL">Tutti i Campus</option>
@@ -545,20 +534,19 @@
       </button>
     </div>
 
-    <!-- CATEGORIE SPECIFICHE CONDIVISE -->
+    <!-- CATEGORIE AGGIORNATE CON AFFITTI & STANZE -->
     <div class="filter-pills">
       <div class="pill active" data-cat="ALL">Tutti</div>
+      <div class="pill" data-cat="Affitti">Affitti & Stanze</div>
       <div class="pill" data-cat="Libri">Libri & Appunti</div>
       <div class="pill" data-cat="Abbigliamento">Abbigliamento</div>
       <div class="pill" data-cat="Biglietti">Biglietti & Serate</div>
       <div class="pill" data-cat="Tech">Tech & Elettronica</div>
-      <div class="pill" data-cat="Casa">Casa & Stanza</div>
       <div class="pill" data-cat="Altro">Altro</div>
     </div>
 
-    <!-- AVVISO SICUREZZA BIGLIETTI (VISIBILE SOLO SE SELEZIONATA LA CATEGORIA) -->
     <div class="ticket-safety-box" id="ticketSafetyNotice">
-      ⚠️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
+      ⚠️️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
     </div>
   </section>
 
@@ -576,26 +564,26 @@
       <div class="modal-header-title">NUOVO ANNUNCIO</div>
       <form id="createListingForm">
         <div class="form-row">
-          <label>Cosa vendi o scambi?</label>
-          <input type="text" id="fTitolo" required placeholder="Es. Compendio Anatomia I (Edi-Ermes)">
+          <label>Cosa vendi, affitti o cerchi?</label>
+          <input type="text" id="fTitolo" required placeholder="Es. Stanza Singola Chieti Scalo / Manuale Anatomia I">
         </div>
         <div class="form-row">
-          <label>Prezzo (es. 20€ o 'Trattabile' o 'Regalo')</label>
-          <input type="text" id="fPrezzo" required placeholder="20€">
+          <label>Prezzo o Canone (es. 220€/mese, 20€ o 'Trattabile')</label>
+          <input type="text" id="fPrezzo" required placeholder="Es. 230€/mese o 25€">
         </div>
         <div class="form-row">
           <label>Categoria</label>
           <select id="fCategoria">
+            <option value="Affitti">Affitti & Stanze (Subentri, Posti Letto)</option>
             <option value="Libri">Libri & Appunti</option>
             <option value="Abbigliamento">Abbigliamento</option>
             <option value="Biglietti">Biglietti & Serate</option>
             <option value="Tech">Tech & Elettronica</option>
-            <option value="Casa">Casa & Stanza</option>
-            <option value="Altro">Altro</option>
+            <option value="Altro">Altro (Casa, Sport, Varie)</option>
           </select>
         </div>
         <div class="form-row">
-          <label>Polo di Scambio a Mano</label>
+          <label>Polo / Posizione</label>
           <select id="fPolo">
             <option value="Chieti Scalo">Campus Chieti Scalo</option>
             <option value="Pescara">Polo Pindaro (Pescara)</option>
@@ -605,16 +593,16 @@
         <div class="form-row">
           <label>Tuo Username Instagram (senza @)</label>
           <input type="text" id="fIg" required placeholder="mariorossi">
-          <small>Gli acquirenti ti scriveranno direttamente su Instagram DM.</small>
+          <small>Gli interessati ti scriveranno direttamente su Instagram DM.</small>
         </div>
         <div class="form-row">
-          <label>Foto Articolo</label>
+          <label>Foto Articolo o Stanza</label>
           <input type="file" id="fFoto" accept="image/*" required>
         </div>
         <div class="form-row">
           <label>Crea un PIN di 4 cifre per rimuovere l'annuncio</label>
           <input type="password" id="fPin" maxlength="4" pattern="[0-9]{4}" required placeholder="1234">
-          <small>Ti servirà per cancellare l'annuncio una volta venduto l'oggetto.</small>
+          <small>Ti servirà per cancellare l'annuncio una volta concluso lo scambio/affitto.</small>
         </div>
         <button type="submit" class="btn-create" id="btnSubmitForm" style="width: 100%; justify-content: center; margin-top: 14px;">
           Pubblica Subito (Gratis)
@@ -623,20 +611,20 @@
     </div>
   </div>
 
-  <!-- MODALE ELIMINAZIONE DA PARTE DEL VENDITORE -->
+  <!-- MODALE ELIMINAZIONE PROPRIETARIO -->
   <div class="modal-backdrop" id="sellerDeleteModal">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseSellerModal" type="button">&times;</button>
       <div class="modal-header-title">GESTIONE ANNUNCIO</div>
       <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px;">
-        Hai già venduto l'oggetto? Inserisci il PIN di 4 cifre impostato alla pubblicazione per rimuoverlo.
+        Hai già concluso lo scambio o affittato la stanza? Inserisci il PIN di 4 cifre per rimuovere l'annuncio.
       </p>
       <div class="form-row">
         <label>PIN Personale (4 cifre)</label>
         <input type="password" id="inputSellerPin" maxlength="4" placeholder="••••">
       </div>
       <button type="button" class="btn-create" id="btnConfirmSellerDelete" style="width: 100%; justify-content: center; margin-top: 12px; background: var(--danger); color: #fff;">
-        Segna come Venduto / Elimina
+        Segna come Concluso / Elimina
       </button>
     </div>
   </div>
@@ -663,11 +651,11 @@
 
       function getCategoryLabel(cat) {
         const map = {
+          "Affitti": "Affitti & Stanze",
           "Libri": "Libri & Appunti",
           "Abbigliamento": "Abbigliamento",
           "Biglietti": "Biglietti & Serate",
           "Tech": "Tech & Elettronica",
-          "Casa": "Casa & Stanza",
           "Altro": "Altro"
         };
         return map[cat] || cat;
@@ -689,7 +677,7 @@
           grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
               <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
-              <p>Nessun articolo disponibile in questa sezione.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
+              <p>Nessun annuncio disponibile in questa sezione.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
             </div>
           `;
           return;
@@ -717,7 +705,7 @@
                     <span>Invia su WhatsApp</span> ↗
                   </a>
                   <button type="button" class="btn-card-secondary" onclick="window.openSellerDeleteModal('${item.id}')">
-                    Sei il venditore? Rimuovi
+                    Sei il proprietario? Rimuovi
                   </button>
                   <button type="button" class="btn-admin-delete" onclick="window.adminDeleteListing('${item.id}')">
                     🛡️ Elimina come Admin
@@ -747,7 +735,6 @@
         }
       }
 
-      // Filtri categoria
       const safetyBox = document.getElementById("ticketSafetyNotice");
       document.querySelectorAll('.pill').forEach(pill => {
         pill.addEventListener('click', () => {
@@ -768,7 +755,6 @@
       document.getElementById("searchInput").addEventListener("input", renderCards);
       document.getElementById("poloFilter").addEventListener("change", renderCards);
 
-      // Modale Creazione
       const modal = document.getElementById("modalBackdrop");
       const btnOpen = document.getElementById("btnOpenModal");
       const btnClose = document.getElementById("btnCloseModal");
@@ -780,7 +766,6 @@
         if (e.target === modal) modal.classList.remove("open");
       });
 
-      // Modale Eliminazione Proprietario (PIN)
       const sellerModal = document.getElementById("sellerDeleteModal");
       const btnCloseSeller = document.getElementById("btnCloseSellerModal");
 
@@ -822,7 +807,6 @@
         }
       });
 
-      // Moderazione Admin Master Key
       window.adminDeleteListing = async function(id) {
         if (!confirm("Sei sicuro di voler eliminare definitivamente questo annuncio?")) return;
         try {
@@ -855,7 +839,6 @@
 
       document.getElementById("btnExitAdmin").addEventListener("click", logoutAdmin);
 
-      // Accesso Admin (Prompt al click nel footer o triplo tocco sul logo)
       let clickCount = 0;
       function triggerAdminPrompt() {
         const key = prompt("Inserisci la Master Key di Moderazione AURA:");
@@ -877,7 +860,6 @@
         }
       });
 
-      // Invio annuncio
       document.getElementById("createListingForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById("btnSubmitForm");
@@ -929,7 +911,7 @@
 
           document.getElementById("createListingForm").reset();
           modal.classList.remove("open");
-          alert("Articolo pubblicato con successo!");
+          alert("Annuncio pubblicato con successo!");
           await loadData();
         } catch (err) {
           alert("Errore durante la pubblicazione: " + err.message);
