@@ -688,7 +688,7 @@
   </header>
 
   <div class="admin-bar" id="adminBar">
-    <span>🛡️ <strong>Modalità Amministratore:</strong> puoi eliminare qualsiasi annuncio dal circuito.</span>
+    <span>🛡️ <strong>Modalità Amministratore Attiva:</strong> puoi eliminare qualsiasi annuncio dal circuito.</span>
     <button class="btn-exit-admin" id="btnExitAdmin">Esci</button>
   </div>
 
@@ -735,7 +735,7 @@
     </div>
 
     <div class="ticket-safety-box" id="ticketSafetyNotice">
-      ⚠️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
+      ⚠️️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
     </div>
   </section>
 
@@ -878,6 +878,8 @@
 
   <script>
     (function() {
+      const MASTER_KEY_CORRETTA = "AURA2026MASTERMOHA";
+
       const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
 
@@ -891,11 +893,15 @@
       let activeSubfilter = "ALL";
       let currentItemToDelete = null;
       let activeDetailItem = null;
-      let adminKey = localStorage.getItem("aura_admin_key") || null;
 
-      if (adminKey) {
+      // CONTROLLO RIGOROSO CHIAVE SALVATA
+      let adminKey = localStorage.getItem("aura_admin_key") || null;
+      if (adminKey && adminKey.trim().toUpperCase() === MASTER_KEY_CORRETTA) {
         document.body.classList.add("is-admin");
         document.getElementById("adminBar").classList.add("active");
+      } else {
+        localStorage.removeItem("aura_admin_key");
+        adminKey = null;
       }
 
       function getCategoryLabel(cat) {
@@ -1302,10 +1308,17 @@
         }
       });
 
+      // ELIMINAZIONE ADMIN
       window.adminDeleteListing = async function(id) {
         if (!confirm("Sei sicuro di voler eliminare definitivamente questo annuncio?")) return;
 
         const currentKey = (adminKey || localStorage.getItem("aura_admin_key") || "").trim();
+        if (currentKey.toUpperCase() !== MASTER_KEY_CORRETTA) {
+          alert("Sessione non valida o scaduta.");
+          logoutAdmin();
+          return;
+        }
+
         let deleted = false;
 
         try {
@@ -1321,10 +1334,8 @@
         }
 
         if (!deleted) {
-          if (currentKey.toUpperCase() === 'AURA2026MASTERMOHA') {
-            const { error } = await sbClient.from('annunci').delete().eq('id', id);
-            if (!error) deleted = true;
-          }
+          const { error } = await sbClient.from('annunci').delete().eq('id', id);
+          if (!error) deleted = true;
         }
 
         if (deleted) {
@@ -1332,8 +1343,7 @@
           detailModal.classList.remove("open");
           await loadData();
         } else {
-          alert("Master Key non valida o non autorizzata.");
-          logoutAdmin();
+          alert("Errore durante l'eliminazione dell'annuncio.");
         }
       };
 
@@ -1347,15 +1357,23 @@
 
       document.getElementById("btnExitAdmin").addEventListener("click", logoutAdmin);
 
+      // PROMPT CON VALIDAZIONE IMMEDIATA (BLOCCA ALL'INGRESSO)
       let clickCount = 0;
       function triggerAdminPrompt() {
-        const key = prompt("Inserisci la Master Key di Moderazione AURA:");
-        if (key) {
-          adminKey = key.trim();
-          localStorage.setItem("aura_admin_key", adminKey);
+        const input = prompt("Inserisci la Master Key di Moderazione AURA:");
+        if (input === null) return; // Se preme Annulla
+
+        const cleanKey = input.trim();
+        if (cleanKey.toUpperCase() === MASTER_KEY_CORRETTA) {
+          adminKey = cleanKey;
+          localStorage.setItem("aura_admin_key", cleanKey);
           document.body.classList.add("is-admin");
           document.getElementById("adminBar").classList.add("active");
           renderCards();
+          alert("Accesso autorizzato: Modalità Moderatore attiva.");
+        } else {
+          alert("Accesso negato: Master Key non valida.");
+          logoutAdmin();
         }
       }
 
