@@ -136,7 +136,7 @@
 
     .input-box { flex: 1; }
 
-    input[type="text"], input[type="password"], select {
+    input[type="text"], input[type="password"], textarea, select {
       width: 100%;
       background: rgba(18, 14, 25, 0.85);
       backdrop-filter: blur(10px);
@@ -150,7 +150,13 @@
       transition: all 0.25s ease;
     }
 
-    input[type="text"]:focus, input[type="password"]:focus, select:focus {
+    textarea {
+      resize: vertical;
+      min-height: 85px;
+      line-height: 1.5;
+    }
+
+    input:focus, textarea:focus, select:focus {
       border-color: var(--rose-gold);
       box-shadow: 0 0 16px rgba(226, 180, 154, 0.25);
     }
@@ -208,7 +214,6 @@
       box-shadow: 0 0 14px rgba(226, 180, 154, 0.2);
     }
 
-    /* SOTTO-FILTRI DINAMICI (GENERE / TARGET) */
     .subfilter-row {
       display: none;
       gap: 8px;
@@ -280,6 +285,7 @@
       cursor: pointer;
     }
 
+    /* GRIGLIA SCHEDE */
     .listings-container {
       max-width: 1050px;
       margin: 16px auto;
@@ -301,6 +307,7 @@
       flex-direction: column;
       transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
+      cursor: pointer;
     }
     .card:hover {
       transform: translateY(-4px);
@@ -338,6 +345,20 @@
       letter-spacing: 0.5px;
     }
 
+    .tag-photo-count {
+      position: absolute;
+      bottom: 9px; right: 9px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     .tag-target {
       position: absolute;
       top: 9px; right: 9px;
@@ -357,13 +378,22 @@
       flex-direction: column;
       flex: 1;
     }
+    .card-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
     .card-meta-category {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--aura-purple);
       font-weight: 600;
-      margin-bottom: 3px;
+    }
+    .card-meta-time {
+      font-size: 9.5px;
+      color: var(--text-muted);
     }
     .card-price {
       font-family: var(--font-serif);
@@ -378,12 +408,22 @@
       font-weight: 400;
       color: #E7DEEA;
       line-height: 1.4;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       flex: 1;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+
+    .card-tap-hint {
+      font-size: 11px;
+      color: var(--rose-gold);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .card-actions {
@@ -402,7 +442,7 @@
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      padding: 10px 0;
+      padding: 9px 0;
       border-radius: 8px;
       transition: all 0.2s;
     }
@@ -410,42 +450,7 @@
       background: linear-gradient(135deg, #FDE8E1, #E2B49A);
       color: #07050A;
       border-color: transparent;
-      box-shadow: 0 4px 14px rgba(226, 180, 154, 0.3);
     }
-
-    .btn-share-wa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      background: rgba(37, 211, 102, 0.08);
-      border: 1px solid rgba(37, 211, 102, 0.25);
-      color: #86EFAC;
-      text-decoration: none;
-      font-size: 10.5px;
-      font-weight: 600;
-      padding: 7px 0;
-      border-radius: 6px;
-      transition: all 0.2s;
-    }
-    .btn-share-wa:hover {
-      background: rgba(37, 211, 102, 0.18);
-      border-color: var(--whatsapp-color);
-      color: #fff;
-    }
-
-    .btn-card-secondary {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 10px;
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 3px 0 0;
-      text-align: center;
-      transition: color 0.2s;
-    }
-    .btn-card-secondary:hover { color: #fff; }
 
     .btn-admin-delete {
       display: none;
@@ -461,6 +466,115 @@
     }
     body.is-admin .btn-admin-delete { display: block; }
 
+    /* ANTEPRIMA MINIATURE NEL FORM */
+    .photo-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .photo-preview-item {
+      position: relative;
+      width: 100%;
+      padding-top: 100%;
+      border-radius: 8px;
+      background: #1A1422;
+      border: 1px dashed rgba(226, 180, 154, 0.3);
+      overflow: hidden;
+    }
+    .photo-preview-item img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .photo-preview-badge {
+      position: absolute;
+      bottom: 4px; left: 4px;
+      background: rgba(0,0,0,0.8);
+      color: var(--rose-gold-light);
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* MODALE DETTAGLIO ANNUNCIO */
+    .detail-window {
+      max-width: 580px !important;
+      padding: 22px !important;
+    }
+    .detail-gallery-main {
+      width: 100%;
+      padding-top: 75%;
+      position: relative;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .detail-gallery-main img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: contain;
+      background: #09070D;
+    }
+    .detail-thumbs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .detail-thumb-item {
+      width: 65px;
+      height: 65px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: all 0.2s;
+    }
+    .detail-thumb-item.active {
+      border-color: var(--rose-gold);
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    .detail-thumb-item img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .detail-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .badge-pill {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(226, 180, 154, 0.12);
+      border: 1px solid rgba(226, 180, 154, 0.3);
+      color: var(--rose-gold-light);
+    }
+    .detail-price {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--rose-gold-light);
+      margin-bottom: 12px;
+    }
+    .detail-desc-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(226, 180, 154, 0.15);
+      border-radius: 10px;
+      padding: 14px;
+      margin: 14px 0;
+      font-size: 13px;
+      color: #DDD4E2;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
     footer {
       text-align: center;
       padding: 34px 16px 20px;
@@ -475,16 +589,13 @@
       font-weight: 600;
       transition: opacity 0.2s;
     }
-    footer a:hover { opacity: 0.8; }
     .admin-trigger {
       cursor: pointer;
       opacity: 0.35;
       font-size: 10px;
       display: inline-block;
       margin-top: 10px;
-      transition: opacity 0.2s;
     }
-    .admin-trigger:hover { opacity: 0.8; }
 
     .modal-backdrop {
       position: fixed;
@@ -544,6 +655,7 @@
       .card-price { font-size: 16px; }
       .card-title { font-size: 12px; }
       .logo-container { max-width: 250px; }
+      .detail-window { padding: 18px !important; }
     }
   </style>
 </head>
@@ -573,7 +685,7 @@
   <section class="controls-wrapper">
     <div class="search-row">
       <div class="input-box">
-        <input type="text" id="searchInput" placeholder="Cerca libro, stanza singola, felpa, biglietto...">
+        <input type="text" id="searchInput" placeholder="Cerca libro, stanza, felpa, biglietto...">
       </div>
       <select id="poloFilter" class="select-polo">
         <option value="ALL">Tutti i Campus</option>
@@ -585,7 +697,7 @@
       </button>
     </div>
 
-    <!-- CATEGORIE PRINCIPALI -->
+    <!-- CATEGORIE -->
     <div class="filter-pills">
       <div class="pill active" data-cat="ALL">Tutti</div>
       <div class="pill" data-cat="Affitti">Affitti & Stanze</div>
@@ -596,7 +708,7 @@
       <div class="pill" data-cat="Altro">Altro</div>
     </div>
 
-    <!-- SOTTO-FILTRI DINAMICI PER AFFITTI -->
+    <!-- SOTTO-FILTRI AFFITTI -->
     <div class="subfilter-row" id="subfilterAffitti">
       <div class="sub-pill active" data-target="ALL">Tutti gli Affitti</div>
       <div class="sub-pill" data-target="Solo Ragazze">Solo Ragazze</div>
@@ -604,7 +716,7 @@
       <div class="sub-pill" data-target="Misto / Tutti">Misto / Per Tutti</div>
     </div>
 
-    <!-- SOTTO-FILTRI DINAMICI PER ABBIGLIAMENTO -->
+    <!-- SOTTO-FILTRI ABBIGLIAMENTO -->
     <div class="subfilter-row" id="subfilterAbbigliamento">
       <div class="sub-pill active" data-target="ALL">Tutti i Capi</div>
       <div class="sub-pill" data-target="Donna">Donna</div>
@@ -624,6 +736,35 @@
     <p><span class="admin-trigger" id="adminTrigger">Accesso Riservato Moderatori</span></p>
   </footer>
 
+  <!-- MODALE DETTAGLIO ANNUNCIO (APERTURA SCHEDA) -->
+  <div class="modal-backdrop" id="detailModal">
+    <div class="modal-window detail-window">
+      <button class="btn-close-modal" id="btnCloseDetail" type="button">&times;</button>
+      <div class="detail-gallery-main">
+        <img id="detailMainImg" src="" alt="Dettaglio annuncio">
+      </div>
+      <div class="detail-thumbs" id="detailThumbsContainer"></div>
+
+      <div class="detail-badge-row" id="detailBadges"></div>
+      <h2 id="detailTitle" style="font-size: 18px; margin-bottom: 6px; color: #fff;"></h2>
+      <div class="detail-price" id="detailPrice"></div>
+
+      <div class="detail-desc-box" id="detailDesc"></div>
+
+      <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 14px;">
+        <a id="detailIgBtn" href="#" target="_blank" rel="noopener" class="btn-create" style="justify-content: center; text-decoration: none; padding: 12px;">
+          Contatta Venditore su Instagram
+        </a>
+        <a id="detailWaBtn" href="#" target="_blank" rel="noopener" class="btn-contact" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(37, 211, 102, 0.12); border-color: rgba(37, 211, 102, 0.3); color: #86EFAC;">
+          Invia Annuncio su WhatsApp ↗
+        </a>
+        <button type="button" class="btn-card-secondary" id="btnDetailDelete">
+          Sei il proprietario? Rimuovi questo annuncio
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODALE CREAZIONE ANNUNCIO -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal-window">
@@ -632,12 +773,14 @@
       <form id="createListingForm">
         <div class="form-row">
           <label>Cosa vendi, affitti o cerchi?</label>
-          <input type="text" id="fTitolo" required placeholder="Es. Stanza Singola Chieti Scalo / Felpa Nike">
+          <input type="text" id="fTitolo" required placeholder="Es. Manuale Anatomia I (Edi-Ermes) o Stanza Singola">
         </div>
+
         <div class="form-row">
-          <label>Prezzo o Canone (es. 230€/mese, 20€ o 'Trattabile')</label>
-          <input type="text" id="fPrezzo" required placeholder="Es. 230€/mese o 25€">
+          <label>Prezzo (il simbolo € viene aggiunto in automatico)</label>
+          <input type="text" id="fPrezzo" required placeholder="Es. 20 oppure 220/mese o Trattabile">
         </div>
+
         <div class="form-row">
           <label>Categoria</label>
           <select id="fCategoria">
@@ -650,11 +793,19 @@
           </select>
         </div>
 
-        <!-- CAMPO GENERE / TARGET DINAMICO -->
         <div class="form-row" id="formRowTarget">
           <label id="formLabelTarget">Destinatari Stanza</label>
-          <select id="fTarget">
-            <!-- Popolato via JS in base alla categoria -->
+          <select id="fTarget"></select>
+        </div>
+
+        <div class="form-row">
+          <label>Condizione / Stato</label>
+          <select id="fCondizione">
+            <option value="Come Nuovo">Come Nuovo / Perfette Condizioni</option>
+            <option value="Ottime Condizioni">Ottime Condizioni</option>
+            <option value="Usato">Usato con segni d'uso</option>
+            <option value="Arredata">Arredata (per Stanze)</option>
+            <option value="Non applicabile">Non applicabile</option>
           </select>
         </div>
 
@@ -666,21 +817,31 @@
             <option value="Entrambi">Entrambi i Poli</option>
           </select>
         </div>
+
+        <div class="form-row">
+          <label>Descrizione Dettagliata</label>
+          <textarea id="fDescrizione" placeholder="Descrivi l'articolo: condizioni del libro, taglia, spese incluse della stanza, disponibilità per lo scambio a mano..."></textarea>
+        </div>
+
         <div class="form-row">
           <label>Tuo Username Instagram (senza @)</label>
           <input type="text" id="fIg" required placeholder="mariorossi">
-          <small>Gli interessati ti scriveranno direttamente su Instagram DM.</small>
+          <small>Gli acquirenti ti scriveranno direttamente su Instagram DM.</small>
         </div>
+
         <div class="form-row">
-          <label>Foto Articolo o Stanza</label>
-          <input type="file" id="fFoto" accept="image/*" required>
-          <small>La foto verrà compressa e ottimizzata in automatico.</small>
+          <label>Foto (Fino a 3 foto • La prima sarà la copertina)</label>
+          <input type="file" id="fFoto" accept="image/*" multiple required>
+          <div class="photo-preview-grid" id="photoPreviewContainer"></div>
+          <small>Le foto vengono ottimizzate e compresse automaticamente.</small>
         </div>
+
         <div class="form-row">
           <label>Crea un PIN di 4 cifre per rimuovere l'annuncio</label>
           <input type="password" id="fPin" maxlength="4" pattern="[0-9]{4}" required placeholder="1234">
-          <small>Ti servirà per cancellare l'annuncio una volta concluso lo scambio/affitto.</small>
+          <small>Ti servirà per cancellare l'annuncio una volta venduto.</small>
         </div>
+
         <button type="submit" class="btn-create" id="btnSubmitForm" style="width: 100%; justify-content: center; margin-top: 14px;">
           Pubblica Subito (Gratis)
         </button>
@@ -694,7 +855,7 @@
       <button class="btn-close-modal" id="btnCloseSellerModal" type="button">&times;</button>
       <div class="modal-header-title">GESTIONE ANNUNCIO</div>
       <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px;">
-        Hai già concluso lo scambio o affittato la stanza? Inserisci il PIN di 4 cifre per rimuovere l'annuncio.
+        Hai già venduto l'oggetto o affittato la stanza? Inserisci il PIN di 4 cifre per rimuoverlo.
       </p>
       <div class="form-row">
         <label>PIN Personale (4 cifre)</label>
@@ -720,6 +881,7 @@
       let activeCategory = "ALL";
       let activeSubfilter = "ALL";
       let currentItemToDelete = null;
+      let activeDetailItem = null;
       let adminKey = localStorage.getItem("aura_admin_key") || null;
 
       if (adminKey) {
@@ -739,7 +901,43 @@
         return map[cat] || cat;
       }
 
-      // Funzione per comprimere le foto lato client prima dell'upload
+      // Funzione di formattazione automatica prezzo
+      function sanitizePrice(str, category) {
+        let val = (str || "").trim();
+        if (!val) return "Trattabile";
+        if (/^(regalo|gratis|in regalo)$/i.test(val)) return "In regalo";
+        if (/^(trattabile|tratt)$/i.test(val)) return "Trattabile";
+
+        // Se contiene già il simbolo €, pulisci gli spazi
+        if (val.includes("€")) {
+          return val.replace(/\s*€/, " €");
+        }
+
+        // Se è nella forma 230/mese o 230 al mese
+        if (/(\d+)\s*\/\s*mese/i.test(val)) {
+          return val.replace(/(\d+)\s*\/\s*mese/i, "$1 € / mese");
+        }
+
+        // Se è puramente numerico (es. 20 o 25,50)
+        if (/^\d+([.,]\d{1,2})?$/.test(val)) {
+          return `${val} €`;
+        }
+
+        return `${val} €`;
+      }
+
+      // Data amichevole
+      function formatTimeAgo(isoString) {
+        if (!isoString) return "";
+        const diffMs = Date.now() - new Date(isoString).getTime();
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        if (diffDays === 0) return "Oggi";
+        if (diffDays === 1) return "Ieri";
+        if (diffDays < 7) return `${diffDays} gg fa`;
+        return `${Math.floor(diffDays / 7)} sett fa`;
+      }
+
+      // Compressione automatica immagini
       async function compressImageFile(file, maxWidth = 1200, quality = 0.8) {
         return new Promise((resolve) => {
           const reader = new FileReader();
@@ -774,6 +972,7 @@
         });
       }
 
+      // Render delle card
       function renderCards() {
         const query = (document.getElementById("searchInput").value || "").toLowerCase();
         const selectedPolo = document.getElementById("poloFilter").value;
@@ -783,7 +982,9 @@
           const catMatch = (activeCategory === "ALL" || item.categoria === activeCategory);
           const poloMatch = (selectedPolo === "ALL" || item.polo === selectedPolo || item.polo === "Entrambi");
           const targetMatch = (activeSubfilter === "ALL" || !item.target || item.target === activeSubfilter || item.target === "Misto / Tutti" || item.target === "Unisex");
-          const queryMatch = (item.titolo || "").toLowerCase().includes(query) || (item.target || "").toLowerCase().includes(query);
+          const queryMatch = (item.titolo || "").toLowerCase().includes(query) || 
+                             (item.descrizione || "").toLowerCase().includes(query) || 
+                             (item.target || "").toLowerCase().includes(query);
           return catMatch && poloMatch && targetMatch && queryMatch;
         });
 
@@ -799,34 +1000,34 @@
 
         grid.innerHTML = filtered.map(item => {
           const cleanIg = (item.contatto_ig || "").trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
-          const shareText = encodeURIComponent(`Ehi! Ho visto questo su AURA Market UdA:\n\n*${item.titolo}* a ${item.prezzo} (${item.polo})\nContatta su IG @${cleanIg}\n\nGuarda tutti gli annunci qui:\n${window.location.href}`);
-          const waUrl = `https://api.whatsapp.com/send?text=${shareText}`;
-
           const targetBadge = (item.target && item.target !== 'Misto / Tutti' && item.target !== 'Unisex' && item.target !== '') 
             ? `<span class="tag-target">${item.target}</span>` 
             : '';
 
+          const extraCount = Array.isArray(item.foto_extra) ? item.foto_extra.length : 0;
+          const photoBadge = extraCount > 0 ? `<span class="tag-photo-count">📷 ${extraCount + 1}</span>` : '';
+          const timeAgoStr = formatTimeAgo(item.created_at);
+
           return `
-            <article class="card" data-id="${item.id}">
+            <article class="card" onclick="window.openDetailModal('${item.id}')">
               <div class="card-cover-wrap">
                 <span class="tag-campus">${item.polo}</span>
                 ${targetBadge}
+                ${photoBadge}
                 <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
               </div>
               <div class="card-content">
-                <span class="card-meta-category">${getCategoryLabel(item.categoria)}</span>
+                <div class="card-meta-row">
+                  <span class="card-meta-category">${getCategoryLabel(item.categoria)}</span>
+                  <span class="card-meta-time">${timeAgoStr}</span>
+                </div>
                 <div class="card-price">${item.prezzo}</div>
                 <div class="card-title">${item.titolo}</div>
-                <div class="card-actions">
+                <div class="card-tap-hint">Tocca per aprire foto & dettagli ↗</div>
+                <div class="card-actions" onclick="event.stopPropagation()">
                   <a href="https://ig.me/m/${cleanIg}" target="_blank" rel="noopener" class="btn-contact">
                     Contatta @${cleanIg}
                   </a>
-                  <a href="${waUrl}" target="_blank" rel="noopener" class="btn-share-wa">
-                    <span>Invia su WhatsApp</span> ↗
-                  </a>
-                  <button type="button" class="btn-card-secondary" onclick="window.openSellerDeleteModal('${item.id}')">
-                    Sei il proprietario? Rimuovi
-                  </button>
                   <button type="button" class="btn-admin-delete" onclick="window.adminDeleteListing('${item.id}')">
                     🛡️ Elimina come Admin
                   </button>
@@ -837,6 +1038,72 @@
         }).join('');
       }
 
+      // APRIRE SCHEDA DETTAGLIO ANNUNCIO
+      const detailModal = document.getElementById("detailModal");
+      window.openDetailModal = function(id) {
+        const item = listings.find(l => l.id === id);
+        if (!item) return;
+        activeDetailItem = item;
+
+        const cleanIg = (item.contatto_ig || "").trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
+        const shareText = encodeURIComponent(`Guarda questo annuncio su AURA Market UdA:\n\n*${item.titolo}* a ${item.prezzo} (${item.polo})\nContatta su IG: @${cleanIg}\n\nLink:\n${window.location.href}`);
+
+        // Galleria foto
+        const allPhotos = [item.foto_url, ...(Array.isArray(item.foto_extra) ? item.foto_extra : [])].filter(Boolean);
+        const mainImg = document.getElementById("detailMainImg");
+        const thumbsBox = document.getElementById("detailThumbsContainer");
+        mainImg.src = allPhotos[0];
+
+        if (allPhotos.length > 1) {
+          thumbsBox.innerHTML = allPhotos.map((url, idx) => `
+            <div class="detail-thumb-item ${idx === 0 ? 'active' : ''}" onclick="window.switchDetailPhoto('${url}', this)">
+              <img src="${url}">
+            </div>
+          `).join('');
+          thumbsBox.style.display = 'flex';
+        } else {
+          thumbsBox.innerHTML = '';
+          thumbsBox.style.display = 'none';
+        }
+
+        // Badges
+        const badgesBox = document.getElementById("detailBadges");
+        let badgesHtml = `
+          <span class="badge-pill">${item.polo}</span>
+          <span class="badge-pill">${getCategoryLabel(item.categoria)}</span>
+        `;
+        if (item.target) badgesHtml += `<span class="badge-pill" style="border-color: var(--aura-magenta); color: #F5D0FE;">${item.target}</span>`;
+        if (item.condizione && item.condizione !== 'Non applicabile') badgesHtml += `<span class="badge-pill">${item.condizione}</span>`;
+        badgesBox.innerHTML = badgesHtml;
+
+        document.getElementById("detailTitle").innerText = item.titolo;
+        document.getElementById("detailPrice").innerText = item.prezzo;
+        document.getElementById("detailDesc").innerText = item.descrizione ? item.descrizione : "Nessuna descrizione aggiuntiva inserita dal venditore.";
+
+        document.getElementById("detailIgBtn").href = `https://ig.me/m/${cleanIg}`;
+        document.getElementById("detailIgBtn").innerText = `Scrivi su Instagram a @${cleanIg}`;
+        document.getElementById("detailWaBtn").href = `https://api.whatsapp.com/send?text=${shareText}`;
+
+        document.getElementById("btnDetailDelete").onclick = () => {
+          detailModal.classList.remove("open");
+          window.openSellerDeleteModal(item.id);
+        };
+
+        detailModal.classList.add("open");
+      };
+
+      window.switchDetailPhoto = function(url, el) {
+        document.getElementById("detailMainImg").src = url;
+        document.querySelectorAll('.detail-thumb-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+      };
+
+      document.getElementById("btnCloseDetail").addEventListener("click", () => detailModal.classList.remove("open"));
+      detailModal.addEventListener("click", (e) => {
+        if (e.target === detailModal) detailModal.classList.remove("open");
+      });
+
+      // Caricamento Dati
       async function loadData() {
         if (!sbClient) return;
         try {
@@ -855,7 +1122,7 @@
         }
       }
 
-      // Gestione Filtri Principali e Sotto-filtri
+      // Filtri
       const safetyBox = document.getElementById("ticketSafetyNotice");
       const subAffitti = document.getElementById("subfilterAffitti");
       const subAbbigliamento = document.getElementById("subfilterAbbigliamento");
@@ -867,7 +1134,6 @@
           activeCategory = pill.dataset.cat;
           activeSubfilter = "ALL";
 
-          // Reset sotto-filtri
           document.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
           document.querySelectorAll('.sub-pill[data-target="ALL"]').forEach(sp => sp.classList.add('active'));
 
@@ -900,7 +1166,7 @@
       document.getElementById("searchInput").addEventListener("input", renderCards);
       document.getElementById("poloFilter").addEventListener("change", renderCards);
 
-      // Logica Form Dinamico per Genere/Target
+      // Form Target Dinamico
       const fCategoria = document.getElementById("fCategoria");
       const formRowTarget = document.getElementById("formRowTarget");
       const formLabelTarget = document.getElementById("formLabelTarget");
@@ -929,9 +1195,34 @@
           fTarget.innerHTML = `<option value="">Nessuno</option>`;
         }
       }
-
       fCategoria.addEventListener("change", updateFormTargetField);
       updateFormTargetField();
+
+      // Anteprima foto selezionate nel Form (Max 3)
+      const fFotoInput = document.getElementById("fFoto");
+      const previewContainer = document.getElementById("photoPreviewContainer");
+
+      fFotoInput.addEventListener("change", () => {
+        previewContainer.innerHTML = "";
+        const files = Array.from(fFotoInput.files).slice(0, 3);
+        if (fFotoInput.files.length > 3) {
+          alert("Puoi caricare al massimo 3 foto. Verranno considerate solo le prime 3.");
+        }
+
+        files.forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const div = document.createElement("div");
+            div.className = "photo-preview-item";
+            div.innerHTML = `
+              <img src="${e.target.result}">
+              <span class="photo-preview-badge">${index === 0 ? 'Copertina' : '#' + (index + 1)}</span>
+            `;
+            previewContainer.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
 
       // Modale Creazione
       const modal = document.getElementById("modalBackdrop");
@@ -940,12 +1231,9 @@
 
       btnOpen.addEventListener("click", () => modal.classList.add("open"));
       btnClose.addEventListener("click", () => modal.classList.remove("open"));
+      modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
 
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) modal.classList.remove("open");
-      });
-
-      // Modale Eliminazione Proprietario (PIN)
+      // Modale Eliminazione
       const sellerModal = document.getElementById("sellerDeleteModal");
       const btnCloseSeller = document.getElementById("btnCloseSellerModal");
 
@@ -956,9 +1244,7 @@
       };
 
       btnCloseSeller.addEventListener("click", () => sellerModal.classList.remove("open"));
-      sellerModal.addEventListener("click", (e) => {
-        if (e.target === sellerModal) sellerModal.classList.remove("open");
-      });
+      sellerModal.addEventListener("click", (e) => { if (e.target === sellerModal) sellerModal.classList.remove("open"); });
 
       document.getElementById("btnConfirmSellerDelete").addEventListener("click", async () => {
         const pin = document.getElementById("inputSellerPin").value.trim();
@@ -978,6 +1264,7 @@
           if (success) {
             alert("Annuncio rimosso con successo dal circuito.");
             sellerModal.classList.remove("open");
+            detailModal.classList.remove("open");
             await loadData();
           } else {
             alert("PIN non corretto. Verifica il codice scelto durante la pubblicazione.");
@@ -987,6 +1274,7 @@
         }
       });
 
+      // Admin
       window.adminDeleteListing = async function(id) {
         if (!confirm("Sei sicuro di voler eliminare definitivamente questo annuncio?")) return;
         try {
@@ -1040,37 +1328,39 @@
         }
       });
 
-      // Invio annuncio con auto-compressione e pulizia Instagram
+      // Invio Annuncio Completo
       document.getElementById("createListingForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById("btnSubmitForm");
-        submitBtn.innerText = "Ottimizzazione foto e invio...";
+        submitBtn.innerText = "Ottimizzazione foto e caricamento...";
         submitBtn.disabled = true;
 
-        const rawFile = document.getElementById("fFoto").files[0];
+        const rawFiles = Array.from(document.getElementById("fFoto").files).slice(0, 3);
         const titolo = document.getElementById("fTitolo").value.trim();
-        const prezzo = document.getElementById("fPrezzo").value.trim();
         const categoria = document.getElementById("fCategoria").value;
+        const prezzo = sanitizePrice(document.getElementById("fPrezzo").value, categoria);
         const target = (categoria === "Affitti" || categoria === "Abbigliamento") ? document.getElementById("fTarget").value : "";
+        const condizione = document.getElementById("fCondizione").value;
         const polo = document.getElementById("fPolo").value;
+        const descrizione = document.getElementById("fDescrizione").value.trim();
         const rawIg = document.getElementById("fIg").value.trim();
         const contatto_ig = rawIg.replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '').trim();
         const seller_pin = document.getElementById("fPin").value.trim();
 
         try {
-          // Compressione automatica immagine
-          const compressedFile = await compressImageFile(rawFile);
-          const cleanFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.jpg`;
+          // Carica e comprimi fino a 3 foto
+          const uploadPromises = rawFiles.map(async (file, idx) => {
+            const compressed = await compressImageFile(file);
+            const cleanFileName = `${Date.now()}_${idx}_${Math.random().toString(36).substring(2, 7)}.jpg`;
+            const { error: uploadError } = await sbClient.storage.from('foto_annunci').upload(cleanFileName, compressed);
+            if (uploadError) throw uploadError;
+            const { data: urlData } = sbClient.storage.from('foto_annunci').getPublicUrl(cleanFileName);
+            return urlData.publicUrl;
+          });
 
-          const { error: uploadError } = await sbClient.storage
-            .from('foto_annunci')
-            .upload(cleanFileName, compressedFile);
-
-          if (uploadError) throw uploadError;
-
-          const { data: urlData } = sbClient.storage
-            .from('foto_annunci')
-            .getPublicUrl(cleanFileName);
+          const uploadedUrls = await Promise.all(uploadPromises);
+          const foto_url = uploadedUrls[0];
+          const foto_extra = uploadedUrls.slice(1);
 
           const payload = {
             titolo,
@@ -1079,22 +1369,26 @@
             polo,
             contatto_ig,
             seller_pin,
-            foto_url: urlData.publicUrl,
+            foto_url,
+            foto_extra,
+            descrizione,
+            condizione,
             target
           };
 
           let { error: dbError } = await sbClient.from('annunci').insert([payload]);
 
-          // Fallback automatico se la colonna target non è ancora presente nel database
-          if (dbError && dbError.message && dbError.message.includes("target")) {
-            delete payload.target;
-            const res = await sbClient.from('annunci').insert([payload]);
-            dbError = res.error;
+          // Fallback di sicurezza nel caso non siano state aggiunte tutte le colonne
+          if (dbError) {
+            delete payload.foto_extra;
+            delete payload.descrizione;
+            delete payload.condizione;
+            const retry = await sbClient.from('annunci').insert([payload]);
+            if (retry.error) throw retry.error;
           }
 
-          if (dbError) throw dbError;
-
           document.getElementById("createListingForm").reset();
+          previewContainer.innerHTML = "";
           updateFormTargetField();
           modal.classList.remove("open");
           alert("Annuncio pubblicato con successo!");
