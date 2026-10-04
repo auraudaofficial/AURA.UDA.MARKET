@@ -123,7 +123,7 @@
       padding: 0 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       position: relative;
       z-index: 3;
     }
@@ -183,7 +183,7 @@
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 4px 0 8px;
+      padding: 4px 0 4px;
       scrollbar-width: none;
     }
     .filter-pills::-webkit-scrollbar { display: none; }
@@ -206,6 +206,42 @@
       border-color: var(--rose-gold);
       color: var(--rose-gold-light);
       box-shadow: 0 0 14px rgba(226, 180, 154, 0.2);
+    }
+
+    /* SOTTO-FILTRI DINAMICI (GENERE / TARGET) */
+    .subfilter-row {
+      display: none;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0 4px;
+      scrollbar-width: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .subfilter-row.active { display: flex; }
+    .subfilter-row::-webkit-scrollbar { display: none; }
+
+    .sub-pill {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(226, 180, 154, 0.25);
+      color: var(--text-muted);
+      padding: 5px 13px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .sub-pill:hover { color: #fff; border-color: var(--aura-magenta); }
+    .sub-pill.active {
+      background: rgba(232, 121, 249, 0.15);
+      border: 1px solid var(--aura-magenta);
+      color: #fff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .ticket-safety-box {
@@ -295,11 +331,24 @@
       backdrop-filter: blur(8px);
       border: 1px solid rgba(226, 180, 154, 0.35);
       color: var(--rose-gold-light);
-      padding: 4px 9px;
+      padding: 4px 8px;
       border-radius: 6px;
       font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.5px;
+    }
+
+    .tag-target {
+      position: absolute;
+      top: 9px; right: 9px;
+      background: rgba(232, 121, 249, 0.85);
+      backdrop-filter: blur(8px);
+      color: #07050A;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
     }
 
     .card-content {
@@ -459,6 +508,8 @@
       max-width: 440px;
       padding: 26px;
       position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .modal-header-title {
@@ -522,7 +573,7 @@
   <section class="controls-wrapper">
     <div class="search-row">
       <div class="input-box">
-        <input type="text" id="searchInput" placeholder="Cerca libro, stanza, felpa, biglietto, iPad...">
+        <input type="text" id="searchInput" placeholder="Cerca libro, stanza singola, felpa, biglietto...">
       </div>
       <select id="poloFilter" class="select-polo">
         <option value="ALL">Tutti i Campus</option>
@@ -534,7 +585,7 @@
       </button>
     </div>
 
-    <!-- CATEGORIE AGGIORNATE CON AFFITTI & STANZE -->
+    <!-- CATEGORIE PRINCIPALI -->
     <div class="filter-pills">
       <div class="pill active" data-cat="ALL">Tutti</div>
       <div class="pill" data-cat="Affitti">Affitti & Stanze</div>
@@ -545,8 +596,24 @@
       <div class="pill" data-cat="Altro">Altro</div>
     </div>
 
+    <!-- SOTTO-FILTRI DINAMICI PER AFFITTI -->
+    <div class="subfilter-row" id="subfilterAffitti">
+      <div class="sub-pill active" data-target="ALL">Tutti gli Affitti</div>
+      <div class="sub-pill" data-target="Solo Ragazze">Solo Ragazze</div>
+      <div class="sub-pill" data-target="Solo Ragazzi">Solo Ragazzi</div>
+      <div class="sub-pill" data-target="Misto / Tutti">Misto / Per Tutti</div>
+    </div>
+
+    <!-- SOTTO-FILTRI DINAMICI PER ABBIGLIAMENTO -->
+    <div class="subfilter-row" id="subfilterAbbigliamento">
+      <div class="sub-pill active" data-target="ALL">Tutti i Capi</div>
+      <div class="sub-pill" data-target="Donna">Donna</div>
+      <div class="sub-pill" data-target="Uomo">Uomo</div>
+      <div class="sub-pill" data-target="Unisex">Unisex</div>
+    </div>
+
     <div class="ticket-safety-box" id="ticketSafetyNotice">
-      ⚠️️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
+      ⚠️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
     </div>
   </section>
 
@@ -565,10 +632,10 @@
       <form id="createListingForm">
         <div class="form-row">
           <label>Cosa vendi, affitti o cerchi?</label>
-          <input type="text" id="fTitolo" required placeholder="Es. Stanza Singola Chieti Scalo / Manuale Anatomia I">
+          <input type="text" id="fTitolo" required placeholder="Es. Stanza Singola Chieti Scalo / Felpa Nike">
         </div>
         <div class="form-row">
-          <label>Prezzo o Canone (es. 220€/mese, 20€ o 'Trattabile')</label>
+          <label>Prezzo o Canone (es. 230€/mese, 20€ o 'Trattabile')</label>
           <input type="text" id="fPrezzo" required placeholder="Es. 230€/mese o 25€">
         </div>
         <div class="form-row">
@@ -579,9 +646,18 @@
             <option value="Abbigliamento">Abbigliamento</option>
             <option value="Biglietti">Biglietti & Serate</option>
             <option value="Tech">Tech & Elettronica</option>
-            <option value="Altro">Altro (Casa, Sport, Varie)</option>
+            <option value="Altro">Altro</option>
           </select>
         </div>
+
+        <!-- CAMPO GENERE / TARGET DINAMICO -->
+        <div class="form-row" id="formRowTarget">
+          <label id="formLabelTarget">Destinatari Stanza</label>
+          <select id="fTarget">
+            <!-- Popolato via JS in base alla categoria -->
+          </select>
+        </div>
+
         <div class="form-row">
           <label>Polo / Posizione</label>
           <select id="fPolo">
@@ -598,6 +674,7 @@
         <div class="form-row">
           <label>Foto Articolo o Stanza</label>
           <input type="file" id="fFoto" accept="image/*" required>
+          <small>La foto verrà compressa e ottimizzata in automatico.</small>
         </div>
         <div class="form-row">
           <label>Crea un PIN di 4 cifre per rimuovere l'annuncio</label>
@@ -641,6 +718,7 @@
 
       let listings = [];
       let activeCategory = "ALL";
+      let activeSubfilter = "ALL";
       let currentItemToDelete = null;
       let adminKey = localStorage.getItem("aura_admin_key") || null;
 
@@ -661,6 +739,41 @@
         return map[cat] || cat;
       }
 
+      // Funzione per comprimere le foto lato client prima dell'upload
+      async function compressImageFile(file, maxWidth = 1200, quality = 0.8) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              let width = img.width;
+              let height = img.height;
+              if (width > height) {
+                if (width > maxWidth) {
+                  height = Math.round((height * maxWidth) / width);
+                  width = maxWidth;
+                }
+              } else {
+                if (height > maxWidth) {
+                  width = Math.round((width * maxWidth) / height);
+                  height = maxWidth;
+                }
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              canvas.toBlob((blob) => {
+                resolve(new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' }));
+              }, 'image/jpeg', quality);
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
       function renderCards() {
         const query = (document.getElementById("searchInput").value || "").toLowerCase();
         const selectedPolo = document.getElementById("poloFilter").value;
@@ -669,28 +782,35 @@
         const filtered = listings.filter(item => {
           const catMatch = (activeCategory === "ALL" || item.categoria === activeCategory);
           const poloMatch = (selectedPolo === "ALL" || item.polo === selectedPolo || item.polo === "Entrambi");
-          const queryMatch = (item.titolo || "").toLowerCase().includes(query);
-          return catMatch && poloMatch && queryMatch;
+          const targetMatch = (activeSubfilter === "ALL" || !item.target || item.target === activeSubfilter || item.target === "Misto / Tutti" || item.target === "Unisex");
+          const queryMatch = (item.titolo || "").toLowerCase().includes(query) || (item.target || "").toLowerCase().includes(query);
+          return catMatch && poloMatch && targetMatch && queryMatch;
         });
 
         if (filtered.length === 0) {
           grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
               <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
-              <p>Nessun annuncio disponibile in questa sezione.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
+              <p>Nessun annuncio disponibile con questi filtri.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
             </div>
           `;
           return;
         }
 
         grid.innerHTML = filtered.map(item => {
-          const shareText = encodeURIComponent(`Ehi! Ho visto questo su AURA Market UdA:\n\n*${item.titolo}* a ${item.prezzo} (${item.polo})\nContatta su IG @${item.contatto_ig.replace('@','')}\n\nGuarda tutti gli annunci qui:\n${window.location.href}`);
+          const cleanIg = (item.contatto_ig || "").trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
+          const shareText = encodeURIComponent(`Ehi! Ho visto questo su AURA Market UdA:\n\n*${item.titolo}* a ${item.prezzo} (${item.polo})\nContatta su IG @${cleanIg}\n\nGuarda tutti gli annunci qui:\n${window.location.href}`);
           const waUrl = `https://api.whatsapp.com/send?text=${shareText}`;
+
+          const targetBadge = (item.target && item.target !== 'Misto / Tutti' && item.target !== 'Unisex' && item.target !== '') 
+            ? `<span class="tag-target">${item.target}</span>` 
+            : '';
 
           return `
             <article class="card" data-id="${item.id}">
               <div class="card-cover-wrap">
                 <span class="tag-campus">${item.polo}</span>
+                ${targetBadge}
                 <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
               </div>
               <div class="card-content">
@@ -698,8 +818,8 @@
                 <div class="card-price">${item.prezzo}</div>
                 <div class="card-title">${item.titolo}</div>
                 <div class="card-actions">
-                  <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
-                    Contatta @${item.contatto_ig.replace('@','')}
+                  <a href="https://ig.me/m/${cleanIg}" target="_blank" rel="noopener" class="btn-contact">
+                    Contatta @${cleanIg}
                   </a>
                   <a href="${waUrl}" target="_blank" rel="noopener" class="btn-share-wa">
                     <span>Invia su WhatsApp</span> ↗
@@ -735,19 +855,44 @@
         }
       }
 
+      // Gestione Filtri Principali e Sotto-filtri
       const safetyBox = document.getElementById("ticketSafetyNotice");
+      const subAffitti = document.getElementById("subfilterAffitti");
+      const subAbbigliamento = document.getElementById("subfilterAbbigliamento");
+
       document.querySelectorAll('.pill').forEach(pill => {
         pill.addEventListener('click', () => {
           document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
           pill.classList.add('active');
           activeCategory = pill.dataset.cat;
+          activeSubfilter = "ALL";
 
-          if (activeCategory === "Biglietti") {
+          // Reset sotto-filtri
+          document.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
+          document.querySelectorAll('.sub-pill[data-target="ALL"]').forEach(sp => sp.classList.add('active'));
+
+          subAffitti.classList.remove("active");
+          subAbbigliamento.classList.remove("active");
+          safetyBox.classList.remove("active");
+
+          if (activeCategory === "Affitti") {
+            subAffitti.classList.add("active");
+          } else if (activeCategory === "Abbigliamento") {
+            subAbbigliamento.classList.add("active");
+          } else if (activeCategory === "Biglietti") {
             safetyBox.classList.add("active");
-          } else {
-            safetyBox.classList.remove("active");
           }
 
+          renderCards();
+        });
+      });
+
+      document.querySelectorAll('.sub-pill').forEach(subPill => {
+        subPill.addEventListener('click', () => {
+          const parent = subPill.parentElement;
+          parent.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
+          subPill.classList.add('active');
+          activeSubfilter = subPill.dataset.target;
           renderCards();
         });
       });
@@ -755,6 +900,40 @@
       document.getElementById("searchInput").addEventListener("input", renderCards);
       document.getElementById("poloFilter").addEventListener("change", renderCards);
 
+      // Logica Form Dinamico per Genere/Target
+      const fCategoria = document.getElementById("fCategoria");
+      const formRowTarget = document.getElementById("formRowTarget");
+      const formLabelTarget = document.getElementById("formLabelTarget");
+      const fTarget = document.getElementById("fTarget");
+
+      function updateFormTargetField() {
+        const cat = fCategoria.value;
+        if (cat === "Affitti") {
+          formRowTarget.style.display = "flex";
+          formLabelTarget.innerText = "Destinatari Stanza";
+          fTarget.innerHTML = `
+            <option value="Misto / Tutti">Misto / Per Tutti</option>
+            <option value="Solo Ragazze">Solo Ragazze</option>
+            <option value="Solo Ragazzi">Solo Ragazzi</option>
+          `;
+        } else if (cat === "Abbigliamento") {
+          formRowTarget.style.display = "flex";
+          formLabelTarget.innerText = "Reparto / Genere";
+          fTarget.innerHTML = `
+            <option value="Unisex">Unisex</option>
+            <option value="Donna">Donna</option>
+            <option value="Uomo">Uomo</option>
+          `;
+        } else {
+          formRowTarget.style.display = "none";
+          fTarget.innerHTML = `<option value="">Nessuno</option>`;
+        }
+      }
+
+      fCategoria.addEventListener("change", updateFormTargetField);
+      updateFormTargetField();
+
+      // Modale Creazione
       const modal = document.getElementById("modalBackdrop");
       const btnOpen = document.getElementById("btnOpenModal");
       const btnClose = document.getElementById("btnCloseModal");
@@ -766,6 +945,7 @@
         if (e.target === modal) modal.classList.remove("open");
       });
 
+      // Modale Eliminazione Proprietario (PIN)
       const sellerModal = document.getElementById("sellerDeleteModal");
       const btnCloseSeller = document.getElementById("btnCloseSellerModal");
 
@@ -860,34 +1040,31 @@
         }
       });
 
+      // Invio annuncio con auto-compressione e pulizia Instagram
       document.getElementById("createListingForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById("btnSubmitForm");
-        submitBtn.innerText = "Caricamento in corso...";
+        submitBtn.innerText = "Ottimizzazione foto e invio...";
         submitBtn.disabled = true;
 
-        const file = document.getElementById("fFoto").files[0];
+        const rawFile = document.getElementById("fFoto").files[0];
         const titolo = document.getElementById("fTitolo").value.trim();
         const prezzo = document.getElementById("fPrezzo").value.trim();
         const categoria = document.getElementById("fCategoria").value;
+        const target = (categoria === "Affitti" || categoria === "Abbigliamento") ? document.getElementById("fTarget").value : "";
         const polo = document.getElementById("fPolo").value;
-        const contatto_ig = document.getElementById("fIg").value.trim();
+        const rawIg = document.getElementById("fIg").value.trim();
+        const contatto_ig = rawIg.replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '').trim();
         const seller_pin = document.getElementById("fPin").value.trim();
 
-        if (file.size > 6 * 1024 * 1024) {
-          alert("L'immagine supera i 6MB. Seleziona una foto più leggera.");
-          submitBtn.innerText = "Pubblica Subito (Gratis)";
-          submitBtn.disabled = false;
-          return;
-        }
-
         try {
-          const fileExt = file.name.split('.').pop();
-          const cleanFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+          // Compressione automatica immagine
+          const compressedFile = await compressImageFile(rawFile);
+          const cleanFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.jpg`;
 
           const { error: uploadError } = await sbClient.storage
             .from('foto_annunci')
-            .upload(cleanFileName, file);
+            .upload(cleanFileName, compressedFile);
 
           if (uploadError) throw uploadError;
 
@@ -895,21 +1072,30 @@
             .from('foto_annunci')
             .getPublicUrl(cleanFileName);
 
-          const { error: dbError } = await sbClient
-            .from('annunci')
-            .insert([{
-              titolo,
-              prezzo,
-              categoria,
-              polo,
-              contatto_ig,
-              seller_pin,
-              foto_url: urlData.publicUrl
-            }]);
+          const payload = {
+            titolo,
+            prezzo,
+            categoria,
+            polo,
+            contatto_ig,
+            seller_pin,
+            foto_url: urlData.publicUrl,
+            target
+          };
+
+          let { error: dbError } = await sbClient.from('annunci').insert([payload]);
+
+          // Fallback automatico se la colonna target non è ancora presente nel database
+          if (dbError && dbError.message && dbError.message.includes("target")) {
+            delete payload.target;
+            const res = await sbClient.from('annunci').insert([payload]);
+            dbError = res.error;
+          }
 
           if (dbError) throw dbError;
 
           document.getElementById("createListingForm").reset();
+          updateFormTargetField();
           modal.classList.remove("open");
           alert("Annuncio pubblicato con successo!");
           await loadData();
