@@ -41,7 +41,7 @@
       background-attachment: fixed;
     }
 
-    /* HEADER & LOGO SFUMATO SENZA TAGLIO */
+    /* HEADER & LOGO SFUMATO */
     header {
       position: relative;
       padding: 38px 16px 20px;
@@ -73,7 +73,6 @@
       margin: 0 auto;
     }
 
-    /* Fusione completa del logo: elimina lo squadro nero del PNG */
     .logo-img {
       width: 100%;
       height: auto;
@@ -106,7 +105,7 @@
       background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.6), transparent);
     }
 
-    /* CONTROLLI & RICERCA */
+    /* CONTROLLI */
     .controls-wrapper {
       max-width: 980px;
       margin: 22px auto 14px;
@@ -124,10 +123,7 @@
       align-items: center;
     }
 
-    .input-box {
-      flex: 1;
-      position: relative;
-    }
+    .input-box { flex: 1; position: relative; }
 
     input[type="text"], select {
       width: 100%;
@@ -148,11 +144,7 @@
       box-shadow: 0 0 18px rgba(226, 180, 154, 0.22);
     }
 
-    .select-polo {
-      width: auto;
-      min-width: 145px;
-      cursor: pointer;
-    }
+    .select-polo { width: auto; min-width: 145px; cursor: pointer; }
 
     .btn-create {
       background: linear-gradient(135deg, #FDE8E1 0%, #E2B49A 50%, #96614D 100%);
@@ -314,7 +306,7 @@
       box-shadow: 0 4px 14px rgba(226, 180, 154, 0.3);
     }
 
-    /* MODALE POPUP */
+    /* MODALE */
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -349,18 +341,8 @@
       margin-bottom: 18px;
     }
 
-    .form-row {
-      margin-bottom: 13px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .form-row label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--rose-gold);
-      letter-spacing: 0.3px;
-    }
+    .form-row { margin-bottom: 13px; display: flex; flex-direction: column; gap: 5px; }
+    .form-row label { font-size: 11px; font-weight: 600; color: var(--rose-gold); letter-spacing: 0.3px; }
 
     .btn-close-modal {
       position: absolute;
@@ -368,7 +350,7 @@
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 22px;
+      font-size: 24px;
       line-height: 1;
       cursor: pointer;
     }
@@ -389,7 +371,6 @@
     <div class="aura-ambient-glow"></div>
     <div class="logo-container">
       <img src="logo.png" alt="AURA UDA CHIETI PESCARA" class="logo-img" onerror="this.style.display='none'; document.getElementById('svgFallback').style.display='block';">
-      <!-- Fallback vettoriale nel caso logo.png manchi sul server -->
       <div id="svgFallback" style="display:none; text-align:center; padding: 20px 0;">
         <div style="font-family: var(--font-serif); font-size: 32px; font-weight: 700; letter-spacing: 12px; color: var(--rose-gold-light);">AURA</div>
         <div style="font-size: 10px; letter-spacing: 5px; color: var(--rose-gold); margin-top: 4px;">UDA CHIETI PESCARA</div>
@@ -408,7 +389,7 @@
         <option value="Chieti Scalo">Campus Chieti</option>
         <option value="Pescara">Polo Pescara</option>
       </select>
-      <button class="btn-create" id="btnOpenModal">
+      <button class="btn-create" id="btnOpenModal" type="button">
         <span>+</span> Vendi / Scambia
       </button>
     </div>
@@ -422,14 +403,12 @@
     </div>
   </section>
 
-  <main class="listings-container" id="listingsGrid">
-    <!-- Popolato dinamicamente da Supabase -->
-  </main>
+  <main class="listings-container" id="listingsGrid"></main>
 
-  <!-- MODALE INSERIMENTO ANNUNCIO -->
+  <!-- MODALE -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal-window">
-      <button class="btn-close-modal" id="btnCloseModal">&times;</button>
+      <button class="btn-close-modal" id="btnCloseModal" type="button">&times;</button>
       <div class="modal-header-title">NUOVO ANNUNCIO AURA</div>
       <form id="createListingForm">
         <div class="form-row">
@@ -473,135 +452,167 @@
   </div>
 
   <script>
-    const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
+    (function() {
+      const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    let listings = [];
-    let activeCategory = "ALL";
+      // Inizializzazione sicura evitando conflitti di variabili
+      let sbClient = null;
+      if (window.supabase && typeof window.supabase.createClient === 'function') {
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } else {
+        console.warn("Supabase CDN non pronto o bloccato.");
+      }
 
-    function renderCards() {
-      const query = document.getElementById("searchInput").value.toLowerCase();
-      const selectedPolo = document.getElementById("poloFilter").value;
-      const grid = document.getElementById("listingsGrid");
+      let listings = [];
+      let activeCategory = "ALL";
 
-      const filtered = listings.filter(item => {
-        const catMatch = (activeCategory === "ALL" || item.categoria === activeCategory);
-        const poloMatch = (selectedPolo === "ALL" || item.polo === selectedPolo || item.polo === "Entrambi");
-        const queryMatch = item.titolo.toLowerCase().includes(query);
-        return catMatch && poloMatch && queryMatch;
+      function renderCards() {
+        const query = (document.getElementById("searchInput").value || "").toLowerCase();
+        const selectedPolo = document.getElementById("poloFilter").value;
+        const grid = document.getElementById("listingsGrid");
+
+        const filtered = listings.filter(item => {
+          const catMatch = (activeCategory === "ALL" || item.categoria === activeCategory);
+          const poloMatch = (selectedPolo === "ALL" || item.polo === selectedPolo || item.polo === "Entrambi");
+          const queryMatch = (item.titolo || "").toLowerCase().includes(query);
+          return catMatch && poloMatch && queryMatch;
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
+              <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
+              <p>Nessun articolo trovato. Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(item => `
+          <article class="card">
+            <div class="card-cover-wrap">
+              <span class="tag-campus">${item.polo}</span>
+              <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
+            </div>
+            <div class="card-content">
+              <div class="card-price">${item.prezzo}</div>
+              <div class="card-title">${item.titolo}</div>
+              <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
+                Contatta @${item.contatto_ig.replace('@','')}
+              </a>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      async function loadData() {
+        if (!sbClient) return;
+        try {
+          const { data, error } = await sbClient
+            .from('annunci')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (!error && data) {
+            listings = data;
+          }
+        } catch (err) {
+          console.error("Errore fetch Supabase:", err);
+        } finally {
+          renderCards();
+        }
+      }
+
+      // Eventi filtri categoria
+      document.querySelectorAll('.pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeCategory = pill.dataset.cat;
+          renderCards();
+        });
       });
 
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
-            <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
-            <p>Nessun articolo trovato. Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
-          </div>
-        `;
-        return;
-      }
+      // Ricerca e filtro campus
+      document.getElementById("searchInput").addEventListener("input", renderCards);
+      document.getElementById("poloFilter").addEventListener("change", renderCards);
 
-      grid.innerHTML = filtered.map(item => `
-        <article class="card">
-          <div class="card-cover-wrap">
-            <span class="tag-campus">${item.polo}</span>
-            <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
-          </div>
-          <div class="card-content">
-            <div class="card-price">${item.prezzo}</div>
-            <div class="card-title">${item.titolo}</div>
-            <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
-              Contatta @${item.contatto_ig.replace('@','')}
-            </a>
-          </div>
-        </article>
-      `).join('');
-    }
+      // Gestione apertura e chiusura modale
+      const modal = document.getElementById("modalBackdrop");
+      const btnOpen = document.getElementById("btnOpenModal");
+      const btnClose = document.getElementById("btnCloseModal");
 
-    async function loadData() {
-      const { data, error } = await supabase
-        .from('annunci')
-        .select('*')
-        .order('created_at', { ascending: false });
+      btnOpen.addEventListener("click", () => modal.classList.add("open"));
+      btnClose.addEventListener("click", () => modal.classList.remove("open"));
 
-      if (!error && data) {
-        listings = data;
-        renderCards();
-      }
-    }
-
-    // Filtri pillola
-    document.querySelectorAll('.pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        activeCategory = pill.dataset.cat;
-        renderCards();
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("open");
       });
-    });
 
-    document.getElementById("searchInput").addEventListener("input", renderCards);
-    document.getElementById("poloFilter").addEventListener("change", renderCards);
+      // Invio annuncio
+      document.getElementById("createListingForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById("btnSubmitForm");
+        submitBtn.innerText = "Caricamento in corso...";
+        submitBtn.disabled = true;
 
-    // Gestione Modale
-    const modal = document.getElementById("modalBackdrop");
-    document.getElementById("btnOpenModal").onclick = () => modal.classList.add("open");
-    document.getElementById("btnCloseModal").onclick = () => modal.classList.remove("open");
+        const file = document.getElementById("fFoto").files[0];
+        const titolo = document.getElementById("fTitolo").value;
+        const prezzo = document.getElementById("fPrezzo").value;
+        const categoria = document.getElementById("fCategoria").value;
+        const polo = document.getElementById("fPolo").value;
+        const contatto_ig = document.getElementById("fIg").value;
 
-    // Invio Form & Upload
-    document.getElementById("createListingForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const submitBtn = document.getElementById("btnSubmitForm");
-      submitBtn.innerText = "Caricamento in corso...";
-      submitBtn.disabled = true;
+        if (!sbClient) {
+          alert("Errore di connessione a Supabase. Ricarica la pagina.");
+          submitBtn.innerText = "Pubblica Subito (Gratis)";
+          submitBtn.disabled = false;
+          return;
+        }
 
-      const file = document.getElementById("fFoto").files[0];
-      const titolo = document.getElementById("fTitolo").value;
-      const prezzo = document.getElementById("fPrezzo").value;
-      const categoria = document.getElementById("fCategoria").value;
-      const polo = document.getElementById("fPolo").value;
-      const contatto_ig = document.getElementById("fIg").value;
+        try {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
-      try {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+          const { error: uploadError } = await sbClient.storage
+            .from('foto_annunci')
+            .upload(fileName, file);
 
-        const { error: uploadError } = await supabase.storage
-          .from('foto_annunci')
-          .upload(fileName, file);
+          if (uploadError) throw uploadError;
 
-        if (uploadError) throw uploadError;
+          const { data: urlData } = sbClient.storage
+            .from('foto_annunci')
+            .getPublicUrl(fileName);
 
-        const { data: urlData } = supabase.storage
-          .from('foto_annunci')
-          .getPublicUrl(fileName);
+          const { error: dbError } = await sbClient
+            .from('annunci')
+            .insert([{
+              titolo,
+              prezzo,
+              categoria,
+              polo,
+              contatto_ig,
+              foto_url: urlData.publicUrl
+            }]);
 
-        const { error: dbError } = await supabase
-          .from('annunci')
-          .insert([{
-            titolo,
-            prezzo,
-            categoria,
-            polo,
-            contatto_ig,
-            foto_url: urlData.publicUrl
-          }]);
+          if (dbError) throw dbError;
 
-        if (dbError) throw dbError;
+          document.getElementById("createListingForm").reset();
+          modal.classList.remove("open");
+          await loadData();
+        } catch (err) {
+          alert("Errore durante la pubblicazione: " + err.message);
+        } finally {
+          submitBtn.innerText = "Pubblica Subito (Gratis)";
+          submitBtn.disabled = false;
+        }
+      });
 
-        document.getElementById("createListingForm").reset();
-        modal.classList.remove("open");
-        await loadData();
-      } catch (err) {
-        alert("Si è verificato un errore: " + err.message);
-      } finally {
-        submitBtn.innerText = "Pubblica Subito (Gratis)";
-        submitBtn.disabled = false;
-      }
-    });
-
-    loadData();
+      // Avvio immediato della UI
+      renderCards();
+      loadData();
+    })();
   </script>
 </body>
 </html>
