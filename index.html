@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA • UdA Chieti Pescara</title>
+  <title>AURA Market • UdA Luxury Student Network</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #050407;
-      --card-bg: rgba(18, 14, 24, 0.72);
+      --surface: #0E0A14;
+      --card-bg: rgba(16, 12, 22, 0.75);
       --card-border: rgba(226, 180, 154, 0.16);
       --card-border-hover: rgba(232, 121, 249, 0.45);
       --rose-gold: #E2B49A;
@@ -19,8 +20,9 @@
       --rose-gold-dark: #96614D;
       --aura-purple: #C084FC;
       --aura-magenta: #E879F9;
-      --text-main: #FBF8FA;
+      --text-main: #FAF5F8;
       --text-muted: #A39BA8;
+      --danger: #EF4444;
       --font-serif: 'Cinzel', serif;
       --font-sans: 'Plus Jakarta Sans', sans-serif;
     }
@@ -32,24 +34,23 @@
       color: var(--text-main);
       font-family: var(--font-sans);
       min-height: 100vh;
-      padding-bottom: 90px;
+      padding-bottom: 110px;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(ellipse 70% 380px at 50% 0%, rgba(217, 70, 239, 0.16) 0%, transparent 80%),
-        radial-gradient(circle 320px at 80% 25%, rgba(226, 180, 154, 0.07) 0%, transparent 70%),
-        radial-gradient(circle 280px at 15% 55%, rgba(147, 51, 234, 0.08) 0%, transparent 65%);
+        radial-gradient(ellipse 70% 360px at 50% 0%, rgba(217, 70, 239, 0.14) 0%, transparent 75%),
+        radial-gradient(circle 350px at 85% 20%, rgba(226, 180, 154, 0.08) 0%, transparent 65%),
+        radial-gradient(circle 300px at 15% 60%, rgba(147, 51, 234, 0.07) 0%, transparent 60%);
       background-attachment: fixed;
     }
 
-    /* HEADER & LOGO SFUMATO */
+    /* HEADER & BRAND IDENTITY */
     header {
       position: relative;
-      padding: 38px 16px 20px;
+      padding: 40px 16px 24px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
     }
 
     .aura-ambient-glow {
@@ -57,10 +58,10 @@
       top: 15px;
       left: 50%;
       transform: translateX(-50%);
-      width: 260px;
-      height: 160px;
-      background: radial-gradient(circle, rgba(232, 121, 249, 0.28) 0%, rgba(192, 132, 252, 0.12) 45%, transparent 75%);
-      filter: blur(32px);
+      width: 280px;
+      height: 170px;
+      background: radial-gradient(circle, rgba(232, 121, 249, 0.25) 0%, rgba(192, 132, 252, 0.10) 45%, transparent 75%);
+      filter: blur(34px);
       z-index: 1;
       pointer-events: none;
     }
@@ -71,6 +72,7 @@
       width: 100%;
       max-width: 320px;
       margin: 0 auto;
+      cursor: pointer;
     }
 
     .logo-img {
@@ -78,9 +80,9 @@
       height: auto;
       display: block;
       mix-blend-mode: screen;
-      -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 75%);
-      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 75%);
-      filter: drop-shadow(0 0 18px rgba(232, 121, 249, 0.28)) contrast(1.08) brightness(1.04);
+      -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 76%);
+      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 76%);
+      filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.25)) contrast(1.06);
       user-select: none;
     }
 
@@ -88,27 +90,35 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-top: 10px;
-      font-size: 9px;
+      margin-top: 12px;
+      font-size: 9.5px;
       letter-spacing: 3.5px;
       text-transform: uppercase;
       font-weight: 600;
       color: var(--rose-gold-light);
-      opacity: 0.85;
+      opacity: 0.9;
       position: relative;
       z-index: 2;
     }
     .brand-subline::before, .brand-subline::after {
       content: "";
       height: 1px;
-      width: 28px;
-      background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.6), transparent);
+      width: 32px;
+      background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.5), transparent);
     }
 
-    /* CONTROLLI */
+    .brand-tagline {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 1px;
+      font-weight: 400;
+    }
+
+    /* CONTROLLI E FILTRI */
     .controls-wrapper {
-      max-width: 980px;
-      margin: 22px auto 14px;
+      max-width: 1050px;
+      margin: 22px auto 10px;
       padding: 0 16px;
       display: flex;
       flex-direction: column;
@@ -123,9 +133,9 @@
       align-items: center;
     }
 
-    .input-box { flex: 1; position: relative; }
+    .input-box { flex: 1; }
 
-    input[type="text"], select {
+    input[type="text"], input[type="password"], select {
       width: 100%;
       background: rgba(18, 14, 25, 0.85);
       backdrop-filter: blur(10px);
@@ -133,18 +143,18 @@
       color: #fff;
       padding: 13px 16px;
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-family: var(--font-sans);
       outline: none;
       transition: all 0.25s ease;
     }
 
-    input[type="text"]:focus, select:focus {
+    input[type="text"]:focus, input[type="password"]:focus, select:focus {
       border-color: var(--rose-gold);
-      box-shadow: 0 0 18px rgba(226, 180, 154, 0.22);
+      box-shadow: 0 0 16px rgba(226, 180, 154, 0.25);
     }
 
-    .select-polo { width: auto; min-width: 145px; cursor: pointer; }
+    .select-polo { width: auto; min-width: 155px; cursor: pointer; }
 
     .btn-create {
       background: linear-gradient(135deg, #FDE8E1 0%, #E2B49A 50%, #96614D 100%);
@@ -153,28 +163,27 @@
       font-weight: 700;
       padding: 13px 22px;
       border-radius: 12px;
-      font-size: 13px;
-      letter-spacing: 0.4px;
+      font-size: 12.5px;
+      letter-spacing: 0.5px;
       cursor: pointer;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 18px rgba(226, 180, 154, 0.3);
+      box-shadow: 0 4px 18px rgba(226, 180, 154, 0.28);
     }
     .btn-create:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 22px rgba(232, 121, 249, 0.38);
+      box-shadow: 0 6px 22px rgba(232, 121, 249, 0.35);
     }
-    .btn-create:active { transform: scale(0.97); }
 
     /* FILTRI CATEGORIA */
     .filter-pills {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 4px 0 6px;
+      padding: 4px 0 8px;
       scrollbar-width: none;
     }
     .filter-pills::-webkit-scrollbar { display: none; }
@@ -183,7 +192,7 @@
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(226, 180, 154, 0.14);
       color: var(--text-muted);
-      padding: 8px 18px;
+      padding: 8px 16px;
       border-radius: 30px;
       font-size: 12px;
       font-weight: 600;
@@ -193,19 +202,44 @@
     }
     .pill:hover { border-color: var(--rose-gold); color: #fff; }
     .pill.active {
-      background: linear-gradient(135deg, rgba(226, 180, 154, 0.2), rgba(232, 121, 249, 0.18));
+      background: linear-gradient(135deg, rgba(226, 180, 154, 0.22), rgba(232, 121, 249, 0.18));
       border-color: var(--rose-gold);
       color: var(--rose-gold-light);
-      box-shadow: 0 0 14px rgba(226, 180, 154, 0.22);
+      box-shadow: 0 0 14px rgba(226, 180, 154, 0.2);
+    }
+
+    /* BARRA STATO ADMIN */
+    .admin-bar {
+      display: none;
+      max-width: 1050px;
+      margin: 0 auto 14px;
+      padding: 10px 16px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 10px;
+      font-size: 12px;
+      color: #FCA5A5;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-bar.active { display: flex; }
+    .btn-exit-admin {
+      background: transparent;
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
     }
 
     /* GRIGLIA ANNUNCI */
     .listings-container {
-      max-width: 980px;
-      margin: 18px auto;
+      max-width: 1050px;
+      margin: 16px auto;
       padding: 0 16px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
       gap: 18px;
       position: relative;
       z-index: 3;
@@ -213,25 +247,25 @@
 
     .card {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       border: 1px solid var(--card-border);
       border-radius: 16px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
     .card:hover {
       transform: translateY(-4px);
       border-color: var(--card-border-hover);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(232, 121, 249, 0.18);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 22px rgba(232, 121, 249, 0.18);
     }
 
     .card-cover-wrap {
       position: relative;
       width: 100%;
-      padding-top: 104%;
+      padding-top: 105%;
       background: #09070D;
       overflow: hidden;
     }
@@ -247,7 +281,7 @@
     .tag-campus {
       position: absolute;
       top: 9px; left: 9px;
-      background: rgba(7, 5, 10, 0.82);
+      background: rgba(7, 5, 10, 0.85);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(226, 180, 154, 0.35);
       color: var(--rose-gold-light);
@@ -263,6 +297,14 @@
       display: flex;
       flex-direction: column;
       flex: 1;
+    }
+    .card-meta-category {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--aura-purple);
+      font-weight: 600;
+      margin-bottom: 3px;
     }
     .card-price {
       font-family: var(--font-serif);
@@ -283,6 +325,12 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
     }
 
     .btn-contact {
@@ -306,7 +354,50 @@
       box-shadow: 0 4px 14px rgba(226, 180, 154, 0.3);
     }
 
-    /* MODALE */
+    .btn-card-secondary {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 2px 0;
+      text-align: center;
+      transition: color 0.2s;
+    }
+    .btn-card-secondary:hover { color: #fff; }
+
+    .btn-admin-delete {
+      display: none;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #F87171;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 7px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    body.is-admin .btn-admin-delete { display: block; }
+
+    /* FOOTER DISCRETO */
+    footer {
+      text-align: center;
+      padding: 30px 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      margin-top: 50px;
+    }
+    .admin-trigger {
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+    .admin-trigger:hover { opacity: 0.9; }
+
+    /* MODALI */
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -326,7 +417,7 @@
       box-shadow: 0 10px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(226, 180, 154, 0.2);
       border-radius: 18px;
       width: 100%;
-      max-width: 430px;
+      max-width: 440px;
       padding: 26px;
       position: relative;
     }
@@ -343,6 +434,7 @@
 
     .form-row { margin-bottom: 13px; display: flex; flex-direction: column; gap: 5px; }
     .form-row label { font-size: 11px; font-weight: 600; color: var(--rose-gold); letter-spacing: 0.3px; }
+    .form-row small { font-size: 10px; color: var(--text-muted); }
 
     .btn-close-modal {
       position: absolute;
@@ -369,20 +461,27 @@
 
   <header>
     <div class="aura-ambient-glow"></div>
-    <div class="logo-container">
-      <img src="logo.png" alt="AURA UDA CHIETI PESCARA" class="logo-img" onerror="this.style.display='none'; document.getElementById('svgFallback').style.display='block';">
+    <div class="logo-container" id="brandLogo">
+      <img src="logo.png" alt="AURA UDA" class="logo-img" onerror="this.style.display='none'; document.getElementById('svgFallback').style.display='block';">
       <div id="svgFallback" style="display:none; text-align:center; padding: 20px 0;">
         <div style="font-family: var(--font-serif); font-size: 32px; font-weight: 700; letter-spacing: 12px; color: var(--rose-gold-light);">AURA</div>
         <div style="font-size: 10px; letter-spacing: 5px; color: var(--rose-gold); margin-top: 4px;">UDA CHIETI PESCARA</div>
       </div>
     </div>
-    <div class="brand-subline">Campus Chieti • Polo Pescara • Scambio 0€</div>
+    <div class="brand-subline">Circuito Universitario • Chieti & Pescara</div>
+    <div class="brand-tagline">Transazioni Dirette Campus-to-Campus • Zero Intermediari</div>
   </header>
+
+  <!-- BANNER MODERAZIONE ATTIVO -->
+  <div class="admin-bar" id="adminBar">
+    <span>🛡️ <strong>Modalità Amministratore Attiva:</strong> puoi eliminare qualsiasi annuncio.</span>
+    <button class="btn-exit-admin" id="btnExitAdmin">Esci</button>
+  </div>
 
   <section class="controls-wrapper">
     <div class="search-row">
       <div class="input-box">
-        <input type="text" id="searchInput" placeholder="Cerca libro, sbobina, abbigliamento...">
+        <input type="text" id="searchInput" placeholder="Cerca libro, sbobina, modello, iPad...">
       </div>
       <select id="poloFilter" class="select-polo">
         <option value="ALL">Tutti i Poli</option>
@@ -394,60 +493,96 @@
       </button>
     </div>
 
+    <!-- CATEGORIE SPECIFICHE UNIVERSITÀ G. D'ANNUNZIO -->
     <div class="filter-pills">
-      <div class="pill active" data-cat="ALL">Tutti gli Annunci</div>
-      <div class="pill" data-cat="Libri">Libri & Sbobine</div>
-      <div class="pill" data-cat="Abbigliamento">Abbigliamento</div>
+      <div class="pill active" data-cat="ALL">Tutti gli Articoli</div>
+      <div class="pill" data-cat="Medicina">Medicina & Sanitarie</div>
+      <div class="pill" data-cat="Economia">Economia & Giurisprudenza</div>
+      <div class="pill" data-cat="Architettura">Architettura & Design</div>
+      <div class="pill" data-cat="Psicologia">Psicologia & Lettere</div>
       <div class="pill" data-cat="Tech">Tech & Calcolatrici</div>
-      <div class="pill" data-cat="Altro">Altro</div>
+      <div class="pill" data-cat="Moda">Moda & Vintage</div>
+      <div class="pill" data-cat="Fuorisede">Casa & Fuorisede</div>
     </div>
   </section>
 
   <main class="listings-container" id="listingsGrid"></main>
 
-  <!-- MODALE -->
+  <footer>
+    <p>AURA • Movimento Indipendente per gli Studenti dell'Università G. d'Annunzio</p>
+    <p style="margin-top: 6px;"><span class="admin-trigger" id="adminTrigger">Accesso Riservato Moderatori</span></p>
+  </footer>
+
+  <!-- MODALE CREAZIONE ANNUNCIO -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseModal" type="button">&times;</button>
       <div class="modal-header-title">NUOVO ANNUNCIO AURA</div>
       <form id="createListingForm">
         <div class="form-row">
-          <label>Cosa vuoi vendere o scambiare?</label>
-          <input type="text" id="fTitolo" required placeholder="Es. Manuale Anatomia I (Edi-Ermes)">
+          <label>Cosa vendi o scambi?</label>
+          <input type="text" id="fTitolo" required placeholder="Es. Compendio Anatomia I (Edi-Ermes)">
         </div>
         <div class="form-row">
-          <label>Prezzo (es. 25€ oppure 'Scambio')</label>
+          <label>Prezzo (es. 25€ o 'Scambio con...')</label>
           <input type="text" id="fPrezzo" required placeholder="25€">
         </div>
         <div class="form-row">
-          <label>Categoria</label>
+          <label>Categoria Accademica</label>
           <select id="fCategoria">
-            <option value="Libri">Libri & Sbobine</option>
-            <option value="Abbigliamento">Abbigliamento</option>
-            <option value="Tech">Tech & Strumenti</option>
-            <option value="Altro">Altro</option>
+            <option value="Medicina">Medicina & Professioni Sanitarie</option>
+            <option value="Economia">Economia & Giurisprudenza</option>
+            <option value="Architettura">Architettura, Design & Ingegneria</option>
+            <option value="Psicologia">Psicologia, Lettere & Formazione</option>
+            <option value="Tech">Tech, iPad & Calcolatrici</option>
+            <option value="Moda">Moda, Abbigliamento & Accessori</option>
+            <option value="Fuorisede">Casa & Servizi Fuorisede</option>
           </select>
         </div>
         <div class="form-row">
-          <label>Punto di Incontro</label>
+          <label>Polo di Scambio</label>
           <select id="fPolo">
             <option value="Chieti Scalo">Campus Chieti Scalo</option>
             <option value="Pescara">Polo Pindaro (Pescara)</option>
-            <option value="Entrambi">Entrambi i Poli</option>
+            <option value="Entrambi">Entrambi i Campus</option>
           </select>
         </div>
         <div class="form-row">
           <label>Tuo Username Instagram (senza @)</label>
           <input type="text" id="fIg" required placeholder="mariorossi">
+          <small>Gli studenti ti scriveranno direttamente nei DM per accordarsi.</small>
         </div>
         <div class="form-row">
           <label>Foto Articolo</label>
           <input type="file" id="fFoto" accept="image/*" required>
         </div>
+        <div class="form-row">
+          <label>Scegli un PIN di 4 cifre per eliminare l'annuncio</label>
+          <input type="password" id="fPin" maxlength="4" pattern="[0-9]{4}" required placeholder="1234">
+          <small>Ti servirà per rimuovere l'annuncio quando l'oggetto sarà venduto.</small>
+        </div>
         <button type="submit" class="btn-create" id="btnSubmitForm" style="width: 100%; justify-content: center; margin-top: 14px;">
-          Pubblica Subito (Gratis)
+          Pubblica Subito nel Circuito
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- MODALE ELIMINAZIONE DA PARTE DEL VENDITORE -->
+  <div class="modal-backdrop" id="sellerDeleteModal">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseSellerModal" type="button">&times;</button>
+      <div class="modal-header-title">GESTIONE ANNUNCIO</div>
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px;">
+        Hai già venduto l'articolo o vuoi ritirarlo? Inserisci il PIN di 4 cifre scelto al momento della pubblicazione.
+      </p>
+      <div class="form-row">
+        <label>PIN Personale (4 cifre)</label>
+        <input type="password" id="inputSellerPin" maxlength="4" placeholder="••••">
+      </div>
+      <button type="button" class="btn-create" id="btnConfirmSellerDelete" style="width: 100%; justify-content: center; margin-top: 12px; background: var(--danger); color: #fff;">
+        Segna come Venduto / Elimina
+      </button>
     </div>
   </div>
 
@@ -456,16 +591,20 @@
       const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
 
-      // Inizializzazione sicura evitando conflitti di variabili
       let sbClient = null;
       if (window.supabase && typeof window.supabase.createClient === 'function') {
         sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      } else {
-        console.warn("Supabase CDN non pronto o bloccato.");
       }
 
       let listings = [];
       let activeCategory = "ALL";
+      let currentItemToDelete = null;
+      let adminKey = localStorage.getItem("aura_admin_key") || null;
+
+      if (adminKey) {
+        document.body.classList.add("is-admin");
+        document.getElementById("adminBar").classList.add("active");
+      }
 
       function renderCards() {
         const query = (document.getElementById("searchInput").value || "").toLowerCase();
@@ -483,24 +622,33 @@
           grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
               <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
-              <p>Nessun articolo trovato. Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
+              <p>Nessun articolo disponibile in questa categoria.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
             </div>
           `;
           return;
         }
 
         grid.innerHTML = filtered.map(item => `
-          <article class="card">
+          <article class="card" data-id="${item.id}">
             <div class="card-cover-wrap">
               <span class="tag-campus">${item.polo}</span>
               <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
             </div>
             <div class="card-content">
+              <span class="card-meta-category">${item.categoria}</span>
               <div class="card-price">${item.prezzo}</div>
               <div class="card-title">${item.titolo}</div>
-              <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
-                Contatta @${item.contatto_ig.replace('@','')}
-              </a>
+              <div class="card-actions">
+                <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
+                  Contatta @${item.contatto_ig.replace('@','')}
+                </a>
+                <button type="button" class="btn-card-secondary" onclick="window.openSellerDeleteModal('${item.id}')">
+                  Sei il proprietario? Rimuovi
+                </button>
+                <button type="button" class="btn-admin-delete" onclick="window.adminDeleteListing('${item.id}')">
+                  🛡️ Elimina come Admin
+                </button>
+              </div>
             </div>
           </article>
         `).join('');
@@ -524,7 +672,7 @@
         }
       }
 
-      // Eventi filtri categoria
+      // Filtri categoria
       document.querySelectorAll('.pill').forEach(pill => {
         pill.addEventListener('click', () => {
           document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
@@ -534,11 +682,10 @@
         });
       });
 
-      // Ricerca e filtro campus
       document.getElementById("searchInput").addEventListener("input", renderCards);
       document.getElementById("poloFilter").addEventListener("change", renderCards);
 
-      // Gestione apertura e chiusura modale
+      // Modale Creazione
       const modal = document.getElementById("modalBackdrop");
       const btnOpen = document.getElementById("btnOpenModal");
       const btnClose = document.getElementById("btnCloseModal");
@@ -550,6 +697,103 @@
         if (e.target === modal) modal.classList.remove("open");
       });
 
+      // Modale Eliminazione Proprietario (PIN)
+      const sellerModal = document.getElementById("sellerDeleteModal");
+      const btnCloseSeller = document.getElementById("btnCloseSellerModal");
+
+      window.openSellerDeleteModal = function(id) {
+        currentItemToDelete = id;
+        document.getElementById("inputSellerPin").value = "";
+        sellerModal.classList.add("open");
+      };
+
+      btnCloseSeller.addEventListener("click", () => sellerModal.classList.remove("open"));
+      sellerModal.addEventListener("click", (e) => {
+        if (e.target === sellerModal) sellerModal.classList.remove("open");
+      });
+
+      document.getElementById("btnConfirmSellerDelete").addEventListener("click", async () => {
+        const pin = document.getElementById("inputSellerPin").value.trim();
+        if (!pin || pin.length !== 4) {
+          alert("Inserisci il PIN numerico di 4 cifre.");
+          return;
+        }
+
+        try {
+          const { data: success, error } = await sbClient.rpc('elimina_annuncio_venditore', {
+            p_id: currentItemToDelete,
+            p_pin: pin
+          });
+
+          if (error) throw error;
+
+          if (success) {
+            alert("Annuncio contrassegnato come venduto e rimosso.");
+            sellerModal.classList.remove("open");
+            await loadData();
+          } else {
+            alert("PIN errato. Verifica il codice scelto alla pubblicazione.");
+          }
+        } catch (err) {
+          alert("Errore durante l'eliminazione: " + err.message);
+        }
+      });
+
+      // Moderazione Admin Master Key
+      window.adminDeleteListing = async function(id) {
+        if (!confirm("Sei sicuro di voler eliminare definitivamente questo annuncio?")) return;
+        try {
+          const { data: success, error } = await sbClient.rpc('elimina_annuncio_admin', {
+            p_id: id,
+            p_master_key: adminKey
+          });
+
+          if (error) throw error;
+
+          if (success) {
+            alert("Annuncio eliminato con successo dai server.");
+            await loadData();
+          } else {
+            alert("Chiave Admin non valida o sessione scaduta.");
+            logoutAdmin();
+          }
+        } catch (err) {
+          alert("Errore moderazione: " + err.message);
+        }
+      };
+
+      function logoutAdmin() {
+        localStorage.removeItem("aura_admin_key");
+        adminKey = null;
+        document.body.classList.remove("is-admin");
+        document.getElementById("adminBar").classList.remove("active");
+        renderCards();
+      }
+
+      document.getElementById("btnExitAdmin").addEventListener("click", logoutAdmin);
+
+      // Accesso Admin (Trigger al click su footer o triplo click logo)
+      let clickCount = 0;
+      function triggerAdminPrompt() {
+        const key = prompt("Inserisci la Master Key di Moderazione AURA:");
+        if (key) {
+          adminKey = key;
+          localStorage.setItem("aura_admin_key", key);
+          document.body.classList.add("is-admin");
+          document.getElementById("adminBar").classList.add("active");
+          renderCards();
+        }
+      }
+
+      document.getElementById("adminTrigger").addEventListener("click", triggerAdminPrompt);
+      document.getElementById("brandLogo").addEventListener("click", () => {
+        clickCount++;
+        if (clickCount >= 3) {
+          clickCount = 0;
+          triggerAdminPrompt();
+        }
+      });
+
       // Invio annuncio
       document.getElementById("createListingForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -558,15 +802,16 @@
         submitBtn.disabled = true;
 
         const file = document.getElementById("fFoto").files[0];
-        const titolo = document.getElementById("fTitolo").value;
-        const prezzo = document.getElementById("fPrezzo").value;
+        const titolo = document.getElementById("fTitolo").value.trim();
+        const prezzo = document.getElementById("fPrezzo").value.trim();
         const categoria = document.getElementById("fCategoria").value;
         const polo = document.getElementById("fPolo").value;
-        const contatto_ig = document.getElementById("fIg").value;
+        const contatto_ig = document.getElementById("fIg").value.trim();
+        const seller_pin = document.getElementById("fPin").value.trim();
 
-        if (!sbClient) {
-          alert("Errore di connessione a Supabase. Ricarica la pagina.");
-          submitBtn.innerText = "Pubblica Subito (Gratis)";
+        if (file.size > 5 * 1024 * 1024) {
+          alert("La foto supera i 5MB. Scegli un'immagine più leggera.");
+          submitBtn.innerText = "Pubblica Subito nel Circuito";
           submitBtn.disabled = false;
           return;
         }
@@ -593,6 +838,7 @@
               categoria,
               polo,
               contatto_ig,
+              seller_pin,
               foto_url: urlData.publicUrl
             }]);
 
@@ -600,16 +846,16 @@
 
           document.getElementById("createListingForm").reset();
           modal.classList.remove("open");
+          alert("Articolo pubblicato con successo!");
           await loadData();
         } catch (err) {
           alert("Errore durante la pubblicazione: " + err.message);
         } finally {
-          submitBtn.innerText = "Pubblica Subito (Gratis)";
+          submitBtn.innerText = "Pubblica Subito nel Circuito";
           submitBtn.disabled = false;
         }
       });
 
-      // Avvio immediato della UI
       renderCards();
       loadData();
     })();
