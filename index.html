@@ -1330,7 +1330,7 @@
 
         if (!deleted) {
           const cleanKey = (adminKey || "").trim().toLowerCase();
-          if (['aura2026', 'auramarket', 'admin'].includes(cleanKey)) {
+          if (cleanKey === 'AURA2026MASTERMOHA') {
             const { error } = await sbClient.from('annunci').delete().eq('id', id);
             if (!error) deleted = true;
           }
