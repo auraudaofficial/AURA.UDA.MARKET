@@ -808,7 +808,6 @@
           <select id="fTarget"></select>
         </div>
 
-        <!-- CONDIZIONE: Rimossa voce 'Arredata', nascosta automaticamente per Affitti e Biglietti -->
         <div class="form-row" id="formRowCondizione">
           <label>Condizione / Stato</label>
           <select id="fCondizione">
@@ -1044,7 +1043,6 @@
         }).join('');
       }
 
-      // APERTURA DETTAGLIO
       const detailModal = document.getElementById("detailModal");
       window.openDetailModal = function(id) {
         const item = listings.find(l => String(l.id) === String(id));
@@ -1125,7 +1123,6 @@
         }
       }
 
-      // Filtri Categorie
       const safetyBox = document.getElementById("ticketSafetyNotice");
       const subAffitti = document.getElementById("subfilterAffitti");
       const subAbbigliamento = document.getElementById("subfilterAbbigliamento");
@@ -1169,7 +1166,6 @@
       document.getElementById("searchInput").addEventListener("input", renderCards);
       document.getElementById("poloFilter").addEventListener("change", renderCards);
 
-      // Form Target e Condizione Dinamici
       const fCategoria = document.getElementById("fCategoria");
       const formRowTarget = document.getElementById("formRowTarget");
       const formLabelTarget = document.getElementById("formLabelTarget");
@@ -1205,7 +1201,6 @@
       fCategoria.addEventListener("change", updateFormTargetField);
       updateFormTargetField();
 
-      // Anteprima foto (Max 3)
       const fFotoInput = document.getElementById("fFoto");
       const previewContainer = document.getElementById("photoPreviewContainer");
 
@@ -1231,7 +1226,6 @@
         });
       });
 
-      // Modale Creazione
       const modal = document.getElementById("modalBackdrop");
       const btnOpen = document.getElementById("btnOpenModal");
       const btnClose = document.getElementById("btnCloseModal");
@@ -1240,7 +1234,6 @@
       btnClose.addEventListener("click", () => modal.classList.remove("open"));
       modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
 
-      // Modale Eliminazione Proprietario (PIN con fallback integrato)
       const sellerModal = document.getElementById("sellerDeleteModal");
       const btnCloseSeller = document.getElementById("btnCloseSellerModal");
 
@@ -1267,7 +1260,6 @@
 
         let deleted = false;
 
-        // Tentativo 1: Chiamata RPC su Supabase
         try {
           const { data, error } = await sbClient.rpc('elimina_annuncio_venditore', {
             p_id: String(currentItemToDelete),
@@ -1277,10 +1269,9 @@
             deleted = true;
           }
         } catch (e) {
-          console.warn("RPC fallito, tentativo diretto...", e);
+          console.warn("RPC venditore fallito, provo fallback...", e);
         }
 
-        // Tentativo 2: Fallback diretto via DELETE con match del PIN
         if (!deleted) {
           try {
             const { data, error } = await sbClient
@@ -1294,7 +1285,7 @@
               deleted = true;
             }
           } catch (e) {
-            console.error("Errore fallback:", e);
+            console.error("Errore fallback venditore:", e);
           }
         }
 
@@ -1311,26 +1302,26 @@
         }
       });
 
-      // Eliminazione Admin (Master Key con fallback integrato)
       window.adminDeleteListing = async function(id) {
         if (!confirm("Sei sicuro di voler eliminare definitivamente questo annuncio?")) return;
 
+        const currentKey = (adminKey || localStorage.getItem("aura_admin_key") || "").trim();
         let deleted = false;
+
         try {
           const { data, error } = await sbClient.rpc('elimina_annuncio_admin', {
-            p_id: String(id),
-            p_master_key: String(adminKey)
+            p_id: String(id).trim(),
+            p_master_key: currentKey
           });
           if (!error && data === true) {
             deleted = true;
           }
         } catch (e) {
-          console.warn("RPC Admin fallito, tentativo fallback...", e);
+          console.warn("RPC Admin fallito, provo fallback...", e);
         }
 
         if (!deleted) {
-          const cleanKey = (adminKey || "").trim().toLowerCase();
-          if (cleanKey === 'aura2026mastermoha') {
+          if (currentKey.toUpperCase() === 'AURA2026MASTERMOHA') {
             const { error } = await sbClient.from('annunci').delete().eq('id', id);
             if (!error) deleted = true;
           }
@@ -1377,7 +1368,6 @@
         }
       });
 
-      // Pubblicazione Annuncio
       document.getElementById("createListingForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById("btnSubmitForm");
