@@ -1330,7 +1330,7 @@
 
         if (!deleted) {
           const cleanKey = (adminKey || "").trim().toLowerCase();
-          if (cleanKey === 'AURA2026MASTERMOHA') {
+          if (cleanKey === 'aura2026mastermoha') {
             const { error } = await sbClient.from('annunci').delete().eq('id', id);
             if (!error) deleted = true;
           }
