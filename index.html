@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA Market • UdA Luxury Student Network</title>
+  <title>AURA Market • UdA Chieti & Pescara</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,8 +11,7 @@
   <style>
     :root {
       --bg: #050407;
-      --surface: #0E0A14;
-      --card-bg: rgba(16, 12, 22, 0.75);
+      --card-bg: rgba(16, 12, 22, 0.78);
       --card-border: rgba(226, 180, 154, 0.16);
       --card-border-hover: rgba(232, 121, 249, 0.45);
       --rose-gold: #E2B49A;
@@ -22,6 +21,7 @@
       --aura-magenta: #E879F9;
       --text-main: #FAF5F8;
       --text-muted: #A39BA8;
+      --whatsapp-color: #25D366;
       --danger: #EF4444;
       --font-serif: 'Cinzel', serif;
       --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -34,7 +34,7 @@
       color: var(--text-main);
       font-family: var(--font-sans);
       min-height: 100vh;
-      padding-bottom: 110px;
+      padding-bottom: 90px;
       overflow-x: hidden;
       background-image: 
         radial-gradient(ellipse 70% 360px at 50% 0%, rgba(217, 70, 239, 0.14) 0%, transparent 75%),
@@ -43,10 +43,22 @@
       background-attachment: fixed;
     }
 
+    /* TOP BANNER ANTEPRIMA INIZIATIVE */
+    .promo-banner {
+      background: linear-gradient(90deg, rgba(226, 180, 154, 0.12), rgba(232, 121, 249, 0.18), rgba(226, 180, 154, 0.12));
+      border-bottom: 1px solid rgba(226, 180, 154, 0.2);
+      text-align: center;
+      padding: 9px 16px;
+      font-size: 11px;
+      letter-spacing: 0.6px;
+      color: var(--rose-gold-light);
+      font-weight: 500;
+    }
+
     /* HEADER & BRAND IDENTITY */
     header {
       position: relative;
-      padding: 40px 16px 24px;
+      padding: 34px 16px 20px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -91,34 +103,26 @@
       align-items: center;
       gap: 12px;
       margin-top: 12px;
-      font-size: 9.5px;
-      letter-spacing: 3.5px;
+      font-size: 10.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       font-weight: 600;
       color: var(--rose-gold-light);
-      opacity: 0.9;
+      opacity: 0.95;
       position: relative;
       z-index: 2;
     }
     .brand-subline::before, .brand-subline::after {
       content: "";
       height: 1px;
-      width: 32px;
+      width: 28px;
       background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.5), transparent);
     }
 
-    .brand-tagline {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 6px;
-      letter-spacing: 1px;
-      font-weight: 400;
-    }
-
-    /* CONTROLLI E FILTRI */
+    /* CONTROLLI E RICERCA */
     .controls-wrapper {
       max-width: 1050px;
-      margin: 22px auto 10px;
+      margin: 18px auto 10px;
       padding: 0 16px;
       display: flex;
       flex-direction: column;
@@ -207,6 +211,19 @@
       color: var(--rose-gold-light);
       box-shadow: 0 0 14px rgba(226, 180, 154, 0.2);
     }
+
+    /* AVVISO DI SICUREZZA PER I BIGLIETTI */
+    .ticket-safety-box {
+      display: none;
+      background: rgba(232, 121, 249, 0.08);
+      border: 1px solid rgba(232, 121, 249, 0.3);
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-size: 11.5px;
+      color: #F5D0FE;
+      line-height: 1.45;
+    }
+    .ticket-safety-box.active { display: block; }
 
     /* BARRA STATO ADMIN */
     .admin-bar {
@@ -354,14 +371,35 @@
       box-shadow: 0 4px 14px rgba(226, 180, 154, 0.3);
     }
 
+    .btn-share-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(37, 211, 102, 0.08);
+      border: 1px solid rgba(37, 211, 102, 0.25);
+      color: #86EFAC;
+      text-decoration: none;
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 7px 0;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .btn-share-wa:hover {
+      background: rgba(37, 211, 102, 0.18);
+      border-color: var(--whatsapp-color);
+      color: #fff;
+    }
+
     .btn-card-secondary {
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 10.5px;
+      font-size: 10px;
       cursor: pointer;
       text-decoration: underline;
-      padding: 2px 0;
+      padding: 3px 0 0;
       text-align: center;
       transition: color 0.2s;
     }
@@ -381,21 +419,31 @@
     }
     body.is-admin .btn-admin-delete { display: block; }
 
-    /* FOOTER DISCRETO */
+    /* FOOTER */
     footer {
       text-align: center;
-      padding: 30px 16px;
-      font-size: 11px;
+      padding: 34px 16px 20px;
+      font-size: 11.5px;
       color: var(--text-muted);
       border-top: 1px solid rgba(255, 255, 255, 0.04);
       margin-top: 50px;
     }
-    .admin-trigger {
-      cursor: pointer;
-      opacity: 0.4;
+    footer a {
+      color: var(--rose-gold-light);
+      text-decoration: none;
+      font-weight: 600;
       transition: opacity 0.2s;
     }
-    .admin-trigger:hover { opacity: 0.9; }
+    footer a:hover { opacity: 0.8; }
+    .admin-trigger {
+      cursor: pointer;
+      opacity: 0.35;
+      font-size: 10px;
+      display: inline-block;
+      margin-top: 10px;
+      transition: opacity 0.2s;
+    }
+    .admin-trigger:hover { opacity: 0.8; }
 
     /* MODALI */
     .modal-backdrop {
@@ -459,6 +507,11 @@
 </head>
 <body>
 
+  <!-- BANNER PROMOZIONALE DISCRETO -->
+  <div class="promo-banner">
+    ✨ In arrivo l'AURA Pass • Convenzioni ed eventi esclusivi per gli studenti UdA
+  </div>
+
   <header>
     <div class="aura-ambient-glow"></div>
     <div class="logo-container" id="brandLogo">
@@ -468,23 +521,22 @@
         <div style="font-size: 10px; letter-spacing: 5px; color: var(--rose-gold); margin-top: 4px;">UDA CHIETI PESCARA</div>
       </div>
     </div>
-    <div class="brand-subline">Circuito Universitario • Chieti & Pescara</div>
-    <div class="brand-tagline">Transazioni Dirette Campus-to-Campus • Zero Intermediari</div>
+    <div class="brand-subline">Compra, Vendi e Scambia tra Studenti UdA</div>
   </header>
 
   <!-- BANNER MODERAZIONE ATTIVO -->
   <div class="admin-bar" id="adminBar">
-    <span>🛡️ <strong>Modalità Amministratore Attiva:</strong> puoi eliminare qualsiasi annuncio.</span>
+    <span>🛡️ <strong>Modalità Amministratore:</strong> puoi eliminare qualsiasi annuncio dal circuito.</span>
     <button class="btn-exit-admin" id="btnExitAdmin">Esci</button>
   </div>
 
   <section class="controls-wrapper">
     <div class="search-row">
       <div class="input-box">
-        <input type="text" id="searchInput" placeholder="Cerca libro, sbobina, modello, iPad...">
+        <input type="text" id="searchInput" placeholder="Cerca libro, felpa, biglietto, iPad...">
       </div>
       <select id="poloFilter" class="select-polo">
-        <option value="ALL">Tutti i Poli</option>
+        <option value="ALL">Tutti i Campus</option>
         <option value="Chieti Scalo">Campus Chieti</option>
         <option value="Pescara">Polo Pescara</option>
       </select>
@@ -493,76 +545,79 @@
       </button>
     </div>
 
-    <!-- CATEGORIE SPECIFICHE UNIVERSITÀ G. D'ANNUNZIO -->
+    <!-- CATEGORIE SPECIFICHE CONDIVISE -->
     <div class="filter-pills">
-      <div class="pill active" data-cat="ALL">Tutti gli Articoli</div>
-      <div class="pill" data-cat="Medicina">Medicina & Sanitarie</div>
-      <div class="pill" data-cat="Economia">Economia & Giurisprudenza</div>
-      <div class="pill" data-cat="Architettura">Architettura & Design</div>
-      <div class="pill" data-cat="Psicologia">Psicologia & Lettere</div>
-      <div class="pill" data-cat="Tech">Tech & Calcolatrici</div>
-      <div class="pill" data-cat="Moda">Moda & Vintage</div>
-      <div class="pill" data-cat="Fuorisede">Casa & Fuorisede</div>
+      <div class="pill active" data-cat="ALL">Tutti</div>
+      <div class="pill" data-cat="Libri">Libri & Appunti</div>
+      <div class="pill" data-cat="Abbigliamento">Abbigliamento</div>
+      <div class="pill" data-cat="Biglietti">Biglietti & Serate</div>
+      <div class="pill" data-cat="Tech">Tech & Elettronica</div>
+      <div class="pill" data-cat="Casa">Casa & Stanza</div>
+      <div class="pill" data-cat="Altro">Altro</div>
+    </div>
+
+    <!-- AVVISO SICUREZZA BIGLIETTI (VISIBILE SOLO SE SELEZIONATA LA CATEGORIA) -->
+    <div class="ticket-safety-box" id="ticketSafetyNotice">
+      ⚠️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
     </div>
   </section>
 
   <main class="listings-container" id="listingsGrid"></main>
 
   <footer>
-    <p>AURA • Movimento Indipendente per gli Studenti dell'Università G. d'Annunzio</p>
-    <p style="margin-top: 6px;"><span class="admin-trigger" id="adminTrigger">Accesso Riservato Moderatori</span></p>
+    <p>AURA Market • Entra nella community su Instagram <a href="https://instagram.com/aura.uda" target="_blank" rel="noopener">@aura.uda</a></p>
+    <p><span class="admin-trigger" id="adminTrigger">Accesso Riservato Moderatori</span></p>
   </footer>
 
   <!-- MODALE CREAZIONE ANNUNCIO -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseModal" type="button">&times;</button>
-      <div class="modal-header-title">NUOVO ANNUNCIO AURA</div>
+      <div class="modal-header-title">NUOVO ANNUNCIO</div>
       <form id="createListingForm">
         <div class="form-row">
           <label>Cosa vendi o scambi?</label>
           <input type="text" id="fTitolo" required placeholder="Es. Compendio Anatomia I (Edi-Ermes)">
         </div>
         <div class="form-row">
-          <label>Prezzo (es. 25€ o 'Scambio con...')</label>
-          <input type="text" id="fPrezzo" required placeholder="25€">
+          <label>Prezzo (es. 20€ o 'Trattabile' o 'Regalo')</label>
+          <input type="text" id="fPrezzo" required placeholder="20€">
         </div>
         <div class="form-row">
-          <label>Categoria Accademica</label>
+          <label>Categoria</label>
           <select id="fCategoria">
-            <option value="Medicina">Medicina & Professioni Sanitarie</option>
-            <option value="Economia">Economia & Giurisprudenza</option>
-            <option value="Architettura">Architettura, Design & Ingegneria</option>
-            <option value="Psicologia">Psicologia, Lettere & Formazione</option>
-            <option value="Tech">Tech, iPad & Calcolatrici</option>
-            <option value="Moda">Moda, Abbigliamento & Accessori</option>
-            <option value="Fuorisede">Casa & Servizi Fuorisede</option>
+            <option value="Libri">Libri & Appunti</option>
+            <option value="Abbigliamento">Abbigliamento</option>
+            <option value="Biglietti">Biglietti & Serate</option>
+            <option value="Tech">Tech & Elettronica</option>
+            <option value="Casa">Casa & Stanza</option>
+            <option value="Altro">Altro</option>
           </select>
         </div>
         <div class="form-row">
-          <label>Polo di Scambio</label>
+          <label>Polo di Scambio a Mano</label>
           <select id="fPolo">
             <option value="Chieti Scalo">Campus Chieti Scalo</option>
             <option value="Pescara">Polo Pindaro (Pescara)</option>
-            <option value="Entrambi">Entrambi i Campus</option>
+            <option value="Entrambi">Entrambi i Poli</option>
           </select>
         </div>
         <div class="form-row">
           <label>Tuo Username Instagram (senza @)</label>
           <input type="text" id="fIg" required placeholder="mariorossi">
-          <small>Gli studenti ti scriveranno direttamente nei DM per accordarsi.</small>
+          <small>Gli acquirenti ti scriveranno direttamente su Instagram DM.</small>
         </div>
         <div class="form-row">
           <label>Foto Articolo</label>
           <input type="file" id="fFoto" accept="image/*" required>
         </div>
         <div class="form-row">
-          <label>Scegli un PIN di 4 cifre per eliminare l'annuncio</label>
+          <label>Crea un PIN di 4 cifre per rimuovere l'annuncio</label>
           <input type="password" id="fPin" maxlength="4" pattern="[0-9]{4}" required placeholder="1234">
-          <small>Ti servirà per rimuovere l'annuncio quando l'oggetto sarà venduto.</small>
+          <small>Ti servirà per cancellare l'annuncio una volta venduto l'oggetto.</small>
         </div>
         <button type="submit" class="btn-create" id="btnSubmitForm" style="width: 100%; justify-content: center; margin-top: 14px;">
-          Pubblica Subito nel Circuito
+          Pubblica Subito (Gratis)
         </button>
       </form>
     </div>
@@ -574,7 +629,7 @@
       <button class="btn-close-modal" id="btnCloseSellerModal" type="button">&times;</button>
       <div class="modal-header-title">GESTIONE ANNUNCIO</div>
       <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px;">
-        Hai già venduto l'articolo o vuoi ritirarlo? Inserisci il PIN di 4 cifre scelto al momento della pubblicazione.
+        Hai già venduto l'oggetto? Inserisci il PIN di 4 cifre impostato alla pubblicazione per rimuoverlo.
       </p>
       <div class="form-row">
         <label>PIN Personale (4 cifre)</label>
@@ -606,6 +661,18 @@
         document.getElementById("adminBar").classList.add("active");
       }
 
+      function getCategoryLabel(cat) {
+        const map = {
+          "Libri": "Libri & Appunti",
+          "Abbigliamento": "Abbigliamento",
+          "Biglietti": "Biglietti & Serate",
+          "Tech": "Tech & Elettronica",
+          "Casa": "Casa & Stanza",
+          "Altro": "Altro"
+        };
+        return map[cat] || cat;
+      }
+
       function renderCards() {
         const query = (document.getElementById("searchInput").value || "").toLowerCase();
         const selectedPolo = document.getElementById("poloFilter").value;
@@ -622,36 +689,44 @@
           grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
               <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
-              <p>Nessun articolo disponibile in questa categoria.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
+              <p>Nessun articolo disponibile in questa sezione.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
             </div>
           `;
           return;
         }
 
-        grid.innerHTML = filtered.map(item => `
-          <article class="card" data-id="${item.id}">
-            <div class="card-cover-wrap">
-              <span class="tag-campus">${item.polo}</span>
-              <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
-            </div>
-            <div class="card-content">
-              <span class="card-meta-category">${item.categoria}</span>
-              <div class="card-price">${item.prezzo}</div>
-              <div class="card-title">${item.titolo}</div>
-              <div class="card-actions">
-                <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
-                  Contatta @${item.contatto_ig.replace('@','')}
-                </a>
-                <button type="button" class="btn-card-secondary" onclick="window.openSellerDeleteModal('${item.id}')">
-                  Sei il proprietario? Rimuovi
-                </button>
-                <button type="button" class="btn-admin-delete" onclick="window.adminDeleteListing('${item.id}')">
-                  🛡️ Elimina come Admin
-                </button>
+        grid.innerHTML = filtered.map(item => {
+          const shareText = encodeURIComponent(`Ehi! Ho visto questo su AURA Market UdA:\n\n*${item.titolo}* a ${item.prezzo} (${item.polo})\nContatta su IG @${item.contatto_ig.replace('@','')}\n\nGuarda tutti gli annunci qui:\n${window.location.href}`);
+          const waUrl = `https://api.whatsapp.com/send?text=${shareText}`;
+
+          return `
+            <article class="card" data-id="${item.id}">
+              <div class="card-cover-wrap">
+                <span class="tag-campus">${item.polo}</span>
+                <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
               </div>
-            </div>
-          </article>
-        `).join('');
+              <div class="card-content">
+                <span class="card-meta-category">${getCategoryLabel(item.categoria)}</span>
+                <div class="card-price">${item.prezzo}</div>
+                <div class="card-title">${item.titolo}</div>
+                <div class="card-actions">
+                  <a href="https://ig.me/m/${item.contatto_ig.replace('@','')}" target="_blank" rel="noopener" class="btn-contact">
+                    Contatta @${item.contatto_ig.replace('@','')}
+                  </a>
+                  <a href="${waUrl}" target="_blank" rel="noopener" class="btn-share-wa">
+                    <span>Invia su WhatsApp</span> ↗
+                  </a>
+                  <button type="button" class="btn-card-secondary" onclick="window.openSellerDeleteModal('${item.id}')">
+                    Sei il venditore? Rimuovi
+                  </button>
+                  <button type="button" class="btn-admin-delete" onclick="window.adminDeleteListing('${item.id}')">
+                    🛡️ Elimina come Admin
+                  </button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
       }
 
       async function loadData() {
@@ -673,11 +748,19 @@
       }
 
       // Filtri categoria
+      const safetyBox = document.getElementById("ticketSafetyNotice");
       document.querySelectorAll('.pill').forEach(pill => {
         pill.addEventListener('click', () => {
           document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
           pill.classList.add('active');
           activeCategory = pill.dataset.cat;
+
+          if (activeCategory === "Biglietti") {
+            safetyBox.classList.add("active");
+          } else {
+            safetyBox.classList.remove("active");
+          }
+
           renderCards();
         });
       });
@@ -728,14 +811,14 @@
           if (error) throw error;
 
           if (success) {
-            alert("Annuncio contrassegnato come venduto e rimosso.");
+            alert("Annuncio rimosso con successo dal circuito.");
             sellerModal.classList.remove("open");
             await loadData();
           } else {
-            alert("PIN errato. Verifica il codice scelto alla pubblicazione.");
+            alert("PIN non corretto. Verifica il codice scelto durante la pubblicazione.");
           }
         } catch (err) {
-          alert("Errore durante l'eliminazione: " + err.message);
+          alert("Errore durante l'operazione: " + err.message);
         }
       });
 
@@ -751,10 +834,10 @@
           if (error) throw error;
 
           if (success) {
-            alert("Annuncio eliminato con successo dai server.");
+            alert("Annuncio eliminato con successo.");
             await loadData();
           } else {
-            alert("Chiave Admin non valida o sessione scaduta.");
+            alert("Chiave Admin non valida o scaduta.");
             logoutAdmin();
           }
         } catch (err) {
@@ -772,7 +855,7 @@
 
       document.getElementById("btnExitAdmin").addEventListener("click", logoutAdmin);
 
-      // Accesso Admin (Trigger al click su footer o triplo click logo)
+      // Accesso Admin (Prompt al click nel footer o triplo tocco sul logo)
       let clickCount = 0;
       function triggerAdminPrompt() {
         const key = prompt("Inserisci la Master Key di Moderazione AURA:");
@@ -809,26 +892,26 @@
         const contatto_ig = document.getElementById("fIg").value.trim();
         const seller_pin = document.getElementById("fPin").value.trim();
 
-        if (file.size > 5 * 1024 * 1024) {
-          alert("La foto supera i 5MB. Scegli un'immagine più leggera.");
-          submitBtn.innerText = "Pubblica Subito nel Circuito";
+        if (file.size > 6 * 1024 * 1024) {
+          alert("L'immagine supera i 6MB. Seleziona una foto più leggera.");
+          submitBtn.innerText = "Pubblica Subito (Gratis)";
           submitBtn.disabled = false;
           return;
         }
 
         try {
           const fileExt = file.name.split('.').pop();
-          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+          const cleanFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
           const { error: uploadError } = await sbClient.storage
             .from('foto_annunci')
-            .upload(fileName, file);
+            .upload(cleanFileName, file);
 
           if (uploadError) throw uploadError;
 
           const { data: urlData } = sbClient.storage
             .from('foto_annunci')
-            .getPublicUrl(fileName);
+            .getPublicUrl(cleanFileName);
 
           const { error: dbError } = await sbClient
             .from('annunci')
@@ -851,7 +934,7 @@
         } catch (err) {
           alert("Errore durante la pubblicazione: " + err.message);
         } finally {
-          submitBtn.innerText = "Pubblica Subito nel Circuito";
+          submitBtn.innerText = "Pubblica Subito (Gratis)";
           submitBtn.disabled = false;
         }
       });
