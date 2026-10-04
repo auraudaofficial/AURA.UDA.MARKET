@@ -4,10 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AURA Market • UdA Chieti & Pescara</title>
+  
+  <!-- META TAG SOCIAL & WHATSAPP PREVIEW -->
+  <meta property="og:title" content="AURA Market • UdA Chieti & Pescara">
+  <meta property="og:description" content="Il mercatino ufficiale tra studenti UdA: affitti, stanze, libri, sbobine, vestiti e biglietti a portata di tap.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="logo.png">
+  <meta name="theme-color" content="#050407">
+  
+  <!-- SUPPORTO WEB APP / AGGIUNGI A SCHERMATA HOME -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AURA Market">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <style>
     :root {
       --bg: #050407;
@@ -134,7 +148,25 @@
       align-items: center;
     }
 
-    .input-box { flex: 1; }
+    .input-box {
+      position: relative;
+      flex: 1;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      display: none;
+      padding: 4px;
+    }
+    .clear-search-btn.visible { display: block; }
 
     input[type="text"], input[type="password"], textarea, select {
       width: 100%;
@@ -478,6 +510,30 @@
     }
     body.is-admin .btn-admin-delete { display: block; }
 
+    /* EMPTY STATE PERSONALIZZATO (LEAD GENERATION) */
+    .empty-state-box {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      background: rgba(18, 14, 25, 0.5);
+      border: 1px dashed rgba(226, 180, 154, 0.25);
+      border-radius: 16px;
+      margin: 10px 0;
+    }
+    .empty-state-title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      color: var(--rose-gold-light);
+      margin-bottom: 8px;
+    }
+    .empty-state-p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      max-width: 420px;
+      margin: 0 auto 16px;
+      line-height: 1.5;
+    }
+
     .photo-preview-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -631,6 +687,7 @@
       position: relative;
       max-height: 90vh;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .modal-header-title {
@@ -656,6 +713,27 @@
       font-size: 24px;
       line-height: 1;
       cursor: pointer;
+    }
+
+    /* TOAST ALERT RAPIDO */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: linear-gradient(135deg, #FDE8E1, #E2B49A);
+      color: #07050A;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      z-index: 10000;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
     }
 
     @media (max-width: 640px) {
@@ -696,6 +774,7 @@
     <div class="search-row">
       <div class="input-box">
         <input type="text" id="searchInput" placeholder="Cerca libro, stanza, felpa, biglietto...">
+        <button class="clear-search-btn" id="btnClearSearch">&times;</button>
       </div>
       <select id="poloFilter" class="select-polo">
         <option value="ALL">Tutti i Campus</option>
@@ -735,7 +814,7 @@
     </div>
 
     <div class="ticket-safety-box" id="ticketSafetyNotice">
-      ⚠️️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
+      ⚠️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
     </div>
   </section>
 
@@ -765,9 +844,9 @@
         <a id="detailIgBtn" href="#" target="_blank" rel="noopener" class="btn-create" style="justify-content: center; text-decoration: none; padding: 12px;">
           Contatta Venditore su Instagram
         </a>
-        <a id="detailWaBtn" href="#" target="_blank" rel="noopener" class="btn-contact" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(37, 211, 102, 0.12); border-color: rgba(37, 211, 102, 0.3); color: #86EFAC;">
-          Invia Annuncio su WhatsApp ↗
-        </a>
+        <button type="button" id="btnShareNative" class="btn-contact" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span>Condividi / Invia Annuncio</span> ↗
+        </button>
         <button type="button" class="btn-card-secondary" id="btnDetailDelete">
           Sei il proprietario? Rimuovi questo annuncio
         </button>
@@ -876,6 +955,9 @@
     </div>
   </div>
 
+  <!-- TOAST FEEDBACK NOTIFICA -->
+  <div class="toast-msg" id="toastMsg">Link copiato negli appunti!</div>
+
   <script>
     (function() {
       const MASTER_KEY_CORRETTA = "AURA2026MASTERMOHA";
@@ -902,6 +984,13 @@
       } else {
         localStorage.removeItem("aura_admin_key");
         adminKey = null;
+      }
+
+      function showToast(text) {
+        const toast = document.getElementById("toastMsg");
+        toast.innerText = text;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2500);
       }
 
       function getCategoryLabel(cat) {
@@ -982,7 +1071,7 @@
       }
 
       function renderCards() {
-        const query = (document.getElementById("searchInput").value || "").toLowerCase();
+        const query = (document.getElementById("searchInput").value || "").toLowerCase().trim();
         const selectedPolo = document.getElementById("poloFilter").value;
         const grid = document.getElementById("listingsGrid");
 
@@ -996,11 +1085,25 @@
           return catMatch && poloMatch && targetMatch && queryMatch;
         });
 
+        // EMPTY STATE COINVOLGENTE (LEAD GENERATION INSTAGRAM)
         if (filtered.length === 0) {
+          const searchWord = query ? ` per "${query}"` : '';
           grid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 60px 16px; color: var(--text-muted);">
-              <div style="font-size: 26px; margin-bottom: 8px; opacity: 0.6;">✧</div>
-              <p>Nessun annuncio disponibile con questi filtri.<br>Tocca <strong>+ Vendi / Scambia</strong> per pubblicare il primo annuncio!</p>
+            <div class="empty-state-box">
+              <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+              <div class="empty-state-title">Nessun annuncio trovato${searchWord}</div>
+              <p class="empty-state-p">
+                Stai cercando un libro, una stanza o degli appunti specifici?<br>
+                Chiedicelo su Instagram: pubblicheremo la tua richiesta nelle storie per trovarti subito un venditore!
+              </p>
+              <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+                <a href="https://ig.me/m/aura.uda" target="_blank" rel="noopener" class="btn-create" style="text-decoration:none;">
+                  Chiedi a @aura.uda nei DM ↗
+                </a>
+                <button type="button" class="btn-create" onclick="document.getElementById('btnOpenModal').click()" style="background: rgba(255,255,255,0.06); color:#fff; border:1px solid var(--rose-gold);">
+                  Pubblica tu il primo
+                </button>
+              </div>
             </div>
           `;
           return;
@@ -1049,14 +1152,18 @@
         }).join('');
       }
 
+      // APRIRE DETTAGLIO CON DEEP LINKING (#ad-ID)
       const detailModal = document.getElementById("detailModal");
-      window.openDetailModal = function(id) {
+      window.openDetailModal = function(id, updateHash = true) {
         const item = listings.find(l => String(l.id) === String(id));
         if (!item) return;
         activeDetailItem = item;
 
+        if (updateHash) {
+          history.replaceState(null, '', '#ad-' + item.id);
+        }
+
         const cleanIg = (item.contatto_ig || "").trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
-        const shareText = encodeURIComponent(`Guarda questo annuncio su AURA Market UdA:\n\n*${item.titolo}* a ${item.prezzo} (${item.polo})\nContatta su IG: @${cleanIg}\n\nLink:\n${window.location.href}`);
 
         const allPhotos = [item.foto_url, ...(Array.isArray(item.foto_extra) ? item.foto_extra : [])].filter(Boolean);
         const mainImg = document.getElementById("detailMainImg");
@@ -1090,7 +1197,27 @@
 
         document.getElementById("detailIgBtn").href = `https://ig.me/m/${cleanIg}`;
         document.getElementById("detailIgBtn").innerText = `Scrivi su Instagram a @${cleanIg}`;
-        document.getElementById("detailWaBtn").href = `https://api.whatsapp.com/send?text=${shareText}`;
+
+        // CONDIVISIONE SMART (Native Share API o Copia Link)
+        document.getElementById("btnShareNative").onclick = async () => {
+          const directUrl = `${window.location.origin}${window.location.pathname}#ad-${item.id}`;
+          const shareData = {
+            title: `AURA Market • ${item.titolo}`,
+            text: `Guarda questo annuncio su AURA Market UdA:\n${item.titolo} (${item.prezzo})`,
+            url: directUrl
+          };
+
+          if (navigator.share) {
+            try {
+              await navigator.share(shareData);
+            } catch (err) {
+              // Condivisione annullata dall'utente
+            }
+          } else {
+            navigator.clipboard.writeText(directUrl);
+            showToast("Link annuncio copiato negli appunti!");
+          }
+        };
 
         document.getElementById("btnDetailDelete").onclick = () => {
           detailModal.classList.remove("open");
@@ -1106,10 +1233,26 @@
         el.classList.add('active');
       };
 
-      document.getElementById("btnCloseDetail").addEventListener("click", () => detailModal.classList.remove("open"));
+      function closeDetailModal() {
+        detailModal.classList.remove("open");
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+
+      document.getElementById("btnCloseDetail").addEventListener("click", closeDetailModal);
       detailModal.addEventListener("click", (e) => {
-        if (e.target === detailModal) detailModal.classList.remove("open");
+        if (e.target === detailModal) closeDetailModal();
       });
+
+      // Controllo se l'utente è entrato tramite link diretto (#ad-ID)
+      function checkUrlDeepLink() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#ad-')) {
+          const targetId = hash.replace('#ad-', '').trim();
+          if (targetId) {
+            window.openDetailModal(targetId, false);
+          }
+        }
+      }
 
       async function loadData() {
         if (!sbClient) return;
@@ -1126,6 +1269,7 @@
           console.error("Errore fetch Supabase:", err);
         } finally {
           renderCards();
+          checkUrlDeepLink();
         }
       }
 
@@ -1169,7 +1313,26 @@
         });
       });
 
-      document.getElementById("searchInput").addEventListener("input", renderCards);
+      // RICERCA CON TASTO CLEAR RAPIDO
+      const searchInput = document.getElementById("searchInput");
+      const btnClear = document.getElementById("btnClearSearch");
+
+      searchInput.addEventListener("input", () => {
+        if (searchInput.value.trim().length > 0) {
+          btnClear.classList.add("visible");
+        } else {
+          btnClear.classList.remove("visible");
+        }
+        renderCards();
+      });
+
+      btnClear.addEventListener("click", () => {
+        searchInput.value = "";
+        btnClear.classList.remove("visible");
+        searchInput.focus();
+        renderCards();
+      });
+
       document.getElementById("poloFilter").addEventListener("change", renderCards);
 
       const fCategoria = document.getElementById("fCategoria");
@@ -1301,7 +1464,7 @@
         if (deleted) {
           alert("Annuncio rimosso con successo dal circuito!");
           sellerModal.classList.remove("open");
-          detailModal.classList.remove("open");
+          closeDetailModal();
           await loadData();
         } else {
           alert("PIN non corretto o annuncio non trovato. Ricontrolla il codice a 4 cifre inserito alla pubblicazione.");
@@ -1340,7 +1503,7 @@
 
         if (deleted) {
           alert("Annuncio eliminato con successo.");
-          detailModal.classList.remove("open");
+          closeDetailModal();
           await loadData();
         } else {
           alert("Errore durante l'eliminazione dell'annuncio.");
@@ -1357,11 +1520,11 @@
 
       document.getElementById("btnExitAdmin").addEventListener("click", logoutAdmin);
 
-      // PROMPT CON VALIDAZIONE IMMEDIATA (BLOCCA ALL'INGRESSO)
+      // PROMPT CON VALIDAZIONE IMMEDIATA
       let clickCount = 0;
       function triggerAdminPrompt() {
         const input = prompt("Inserisci la Master Key di Moderazione AURA:");
-        if (input === null) return; // Se preme Annulla
+        if (input === null) return;
 
         const cleanKey = input.trim();
         if (cleanKey.toUpperCase() === MASTER_KEY_CORRETTA) {
@@ -1370,7 +1533,7 @@
           document.body.classList.add("is-admin");
           document.getElementById("adminBar").classList.add("active");
           renderCards();
-          alert("Accesso autorizzato: Modalità Moderatore attiva.");
+          showToast("Modalità Moderatore Attivata 🛡️");
         } else {
           alert("Accesso negato: Master Key non valida.");
           logoutAdmin();
@@ -1446,7 +1609,7 @@
           previewContainer.innerHTML = "";
           updateFormTargetField();
           modal.classList.remove("open");
-          alert("Annuncio pubblicato con successo!");
+          showToast("Annuncio pubblicato con successo! ✨");
           await loadData();
         } catch (err) {
           alert("Errore durante la pubblicazione: " + err.message);
