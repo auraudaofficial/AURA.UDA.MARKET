@@ -12,7 +12,7 @@
   <meta property="og:image" content="logo.png">
   <meta name="theme-color" content="#050407">
   
-  <!-- SUPPORTO WEB APP / AGGIUNGI A SCHERMATA HOME -->
+  <!-- SUPPORTO WEB APP -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="AURA Market">
@@ -293,6 +293,7 @@
     }
     .ticket-safety-box.active { display: block; }
 
+    /* ADMIN BAR OTTIMIZZATA */
     .admin-bar {
       display: none;
       max-width: 1050px;
@@ -300,19 +301,39 @@
       padding: 10px 16px;
       background: rgba(239, 68, 68, 0.12);
       border: 1px solid rgba(239, 68, 68, 0.35);
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 12px;
       color: #FCA5A5;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .admin-bar.active { display: flex; }
+    .admin-actions-group { display: flex; gap: 8px; align-items: center; }
+    
+    .btn-admin-dash {
+      background: linear-gradient(135deg, #EF4444, #B91C1C);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: opacity 0.2s;
+    }
+    .btn-admin-dash:hover { opacity: 0.9; }
+
     .btn-exit-admin {
       background: transparent;
       border: 1px solid rgba(239, 68, 68, 0.5);
       color: #fff;
-      padding: 4px 10px;
-      border-radius: 6px;
+      padding: 5px 12px;
+      border-radius: 8px;
       font-size: 11px;
       cursor: pointer;
     }
@@ -510,7 +531,6 @@
     }
     body.is-admin .btn-admin-delete { display: block; }
 
-    /* EMPTY STATE PERSONALIZZATO (LEAD GENERATION) */
     .empty-state-box {
       grid-column: 1 / -1;
       text-align: center;
@@ -715,7 +735,146 @@
       cursor: pointer;
     }
 
-    /* TOAST ALERT RAPIDO */
+    /* STILI DELLA DASHBOARD LIVE */
+    .dashboard-window {
+      max-width: 860px !important;
+      padding: 24px !important;
+    }
+    .dash-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .kpi-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(226, 180, 154, 0.2);
+      border-radius: 14px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-title {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .kpi-val {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--rose-gold-light);
+    }
+    .kpi-sub {
+      font-size: 10px;
+      color: var(--aura-purple);
+      margin-top: 4px;
+    }
+
+    .dash-breakdown-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 20px;
+    }
+    .dash-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--rose-gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cat-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+    .cat-bar-label { width: 110px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cat-bar-track { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; }
+    .cat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--aura-purple), var(--aura-magenta)); border-radius: 10px; }
+    .cat-bar-count { width: 26px; text-align: right; font-weight: 700; color: #fff; }
+
+    .dash-table-wrap {
+      overflow-x: auto;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      max-height: 380px;
+      overflow-y: auto;
+    }
+    .dash-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      text-align: left;
+    }
+    .dash-table th {
+      background: rgba(20, 15, 28, 0.95);
+      padding: 10px 12px;
+      color: var(--rose-gold);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(226, 180, 154, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .dash-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+      color: #E6DFEB;
+    }
+    .dash-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .dash-pin-badge {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #FBBF24;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-family: monospace;
+    }
+
+    .btn-dash-action-del {
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #F87171;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 10.5px;
+      font-weight: 600;
+    }
+    .btn-dash-action-del:hover { background: var(--danger); color: #fff; }
+
+    .pulse-live {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      margin-right: 5px;
+      box-shadow: 0 0 8px #10B981;
+      animation: pulseAnim 1.6s infinite;
+    }
+    @keyframes pulseAnim {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
     .toast-msg {
       position: fixed;
       bottom: 24px;
@@ -732,9 +891,7 @@
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
     }
-    .toast-msg.show {
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast-msg.show { transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 640px) {
       .search-row { flex-direction: column; align-items: stretch; }
@@ -743,7 +900,9 @@
       .card-price { font-size: 16px; }
       .card-title { font-size: 12px; }
       .logo-container { max-width: 250px; }
-      .detail-window { padding: 18px !important; }
+      .detail-window, .dashboard-window { padding: 18px !important; }
+      .admin-bar { flex-direction: column; align-items: stretch; }
+      .admin-actions-group { justify-content: space-between; }
     }
   </style>
 </head>
@@ -765,9 +924,18 @@
     <div class="brand-subline">Compra, Vendi e Scambia tra Studenti UdA</div>
   </header>
 
+  <!-- BARRA MODERAZIONE CON TASTO DASHBOARD -->
   <div class="admin-bar" id="adminBar">
-    <span>🛡️ <strong>Modalità Amministratore Attiva:</strong> puoi eliminare qualsiasi annuncio dal circuito.</span>
-    <button class="btn-exit-admin" id="btnExitAdmin">Esci</button>
+    <div style="display:flex; align-items:center;">
+      <span class="pulse-live"></span>
+      <span><strong>Modalità Admin:</strong> Master Key Attiva</span>
+    </div>
+    <div class="admin-actions-group">
+      <button class="btn-admin-dash" id="btnOpenDashboard">
+        📊 Dashboard & Metriche Live
+      </button>
+      <button class="btn-exit-admin" id="btnExitAdmin">Esci</button>
+    </div>
   </div>
 
   <section class="controls-wrapper">
@@ -850,6 +1018,77 @@
         <button type="button" class="btn-card-secondary" id="btnDetailDelete">
           Sei il proprietario? Rimuovi questo annuncio
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE DASHBOARD AMMINISTRATIVA -->
+  <div class="modal-backdrop" id="dashboardModal">
+    <div class="modal-window dashboard-window">
+      <button class="btn-close-modal" id="btnCloseDashboard" type="button">&times;</button>
+      <div class="modal-header-title" style="text-align: left; display: flex; align-items: center; justify-content: space-between; padding-right: 30px;">
+        <div>
+          <span class="pulse-live"></span> AURA CONTROL CENTER
+        </div>
+        <button id="btnExportCsv" class="btn-dash-action-del" style="background: rgba(226, 180, 154, 0.15); border-color: var(--rose-gold); color: var(--rose-gold-light);">
+          📥 Esporta CSV
+        </button>
+      </div>
+
+      <!-- KPI METRICHE -->
+      <div class="dash-kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">Annunci Totali</div>
+          <div class="kpi-val" id="kpiTotal">0</div>
+          <div class="kpi-sub" id="kpiNewToday">+0 pubblicati oggi</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Valore Circolante</div>
+          <div class="kpi-val" id="kpiTotalValue">0 €</div>
+          <div class="kpi-sub">Totale stimato bacheca</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Campus Chieti</div>
+          <div class="kpi-val" id="kpiChieti">0%</div>
+          <div class="kpi-sub" id="kpiChietiCount">0 annunci</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Polo Pescara</div>
+          <div class="kpi-val" id="kpiPescara">0%</div>
+          <div class="kpi-sub" id="kpiPescaraCount">0 annunci</div>
+        </div>
+      </div>
+
+      <!-- RIPARTIZIONE CATEGORIE -->
+      <div class="dash-breakdown-box">
+        <div class="dash-section-title">
+          <span>Distribuzione Categorie</span>
+          <span style="font-size: 10px; color: var(--text-muted);" id="dashLastSync">Live sync attivo</span>
+        </div>
+        <div id="dashCatBars"></div>
+      </div>
+
+      <!-- TABELLA DI GESTIONE & RECUPERO PIN -->
+      <div class="dash-section-title">
+        <span>Gestione Annunci & PIN Venditori</span>
+        <input type="text" id="dashSearchInput" placeholder="Filtra per titolo, IG o ID..." style="width: 200px; padding: 6px 10px; font-size: 11px;">
+      </div>
+
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Titolo</th>
+              <th>Prezzo</th>
+              <th>Polo</th>
+              <th>Venditore</th>
+              <th>PIN</th>
+              <th>Azione</th>
+            </tr>
+          </thead>
+          <tbody id="dashTableBody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -955,7 +1194,7 @@
     </div>
   </div>
 
-  <!-- TOAST FEEDBACK NOTIFICA -->
+  <!-- NOTIFICA TOAST -->
   <div class="toast-msg" id="toastMsg">Link copiato negli appunti!</div>
 
   <script>
@@ -1085,7 +1324,6 @@
           return catMatch && poloMatch && targetMatch && queryMatch;
         });
 
-        // EMPTY STATE COINVOLGENTE (LEAD GENERATION INSTAGRAM)
         if (filtered.length === 0) {
           const searchWord = query ? ` per "${query}"` : '';
           grid.innerHTML = `
@@ -1152,7 +1390,7 @@
         }).join('');
       }
 
-      // APRIRE DETTAGLIO CON DEEP LINKING (#ad-ID)
+      // APERTURA DETTAGLIO
       const detailModal = document.getElementById("detailModal");
       window.openDetailModal = function(id, updateHash = true) {
         const item = listings.find(l => String(l.id) === String(id));
@@ -1198,7 +1436,6 @@
         document.getElementById("detailIgBtn").href = `https://ig.me/m/${cleanIg}`;
         document.getElementById("detailIgBtn").innerText = `Scrivi su Instagram a @${cleanIg}`;
 
-        // CONDIVISIONE SMART (Native Share API o Copia Link)
         document.getElementById("btnShareNative").onclick = async () => {
           const directUrl = `${window.location.origin}${window.location.pathname}#ad-${item.id}`;
           const shareData = {
@@ -1210,9 +1447,7 @@
           if (navigator.share) {
             try {
               await navigator.share(shareData);
-            } catch (err) {
-              // Condivisione annullata dall'utente
-            }
+            } catch (err) {}
           } else {
             navigator.clipboard.writeText(directUrl);
             showToast("Link annuncio copiato negli appunti!");
@@ -1243,7 +1478,6 @@
         if (e.target === detailModal) closeDetailModal();
       });
 
-      // Controllo se l'utente è entrato tramite link diretto (#ad-ID)
       function checkUrlDeepLink() {
         const hash = window.location.hash;
         if (hash && hash.startsWith('#ad-')) {
@@ -1254,6 +1488,146 @@
         }
       }
 
+      // ==========================================
+      // LOGICA DELLA DASHBOARD AMMINISTRATIVA LIVE
+      // ==========================================
+      const dashModal = document.getElementById("dashboardModal");
+      const btnOpenDash = document.getElementById("btnOpenDashboard");
+      const btnCloseDash = document.getElementById("btnCloseDashboard");
+
+      btnOpenDash.addEventListener("click", () => {
+        renderDashboard();
+        dashModal.classList.add("open");
+      });
+      btnCloseDash.addEventListener("click", () => dashModal.classList.remove("open"));
+      dashModal.addEventListener("click", (e) => {
+        if (e.target === dashModal) dashModal.classList.remove("open");
+      });
+
+      function renderDashboard() {
+        const total = listings.length;
+        document.getElementById("kpiTotal").innerText = total;
+
+        // Nuovi oggi
+        const now = Date.now();
+        const oneDayAgo = now - 24 * 60 * 60 * 1000;
+        const newToday = listings.filter(l => new Date(l.created_at).getTime() > oneDayAgo).length;
+        document.getElementById("kpiNewToday").innerText = `+${newToday} pubblicati oggi`;
+
+        // Calcolo valore circolante totale
+        let totalVal = 0;
+        listings.forEach(l => {
+          const digits = (l.prezzo || "").replace(/[^0-9.,]/g, '').replace(',', '.');
+          const parsed = parseFloat(digits);
+          if (!isNaN(parsed) && parsed > 0 && parsed < 2000) {
+            totalVal += parsed;
+          }
+        });
+        document.getElementById("kpiTotalValue").innerText = `${Math.round(totalVal)} €`;
+
+        // Percentuale Polo
+        const chietiCount = listings.filter(l => l.polo === 'Chieti Scalo').length;
+        const pescaraCount = listings.filter(l => l.polo === 'Pescara').length;
+        const chietiPct = total > 0 ? Math.round((chietiCount / total) * 100) : 0;
+        const pescaraPct = total > 0 ? Math.round((pescaraCount / total) * 100) : 0;
+
+        document.getElementById("kpiChieti").innerText = `${chietiPct}%`;
+        document.getElementById("kpiChietiCount").innerText = `${chietiCount} annunci`;
+        document.getElementById("kpiPescara").innerText = `${pescaraPct}%`;
+        document.getElementById("kpiPescaraCount").innerText = `${pescaraCount} annunci`;
+
+        // Ripartizione Categorie
+        const categories = ["Affitti", "Libri", "Abbigliamento", "Biglietti", "Tech", "Altro"];
+        const catBarsContainer = document.getElementById("dashCatBars");
+        catBarsContainer.innerHTML = categories.map(cat => {
+          const count = listings.filter(l => l.categoria === cat).length;
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          return `
+            <div class="cat-bar-item">
+              <span class="cat-bar-label">${getCategoryLabel(cat)}</span>
+              <div class="cat-bar-track">
+                <div class="cat-bar-fill" style="width: ${pct}%;"></div>
+              </div>
+              <span class="cat-bar-count">${count}</span>
+            </div>
+          `;
+        }).join('');
+
+        renderDashTable();
+      }
+
+      // Tabella con filtro istantaneo
+      function renderDashTable() {
+        const query = (document.getElementById("dashSearchInput").value || "").toLowerCase().trim();
+        const tbody = document.getElementById("dashTableBody");
+
+        const filtered = listings.filter(l => 
+          (l.titolo || "").toLowerCase().includes(query) ||
+          (l.contatto_ig || "").toLowerCase().includes(query) ||
+          (l.id || "").toLowerCase().includes(query)
+        );
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:var(--text-muted);">Nessun annuncio trovato.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = filtered.map(l => {
+          const cleanIg = (l.contatto_ig || "").replace('@','');
+          return `
+            <tr>
+              <td>
+                <img src="${l.foto_url}" style="width:36px; height:36px; object-fit:cover; border-radius:6px; background:#000;">
+              </td>
+              <td style="font-weight:600; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${l.titolo}
+              </td>
+              <td style="color:var(--rose-gold-light); font-weight:700;">${l.prezzo}</td>
+              <td><span style="font-size:9.5px; opacity:0.8;">${l.polo}</span></td>
+              <td>
+                <a href="https://ig.me/m/${cleanIg}" target="_blank" rel="noopener" style="color:var(--aura-purple); text-decoration:none; font-weight:600;">
+                  @${cleanIg}
+                </a>
+              </td>
+              <td><span class="dash-pin-badge">${l.seller_pin || '----'}</span></td>
+              <td>
+                <button class="btn-dash-action-del" onclick="window.adminDeleteListing('${l.id}')">
+                  Elimina
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      document.getElementById("dashSearchInput").addEventListener("input", renderDashTable);
+
+      // ESPORTAZIONE DATI IN CSV
+      document.getElementById("btnExportCsv").addEventListener("click", () => {
+        if (listings.length === 0) {
+          alert("Nessun annuncio da esportare.");
+          return;
+        }
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+        csvContent += "ID,Data,Titolo,Prezzo,Categoria,Polo,Target,Instagram,PIN\n";
+
+        listings.forEach(l => {
+          const date = new Date(l.created_at).toLocaleDateString('it-IT');
+          const cleanTitle = `"${(l.titolo || '').replace(/"/g, '""')}"`;
+          const cleanPrice = `"${(l.prezzo || '').replace(/"/g, '""')}"`;
+          csvContent += `${l.id},${date},${cleanTitle},${cleanPrice},${l.categoria},${l.polo},${l.target || ''},${l.contatto_ig},${l.seller_pin}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `aura_market_annunci_${Date.now()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+
+      // CARICAMENTO DATI & ASCOLTO REALTIME
       async function loadData() {
         if (!sbClient) return;
         try {
@@ -1270,9 +1644,29 @@
         } finally {
           renderCards();
           checkUrlDeepLink();
+          if (dashModal.classList.contains("open")) {
+            renderDashboard();
+          }
         }
       }
 
+      // Sottoscrizione al canale Realtime di Supabase
+      function setupRealtimeListener() {
+        if (!sbClient) return;
+        try {
+          sbClient
+            .channel('realtime_annunci_aura')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, (payload) => {
+              loadData();
+              showToast("⚡ Aggiornamento bacheca in tempo reale!");
+            })
+            .subscribe();
+        } catch (e) {
+          console.warn("Realtime non supportato:", e);
+        }
+      }
+
+      // GESTIONE FILTRI
       const safetyBox = document.getElementById("ticketSafetyNotice");
       const subAffitti = document.getElementById("subfilterAffitti");
       const subAbbigliamento = document.getElementById("subfilterAbbigliamento");
@@ -1313,7 +1707,6 @@
         });
       });
 
-      // RICERCA CON TASTO CLEAR RAPIDO
       const searchInput = document.getElementById("searchInput");
       const btnClear = document.getElementById("btnClearSearch");
 
@@ -1502,7 +1895,7 @@
         }
 
         if (deleted) {
-          alert("Annuncio eliminato con successo.");
+          showToast("Annuncio eliminato con successo.");
           closeDetailModal();
           await loadData();
         } else {
@@ -1515,12 +1908,12 @@
         adminKey = null;
         document.body.classList.remove("is-admin");
         document.getElementById("adminBar").classList.remove("active");
+        dashModal.classList.remove("open");
         renderCards();
       }
 
       document.getElementById("btnExitAdmin").addEventListener("click", logoutAdmin);
 
-      // PROMPT CON VALIDAZIONE IMMEDIATA
       let clickCount = 0;
       function triggerAdminPrompt() {
         const input = prompt("Inserisci la Master Key di Moderazione AURA:");
@@ -1621,6 +2014,7 @@
 
       renderCards();
       loadData();
+      setupRealtimeListener();
     })();
   </script>
 </body>
