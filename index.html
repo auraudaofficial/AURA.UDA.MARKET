@@ -106,7 +106,7 @@
       filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.25));
     }
 
-    /* SWITCHER PRINCIPALE DELLE SCHEDE */
+    /* SWITCHER SCHEDE */
     .app-tabs-wrap {
       max-width: 440px;
       margin: 10px auto 14px;
@@ -173,6 +173,15 @@
       font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
+    }
+    .badge-pending-count {
+      background: #EF4444;
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 10.5px;
+      font-weight: 800;
+      margin-left: 5px;
     }
 
     .controls-wrapper {
@@ -250,18 +259,6 @@
     .pill.active {
       background: linear-gradient(135deg, rgba(226, 180, 154, 0.22), rgba(232, 121, 249, 0.18));
       border-color: var(--rose-gold); color: var(--rose-gold-light);
-    }
-
-    .subfilter-row { display: none; gap: 8px; overflow-x: auto; padding: 4px 0; }
-    .subfilter-row.active { display: flex; }
-    .sub-pill {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed rgba(226, 180, 154, 0.25);
-      color: var(--text-muted);
-      padding: 5px 13px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap;
-    }
-    .sub-pill.active {
-      background: rgba(232, 121, 249, 0.15); border: 1px solid var(--aura-magenta); color: #fff;
     }
 
     /* GRIGLIA MARKET */
@@ -374,7 +371,7 @@
       margin-bottom: 14px;
     }
 
-    /* CENSURA A BARRE NERE */
+    /* BARRE DI CENSURA */
     .redacted-bar {
       display: inline-block;
       background: #000;
@@ -395,7 +392,7 @@
       border-bottom: 1px dashed var(--rose-gold);
     }
 
-    /* BARRA DI PROGRESSO SBLOCCO */
+    /* PROGRESSO SBLOCCO */
     .unlock-progress-wrap {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -424,7 +421,30 @@
       transition: width 0.4s ease;
     }
 
-    /* REAZIONI LIVE */
+    /* BOX SPOTTED MATCH */
+    .spotted-matched-box {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-unlock-author {
+      background: #10B981;
+      color: #050407;
+      border: none;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
     .vault-actions-bar {
       display: flex;
       align-items: center;
@@ -434,10 +454,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       flex-wrap: wrap;
     }
-    .reaction-btns-group {
-      display: flex;
-      gap: 6px;
-    }
+    .reaction-btns-group { display: flex; gap: 6px; }
     .btn-react {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -456,12 +473,7 @@
       border-color: var(--aura-magenta);
       transform: scale(1.04);
     }
-    .btn-react.reacted {
-      background: rgba(226, 180, 154, 0.25);
-      border-color: var(--rose-gold);
-    }
 
-    /* TASTO SPOTTED "SONO IO" */
     .btn-spotted-handshake {
       background: linear-gradient(135deg, rgba(192, 132, 252, 0.25), rgba(232, 121, 249, 0.25));
       border: 1px solid var(--aura-purple);
@@ -475,12 +487,7 @@
       align-items: center;
       gap: 5px;
     }
-    .btn-spotted-handshake:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 14px rgba(192, 132, 252, 0.3);
-    }
 
-    /* CARD INTERLEAVED DALL'AURA MARKET NEL FEED GOSSIP */
     .interleaved-market-card {
       background: linear-gradient(135deg, rgba(226, 180, 154, 0.12), rgba(16, 12, 22, 0.9));
       border: 1px solid var(--rose-gold);
@@ -522,7 +529,6 @@
       font-weight: 700;
     }
 
-    /* BOTTONI SEGRETI ADMIN SUI POST VAULT */
     .admin-vault-tools {
       display: none;
       gap: 6px;
@@ -551,6 +557,73 @@
       cursor: pointer;
     }
 
+    /* CARD MODERAZIONE PENDING & AI */
+    .mod-card-pending {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(226, 180, 154, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: all 0.3s ease;
+    }
+    .mod-card-pending.ai-safe {
+      border-color: #10B981;
+      background: rgba(16, 185, 129, 0.06);
+    }
+    .mod-card-pending.ai-danger {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .ai-badge.safe { background: rgba(16, 185, 129, 0.2); color: #6EE7B7; border: 1px solid #10B981; }
+    .ai-badge.danger { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid #EF4444; }
+
+    .mod-actions-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-mod-approve-now {
+      background: #10B981;
+      color: #050407;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11.5px;
+      cursor: pointer;
+    }
+    .btn-mod-approve-queue {
+      background: linear-gradient(135deg, var(--rose-gold), var(--aura-magenta));
+      color: #050407;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11.5px;
+      cursor: pointer;
+    }
+    .btn-mod-reject {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #EF4444;
+      color: #FCA5A5;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      cursor: pointer;
+    }
+
     /* MODALI */
     .modal-backdrop {
       position: fixed;
@@ -570,7 +643,7 @@
       box-shadow: 0 10px 45px rgba(0, 0, 0, 0.7);
       border-radius: 18px;
       width: 100%;
-      max-width: 460px;
+      max-width: 540px;
       padding: 24px;
       position: relative;
       max-height: 90vh;
@@ -601,14 +674,12 @@
     }
     .toast-msg.show { transform: translateX(-50%) translateY(0); }
 
-    /* CANVAS NASCOSTO PER RENDERING STORY IG 1080x1920 */
     #storyCanvas { display: none; }
 
     @media (max-width: 640px) {
       .search-row { flex-direction: column; align-items: stretch; }
       .select-polo { width: 100%; }
       .listings-container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .card-price { font-size: 16px; }
     }
   </style>
 </head>
@@ -641,19 +712,22 @@
     </div>
   </div>
 
-  <!-- BARRA ADMIN CONDIVISA -->
+  <!-- BARRA ADMIN CON ACCESSO ALLA CODA -->
   <div class="admin-bar" id="adminBar">
     <div style="display:flex; align-items:center;">
       <span style="display:inline-block; width:8px; height:8px; background:#10B981; border-radius:50%; margin-right:6px;"></span>
-      <span><strong>Moderazione Attiva:</strong> Master Key Valida</span>
+      <span><strong>Moderazione:</strong> Master Key Attiva</span>
     </div>
     <div style="display:flex; gap:8px;">
-      <button class="btn-admin-dash" id="btnExitAdmin">Disconnetti</button>
+      <button class="btn-admin-dash" id="btnOpenPendingQueue">
+        📥 Coda Moderazione <span class="badge-pending-count" id="pendingCountBadge">0</span>
+      </button>
+      <button class="btn-admin-dash" id="btnExitAdmin" style="background:transparent; border:1px solid #EF4444; color:#fff;">Esci</button>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- SEZIONE 1: AURA MARKET                    -->
+  <!-- SEZIONE 1: AURA MARKET                     -->
   <!-- ========================================== -->
   <section id="sectionMarket">
     <div class="controls-wrapper">
@@ -687,7 +761,7 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- SEZIONE 2: AURA RADAR & THE VAULT         -->
+  <!-- SEZIONE 2: AURA RADAR & THE VAULT          -->
   <!-- ========================================== -->
   <section id="sectionVault" style="display: none;">
     <div class="controls-wrapper" style="max-width: 680px;">
@@ -711,6 +785,38 @@
 
     <main class="vault-container" id="vaultFeed"></main>
   </section>
+
+  <!-- MODALE MODERAZIONE (CON INTEGRAZIONE GEMINI AI) -->
+  <div class="modal-backdrop" id="modalPendingQueue">
+    <div class="modal-window" style="max-width: 620px;">
+      <button class="btn-close-modal" id="btnClosePendingQueue">&times;</button>
+      <div class="modal-header-title">CODA DI MODERAZIONE & AI</div>
+      
+      <!-- BOX CHIAVE GEMINI -->
+      <div style="background: rgba(192, 132, 252, 0.08); border: 1px solid rgba(192, 132, 252, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <label style="font-size:11px; font-weight:700; color:var(--rose-gold-light);">Chiave Google Gemini API:</label>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:10.5px; color:var(--aura-magenta); text-decoration:underline;">Ottieni Gratis ➔</a>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <input type="password" id="inputGeminiApiKey" placeholder="Incolla AIzaSy..." style="flex:1; padding:9px 12px; font-size:12px;">
+          <button type="button" class="btn-admin-dash" id="btnSaveGeminiKey" style="background:var(--rose-gold); color:#000;">Salva</button>
+        </div>
+      </div>
+
+      <!-- BOTTONI DI AZIONE MASSIVA AI -->
+      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <button type="button" class="btn-create" id="btnRunGeminiAI" style="flex:1; justify-content:center; background:linear-gradient(135deg, #E879F9, #C084FC); color:#050407;">
+          🪄 Analizza & Censura con Gemini
+        </button>
+        <button type="button" class="btn-create" id="btnBatchApproveSafe" style="flex:1; justify-content:center; background:#10B981; color:#050407;">
+          ⚡ Approva Tutti i Sicuri (+1 min)
+        </button>
+      </div>
+
+      <div id="pendingListContainer"></div>
+    </div>
+  </div>
 
   <!-- MODALE CREAZIONE POST VAULT / SPOTTED -->
   <div class="modal-backdrop" id="modalVaultCreate">
@@ -741,61 +847,93 @@
 
         <div class="form-row">
           <label>Titolo del post</label>
-          <input type="text" id="vTitolo" placeholder="Es. La coinquilina e il cibo scomparso..." required maxlength="70">
+          <input type="text" id="vTitolo" placeholder="Es. Ragazzo felpa verde biblioteca..." required maxlength="70">
         </div>
 
         <div class="form-row">
-          <label>Il Racconto</label>
-          <textarea id="vTesto" required placeholder="Racconta cosa è successo. Consiglio: metti tra parentesi quadre [così] le parole più calde per censurarle con le barre nere finché la community non le sblocca!"></textarea>
-          <small>⚠️ Regola d'oro: niente nomi e cognomi, diffamazione pesante o insulti d'odio.</small>
+          <label>Il Racconto / Descrizione</label>
+          <textarea id="vTesto" required placeholder="Racconta cosa hai visto. I moderatori e l'AI applicheranno le censure sulle parole calde prima della pubblicazione!"></textarea>
+          <small>⚠️ Verrà controllato con Gemini AI prima della pubblicazione.</small>
         </div>
 
-        <!-- CAMPI SPECIFICI SPOTTED -->
+        <!-- CAMPI SPOTTED -->
         <div id="spottedFields" style="display: none; background: rgba(192, 132, 252, 0.08); border: 1px dashed rgba(192, 132, 252, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
           <div class="form-row">
-            <label>Domanda Segreta Anti-Fake (Secret Handshake)</label>
+            <label>Domanda Segreta Anti-Fake</label>
             <input type="text" id="vHandshakeQ" placeholder="Es. Che colore aveva la mia borraccia sul tavolo?">
-            <small>Solo chi era davvero lì saprà rispondere per sbloccare il contatto.</small>
+            <small>Solo chi era davvero lì saprà rispondere per lasciare il suo contatto.</small>
           </div>
           <div class="form-row">
             <label>Risposta Esatta alla domanda</label>
-            <input type="text" id="vHandshakeA" placeholder="Es. Gialla (non sensibile alle maiuscole)">
+            <input type="text" id="vHandshakeA" placeholder="Es. Gialla">
           </div>
           <div class="form-row">
-            <label>Tuo Contatto Instagram (Verrà mostrato SOLO se risponde giusto!)</label>
-            <input type="text" id="vAuthorContact" placeholder="mariorossi">
+            <label>Crea un PIN a 4 cifre per te (Autore)</label>
+            <input type="password" id="vAuthorPin" maxlength="4" pattern="[0-9]{4}" placeholder="1234">
+            <small>Ti servirà per visualizzare l'Instagram di chi risponde correttamente!</small>
           </div>
         </div>
 
         <button type="submit" class="btn-create" id="btnSubmitVault" style="width: 100%; justify-content: center; margin-top: 10px;">
-          Invia al Feed Anonimo ✨
+          Invia alla Moderazione ✨
         </button>
       </form>
     </div>
   </div>
 
-  <!-- MODALE VERIFICA SPOTTED (SECRET HANDSHAKE) -->
+  <!-- MODALE VERIFICA SPOTTED (CHI SI RICONOSCE) -->
   <div class="modal-backdrop" id="modalHandshake">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseHandshakeModal">&times;</button>
-      <div class="modal-header-title">PROVA DEL NOVE 👀</div>
+      <div class="modal-header-title">TI SEI RICONOSCIUTO? 👀</div>
       <p id="handshakePromptText" style="font-size: 13.5px; color: #E7DEEA; margin-bottom: 14px; text-align: center; line-height: 1.5;"></p>
       
-      <div class="form-row">
-        <label>La tua risposta:</label>
-        <input type="text" id="inputHandshakeAnswer" placeholder="Inserisci la risposta...">
-        <small>Hai a disposizione pochi tentativi. Se indovini, si svelerà il contatto IG dell'autore!</small>
+      <div id="handshakeStepAnswer">
+        <div class="form-row">
+          <label>Rispondi alla domanda per confermare che eri tu:</label>
+          <input type="text" id="inputHandshakeAnswer" placeholder="La tua risposta...">
+        </div>
+        <button type="button" class="btn-create" id="btnVerifyHandshake" style="width: 100%; justify-content: center;">
+          Conferma Risposta 🔓
+        </button>
       </div>
 
-      <div id="handshakeResultBox" style="display:none; margin: 12px 0; padding: 12px; border-radius: 10px; font-size: 13px; text-align: center;"></div>
+      <div id="handshakeStepIg" style="display: none;">
+        <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10B981; color: #6EE7B7; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-size: 12.5px; text-align:center;">
+          🎉 Risposta Esatta! Eri proprio tu!
+        </div>
+        <div class="form-row">
+          <label>Tuo Username Instagram (senza @):</label>
+          <input type="text" id="inputMyIg" placeholder="mario_rossi">
+          <small>Verrà mostrato SOLO all'autore dello spotted tramite il suo PIN privato, così potrà scriverti nei DM!</small>
+        </div>
+        <button type="button" class="btn-create" id="btnSubmitMatchedIg" style="width: 100%; justify-content: center;">
+          Invia il mio Profilo all'Autore 🚀
+        </button>
+      </div>
+    </div>
+  </div>
 
-      <button type="button" class="btn-create" id="btnVerifyHandshake" style="width: 100%; justify-content: center;">
-        Verifica Risposta 🔓
+  <!-- MODALE SBLOCCO AUTORE -->
+  <div class="modal-backdrop" id="modalAuthorUnlock">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseAuthorUnlock">&times;</button>
+      <div class="modal-header-title">CHI HA RISPOSTO? 🎯</div>
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 14px;">
+        Qualcuno si è riconosciuto ed ha superato la domanda segreta! Inserisci il tuo PIN a 4 cifre per visualizzare il suo Instagram.
+      </p>
+      <div class="form-row">
+        <label>PIN Autore (4 cifre):</label>
+        <input type="password" id="inputAuthorPinUnlock" maxlength="4" placeholder="••••">
+      </div>
+      <div id="authorResultBox" style="display:none; padding:12px; border-radius:8px; margin: 10px 0; text-align:center;"></div>
+      <button type="button" class="btn-create" id="btnConfirmAuthorUnlock" style="width: 100%; justify-content: center;">
+        Sblocca Contatto 🔓
       </button>
     </div>
   </div>
 
-  <!-- MODALE CREAZIONE ANNUNCIO MARKET -->
+  <!-- MODALE CREAZIONE MARKET -->
   <div class="modal-backdrop" id="modalMarketCreate">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseMarketModal">&times;</button>
@@ -863,10 +1001,12 @@
 
       let listings = [];
       let vaultPosts = [];
+      let pendingPosts = [];
+      let aiAnalysisResults = {}; // id -> { safe, reason, censored_text }
       let activeVaultType = "ALL";
       let activePostForHandshake = null;
+      let activePostForAuthorUnlock = null;
 
-      // HASHING NATIVO SHA-256
       async function sha256(str) {
         const buffer = new TextEncoder().encode(str.trim().toLowerCase());
         const hash = await crypto.subtle.digest("SHA-256", buffer);
@@ -880,7 +1020,7 @@
         setTimeout(() => toast.classList.remove("show"), 2600);
       }
 
-      // CONTROLLO ADMIN
+      // ADMIN
       let adminKey = localStorage.getItem("aura_admin_key") || null;
       if (adminKey && adminKey.trim().toUpperCase() === MASTER_KEY_CORRETTA) {
         document.body.classList.add("is-admin");
@@ -894,9 +1034,9 @@
           document.body.classList.add("is-admin");
           document.getElementById("adminBar").classList.add("active");
           showToast("Accesso Moderatore Effettuato 🛡️");
-          renderVault();
+          loadVaultData();
         } else if (input !== null) {
-          alert("Chiave errata.");
+          alert("Chiave non valida.");
         }
       }
       document.getElementById("brandLogo").addEventListener("click", triggerAdminPrompt);
@@ -907,7 +1047,18 @@
         renderVault();
       });
 
-      // SWITCH TABS
+      // GESTIONE CHIAVE GEMINI
+      const inputGemini = document.getElementById("inputGeminiApiKey");
+      inputGemini.value = localStorage.getItem("aura_gemini_key") || "";
+      document.getElementById("btnSaveGeminiKey").addEventListener("click", () => {
+        const k = inputGemini.value.trim();
+        if (k) {
+          localStorage.setItem("aura_gemini_key", k);
+          showToast("Chiave Gemini Salvata! 🤖");
+        }
+      });
+
+      // TABS SWITCHER
       const tabMarket = document.getElementById("tabBtnMarket");
       const tabVault = document.getElementById("tabBtnVault");
       const secMarket = document.getElementById("sectionMarket");
@@ -927,9 +1078,6 @@
         renderVault();
       });
 
-      // ==========================================
-      // RENDERING FEED VAULT & AUTO-CENSURA
-      // ==========================================
       function parseCensorship(text, isUnlocked) {
         if (!text) return "";
         return text.replace(/\[(.*?)\]/g, (match, p1) => {
@@ -941,11 +1089,15 @@
         });
       }
 
+      // RENDERING FEED PUBBLICO
       function renderVault() {
         const feed = document.getElementById("vaultFeed");
         const polo = document.getElementById("poloFilterVault").value;
+        const now = new Date();
 
         const filtered = vaultPosts.filter(p => {
+          const isLive = (p.status === 'active') && (!p.published_at || new Date(p.published_at) <= now);
+          if (!isLive) return false;
           const typeMatch = (activeVaultType === "ALL" || p.tipo === activeVaultType);
           const poloMatch = (polo === "ALL" || p.polo === polo || p.polo === "Tutti");
           return typeMatch && poloMatch;
@@ -955,9 +1107,9 @@
           feed.innerHTML = `
             <div style="text-align:center; padding: 40px 20px; background: rgba(255,255,255,0.02); border-radius:16px;">
               <div style="font-size:32px; margin-bottom:8px;">⚡</div>
-              <div style="font-size:16px; font-weight:700; color:var(--rose-gold-light);">Nessun gossip o spotted recente</div>
+              <div style="font-size:16px; font-weight:700; color:var(--rose-gold-light);">Nessun post attivo al momento</div>
               <p style="font-size:12px; color:var(--text-muted); margin: 8px auto 16px; max-width:320px;">
-                Sii il primo a lanciare una voce anonima o a cercare qualcuno nel campus!
+                I post vengono verificati e approvati con AI a intervalli regolari. Invia tu il prossimo!
               </p>
               <button class="btn-create" onclick="document.getElementById('btnOpenVaultModal').click()" style="margin: 0 auto;">
                 Invia in Anonimo
@@ -968,10 +1120,10 @@
         }
 
         let html = "";
-        let postCount = 0;
+        let count = 0;
 
-        filtered.forEach((p, index) => {
-          postCount++;
+        filtered.forEach((p) => {
+          count++;
           const isSpotted = p.tipo === 'spotted';
           const badgeClass = isSpotted ? 'spotted' : 'gossip';
           const badgeIcon = isSpotted ? '👀 SPOTTED' : '💣 THE VAULT';
@@ -990,11 +1142,29 @@
             </div>
           ` : '';
 
-          const handshakeBtn = (isSpotted && p.handshake_q) ? `
-            <button class="btn-spotted-handshake" onclick="window.openHandshakeModal('${p.id}')">
-              Penso di essere io 👀
-            </button>
-          ` : '';
+          let spottedBox = "";
+          if (isSpotted) {
+            if (p.has_match) {
+              spottedBox = `
+                <div class="spotted-matched-box">
+                  <span style="font-size: 11.5px; color: #6EE7B7; font-weight: 600;">
+                    🎯 Qualcuno si è riconosciuto ed ha lasciato il suo profilo!
+                  </span>
+                  <button class="btn-unlock-author" onclick="window.openAuthorUnlockModal('${p.id}')">
+                    🔑 Sei l'autore? Sblocca con PIN
+                  </button>
+                </div>
+              `;
+            } else if (p.handshake_q) {
+              spottedBox = `
+                <div style="margin-bottom: 12px;">
+                  <button class="btn-spotted-handshake" onclick="window.openHandshakeModal('${p.id}')">
+                    Penso di essere io 👀
+                  </button>
+                </div>
+              `;
+            }
+          }
 
           html += `
             <article class="vault-card">
@@ -1005,25 +1175,24 @@
               <h3 class="vault-title">${p.titolo}</h3>
               <div class="vault-body">${textParsed}</div>
               ${unlockBar}
+              ${spottedBox}
               <div class="vault-actions-bar">
                 <div class="reaction-btns-group">
                   <button class="btn-react" onclick="window.reactVault('${p.id}', 'fire')">🔥 ${p.voti_fire || 0}</button>
                   <button class="btn-react" onclick="window.reactVault('${p.id}', 'skull')">💀 ${p.voti_skull || 0}</button>
                   <button class="btn-react" onclick="window.reactVault('${p.id}', 'redflag')">🚩 ${p.voti_redflag || 0}</button>
                 </div>
-                ${handshakeBtn}
                 <button style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;" onclick="window.flagVault('${p.id}')">Segnala</button>
               </div>
 
               <div class="admin-vault-tools">
                 <button class="btn-tool-igstory" onclick="window.downloadStoryImage('${p.id}')">📸 Scarica Story IG (1080x1920)</button>
-                <button class="btn-tool-del" onclick="window.deleteVaultAdmin('${p.id}')">Elimina</button>
+                <button class="btn-tool-del" onclick="window.rejectVaultPost('${p.id}')">Elimina</button>
               </div>
             </article>
           `;
 
-          // INTERLEAVING: INIETTA UN ANNUNCIO DAL MARKET OGNI 3 POST
-          if (postCount % 3 === 0 && listings.length > 0) {
+          if (count % 3 === 0 && listings.length > 0) {
             const randomListing = listings[Math.floor(Math.random() * listings.length)];
             html += `
               <div class="interleaved-market-card" onclick="document.getElementById('tabBtnMarket').click();">
@@ -1042,149 +1211,207 @@
         feed.innerHTML = html;
       }
 
-      // REAZIONI RPC
-      window.reactVault = async function(id, type) {
-        const storedKey = `aura_voted_${id}`;
-        if (localStorage.getItem(storedKey)) {
-          showToast("Hai già votato questo post!");
+      // ==========================================
+      // INTEGRAZIONE GOOGLE GEMINI AI
+      // ==========================================
+      async function callGeminiModeration(apiKey, post) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const prompt = `Sei il moderatore editoriale di AURA, community studentesca universitaria UdA (Chieti-Pescara).
+Analizza questo post anonimo di tipo "${post.tipo}" inviato nel campus di "${post.polo} - ${post.luogo}".
+
+TITOLO: "${post.titolo}"
+TESTO: "${post.testo}"
+
+ISTRUZIONI:
+1. MODERAZIONE: È safe=false SOLO SE contiene violazioni gravi: nomi e cognomi reali di persone fisiche, numeri di telefono, insulti d'odio/sessisti pesanti, doxxing o accuse penali. L'ironia, lo slang, la goliardia e il drama tra coinquilini senza nomi sono safe=true.
+2. CENSURA STRATEGICA: Se safe=true, individua 1 o 2 dettagli caldi (il corso di laurea specifico, il locale esatto o il colpo di scena) e racchiudili tra parentesi quadre [...] per creare suspense con le barre nere. NON censurare tutto, solo 1 o 2 parole/frasi chiave. Mantieni il resto intatto.
+
+Rispondi ESCLUSIVAMENTE con un JSON valido con questa struttura:
+{
+  "safe": true,
+  "reason": "breve motivazione in italiano",
+  "censored_text": "il testo con le parentesi [...] inserite"
+}`;
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json" }
+          })
+        });
+
+        if (!res.ok) throw new Error("Errore API Gemini: " + res.statusText);
+        const data = await res.json();
+        const rawJson = data.candidates[0].content.parts[0].text;
+        return JSON.parse(rawJson);
+      }
+
+      // 1. TASTO: ANALIZZA TUTTI I POST IN ATTESA CON GEMINI
+      document.getElementById("btnRunGeminiAI").addEventListener("click", async () => {
+        const apiKey = localStorage.getItem("aura_gemini_key");
+        if (!apiKey) {
+          alert("Inserisci e salva prima la tua Chiave Google Gemini API in alto.");
           return;
         }
-        localStorage.setItem(storedKey, "1");
+        if (pendingPosts.length === 0) {
+          showToast("Nessun post da analizzare.");
+          return;
+        }
 
-        try {
-          const { data, error } = await sbClient.rpc('vota_vault_post', { p_id: id, p_vote_type: type });
-          if (!error && data.success) {
-            if (data.is_unlocked) {
-              showToast("🎉 Quorum raggiunto! Dettagli sbloccati!");
+        const runBtn = document.getElementById("btnRunGeminiAI");
+        runBtn.disabled = true;
+        runBtn.innerText = "⏳ Analisi in corso...";
+
+        let processed = 0;
+        for (const post of pendingPosts) {
+          try {
+            const aiRes = await callGeminiModeration(apiKey, post);
+            aiAnalysisResults[post.id] = aiRes;
+            processed++;
+          } catch (err) {
+            console.error("Errore post", post.id, err);
+          }
+        }
+
+        runBtn.disabled = false;
+        runBtn.innerText = "🪄 Analizza & Censura con Gemini";
+        showToast(`Analisi completata su ${processed} post! ✨`);
+        renderPendingQueue();
+      });
+
+      // 2. TASTO: APPROVA TUTTI I SICURI IN CODA (+1 MIN)
+      document.getElementById("btnBatchApproveSafe").addEventListener("click", async () => {
+        const safePosts = pendingPosts.filter(p => aiAnalysisResults[p.id] && aiAnalysisResults[p.id].safe === true);
+        if (safePosts.length === 0) {
+          alert("Nessun post con esito 'Sicuro' pronto per l'approvazione automatica. Esegui prima l'analisi AI.");
+          return;
+        }
+
+        if (!confirm(`Vuoi approvare in blocco ${safePosts.length} post sicuri, scaglionati di 1 minuto ciascuno?`)) return;
+
+        let delay = 60;
+        for (const p of safePosts) {
+          const testoFinale = aiAnalysisResults[p.id].censored_text || p.testo;
+          try {
+            await sbClient.rpc('approva_vault_post', {
+              p_id: p.id,
+              p_master_key: MASTER_KEY_CORRETTA,
+              p_testo: testoFinale,
+              p_delay_seconds: delay
+            });
+            delay += 60; // +1 minuto di delay per ogni post successivo!
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        showToast(`${safePosts.length} post approvati e programmati! 🚀`);
+        await loadVaultData();
+        renderPendingQueue();
+      });
+
+      // RENDERING DELLA CODA MODERATORE
+      function renderPendingQueue() {
+        const container = document.getElementById("pendingListContainer");
+        const countBadge = document.getElementById("pendingCountBadge");
+        countBadge.innerText = pendingPosts.length;
+
+        if (pendingPosts.length === 0) {
+          container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">Nessun post in attesa. Sei in pari! 🎉</div>`;
+          return;
+        }
+
+        container.innerHTML = pendingPosts.map(p => {
+          const ai = aiAnalysisResults[p.id];
+          let cardClass = "";
+          let aiBadgeHtml = "";
+          let currentText = p.testo;
+
+          if (ai) {
+            if (ai.safe) {
+              cardClass = "ai-safe";
+              aiBadgeHtml = `<div class="ai-badge safe">✅ GEMINI AI: SICURO & CENSURATO (${ai.reason})</div>`;
+              currentText = ai.censored_text;
             } else {
-              showToast("Voto registrato! 🔥");
+              cardClass = "ai-danger";
+              aiBadgeHtml = `<div class="ai-badge danger">⛔ GEMINI AI: A RISCHIO (${ai.reason})</div>`;
             }
+          }
+
+          return `
+            <div class="mod-card-pending ${cardClass}" id="mod-card-${p.id}">
+              ${aiBadgeHtml}
+              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="font-size:11px; font-weight:700; color:var(--rose-gold);">${p.tipo.toUpperCase()} • ${p.polo}</span>
+                <span style="font-size:10px; color:var(--text-muted);">${p.luogo}</span>
+              </div>
+              <div style="font-weight:700; color:#fff; font-size:14px; margin-bottom:6px;">${p.titolo}</div>
+              
+              <label style="font-size:10.5px; color:var(--rose-gold); font-weight:600;">Testo (puoi modificarlo liberamente):</label>
+              <textarea id="edit-testo-${p.id}" style="margin-top:4px; font-size:12.5px;">${currentText}</textarea>
+
+              <div class="mod-actions-row">
+                <button class="btn-mod-approve-now" onclick="window.approveVaultPost('${p.id}', 0)">
+                  ✅ Approva Subito
+                </button>
+                <button class="btn-mod-approve-queue" onclick="window.approveVaultPost('${p.id}', 60)">
+                  ⏱️ In Coda (+1 min)
+                </button>
+                <button class="btn-mod-reject" onclick="window.rejectVaultPost('${p.id}')">
+                  ❌ Rifiuta
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      window.approveVaultPost = async function(id, delaySeconds) {
+        const testoModificato = document.getElementById(`edit-testo-${id}`).value.trim();
+        try {
+          const { data, error } = await sbClient.rpc('approva_vault_post', {
+            p_id: id,
+            p_master_key: MASTER_KEY_CORRETTA,
+            p_testo: testoModificato,
+            p_delay_seconds: delaySeconds
+          });
+
+          if (!error && data.success) {
+            const pubDate = new Date(data.published_at);
+            const timeStr = pubDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            showToast(delaySeconds > 0 ? `In coda! Live alle ${timeStr}` : "Pubblicato subito!");
             await loadVaultData();
+            renderPendingQueue();
+          } else {
+            alert("Errore approvazione: " + (error ? error.message : data.error));
           }
         } catch (e) {
           console.error(e);
         }
       };
 
-      // SEGNALAZIONE RPC
-      window.flagVault = async function(id) {
-        if (!confirm("Vuoi segnalare questo post per contenuto non appropriato?")) return;
+      window.rejectVaultPost = async function(id) {
+        if (!confirm("Rifiutare ed eliminare questo post?")) return;
         try {
-          const { data, error } = await sbClient.rpc('segnala_vault_post', { p_id: id });
-          if (!error && data.success) {
-            showToast("Segnalazione inviata. Grazie per l'aiuto!");
-            if (data.quarantined) loadVaultData();
-          }
-        } catch (e) {}
-      };
-
-      // ELIMINAZIONE ADMIN
-      window.deleteVaultAdmin = async function(id) {
-        if (!confirm("Eliminare definitivamente questo post?")) return;
-        try {
-          await sbClient.rpc('elimina_vault_admin', { p_id: id, p_master_key: MASTER_KEY_CORRETTA });
+          await sbClient.rpc('rifiuta_vault_post', { p_id: id, p_master_key: MASTER_KEY_CORRETTA });
           showToast("Post eliminato.");
-          loadVaultData();
+          await loadVaultData();
+          renderPendingQueue();
         } catch (e) {}
       };
 
-      // ==========================================
-      // GENERATORE AUTOMATICO STORY INSTAGRAM (1080x1920)
-      // ==========================================
-      window.downloadStoryImage = function(id) {
-        const post = vaultPosts.find(p => p.id === id);
-        if (!post) return;
-
-        const canvas = document.getElementById("storyCanvas");
-        const ctx = canvas.getContext("2d");
-
-        // 1. Sfondo profondo
-        ctx.fillStyle = "#050407";
-        ctx.fillRect(0, 0, 1080, 1920);
-
-        // 2. Glow radiale Rose Gold / Purple
-        const grad = ctx.createRadialGradient(540, 400, 50, 540, 400, 700);
-        grad.addColorStop(0, "rgba(232, 121, 249, 0.22)");
-        grad.addColorStop(1, "transparent");
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 1080, 1920);
-
-        // 3. Header e Brand
-        ctx.font = "bold 46px 'Cinzel', serif";
-        ctx.fillStyle = "#FDE8E1";
-        ctx.textAlign = "center";
-        ctx.fillText("AURA • UDA THE VAULT", 540, 260);
-
-        // Badge Polo
-        ctx.font = "bold 28px 'Plus Jakarta Sans', sans-serif";
-        ctx.fillStyle = "#E2B49A";
-        ctx.fillText(`📍 ${post.polo.toUpperCase()} • ${post.luogo.toUpperCase()}`, 540, 330);
-
-        // Linea divisoria
-        ctx.strokeStyle = "rgba(226, 180, 154, 0.35)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(340, 370);
-        ctx.lineTo(740, 370);
-        ctx.stroke();
-
-        // 4. Box Contenuto
-        ctx.fillStyle = "rgba(18, 14, 25, 0.95)";
-        ctx.roundRect(100, 460, 880, 1050, 30);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(226, 180, 154, 0.4)";
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        // Titolo Post
-        ctx.font = "bold 48px 'Plus Jakarta Sans', sans-serif";
-        ctx.fillStyle = "#FFFFFF";
-        ctx.textAlign = "left";
-        wrapText(ctx, post.titolo, 160, 570, 760, 60);
-
-        // Corpo Testo (con virgolette stilizzate)
-        ctx.font = "400 36px 'Plus Jakarta Sans', sans-serif";
-        ctx.fillStyle = "#E7DEEA";
-        const cleanText = post.testo.replace(/\[(.*?)\]/g, "████████");
-        wrapText(ctx, `“${cleanText}”`, 160, 740, 760, 56);
-
-        // 5. Footer Call to Action
-        ctx.fillStyle = "#E879F9";
-        ctx.font = "bold 34px 'Plus Jakarta Sans', sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("Vota per sbloccare i dettagli completi", 540, 1640);
-
-        ctx.fillStyle = "#FAF5F8";
-        ctx.font = "500 28px 'Plus Jakarta Sans', sans-serif";
-        ctx.fillText("Link in Bio • @aura.uda", 540, 1700);
-
-        // Download automatico PNG
-        const link = document.createElement("a");
-        link.download = `story_aura_${post.id.substring(0, 6)}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-        showToast("Grafica Story IG 1080x1920 generata!");
-      };
-
-      function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-        const words = text.split(" ");
-        let line = "";
-        for (let n = 0; n < words.length; n++) {
-          const testLine = line + words[n] + " ";
-          const metrics = ctx.measureText(testLine);
-          if (metrics.width > maxWidth && n > 0) {
-            ctx.fillText(line, x, y);
-            line = words[n] + " ";
-            y += lineHeight;
-          } else {
-            line = testLine;
-          }
-        }
-        ctx.fillText(line, x, y);
-      }
+      // MODALE MODERATORE
+      const modalPending = document.getElementById("modalPendingQueue");
+      document.getElementById("btnOpenPendingQueue").addEventListener("click", () => {
+        renderPendingQueue();
+        modalPending.classList.add("open");
+      });
+      document.getElementById("btnClosePendingQueue").addEventListener("click", () => modalPending.classList.remove("open"));
 
       // ==========================================
-      // SECRET HANDSHAKE (SPOTTED)
+      // SPOTTED FLUSSO INVERTITO
       // ==========================================
       const modalHandshake = document.getElementById("modalHandshake");
       window.openHandshakeModal = function(id) {
@@ -1193,37 +1420,101 @@
         activePostForHandshake = post;
         document.getElementById("handshakePromptText").innerText = `Domanda dell'autore:\n"${post.handshake_q}"`;
         document.getElementById("inputHandshakeAnswer").value = "";
-        document.getElementById("handshakeResultBox").style.display = "none";
+        document.getElementById("inputMyIg").value = "";
+        document.getElementById("handshakeStepAnswer").style.display = "block";
+        document.getElementById("handshakeStepIg").style.display = "none";
         modalHandshake.classList.add("open");
       };
-
       document.getElementById("btnCloseHandshakeModal").addEventListener("click", () => modalHandshake.classList.remove("open"));
 
       document.getElementById("btnVerifyHandshake").addEventListener("click", async () => {
         const ans = document.getElementById("inputHandshakeAnswer").value.trim();
         if (!ans) return;
-
         const hash = await sha256(ans);
-        const resultBox = document.getElementById("handshakeResultBox");
-        resultBox.style.display = "block";
 
         if (hash === activePostForHandshake.handshake_hash) {
-          resultBox.style.background = "rgba(16, 185, 129, 0.15)";
-          resultBox.style.border = "1px solid #10B981";
-          resultBox.style.color = "#6EE7B7";
-          const ig = (activePostForHandshake.author_contact || "").replace("@", "");
-          resultBox.innerHTML = `🎉 <strong>Risposta Esatta!</strong><br>Contatta l'autore su Instagram: <a href="https://ig.me/m/${ig}" target="_blank" style="color:#fff; font-weight:700;">@${ig}</a>`;
+          document.getElementById("handshakeStepAnswer").style.display = "none";
+          document.getElementById("handshakeStepIg").style.display = "block";
         } else {
-          resultBox.style.background = "rgba(239, 68, 68, 0.15)";
-          resultBox.style.border = "1px solid #EF4444";
-          resultBox.style.color = "#FCA5A5";
-          resultBox.innerHTML = `❌ <strong>Risposta non corretta.</strong> Riprova solo se eri davvero tu!`;
+          alert("Risposta non corretta. Riprova solo se eri davvero tu!");
         }
       });
 
-      // ==========================================
-      // SUBMIT VAULT POST (CON FILTRO ANTI-DIFFAMAZIONE)
-      // ==========================================
+      document.getElementById("btnSubmitMatchedIg").addEventListener("click", async () => {
+        const rawIg = document.getElementById("inputMyIg").value.trim().replace(/^@+/, '');
+        if (!rawIg) {
+          alert("Inserisci il tuo username Instagram.");
+          return;
+        }
+
+        try {
+          const ans = document.getElementById("inputHandshakeAnswer").value.trim();
+          const hash = await sha256(ans);
+          const { data, error } = await sbClient.rpc('invia_spotted_match', {
+            p_id: activePostForHandshake.id,
+            p_hash: hash,
+            p_target_ig: rawIg
+          });
+
+          if (!error && data.success) {
+            alert("Il tuo Instagram è stato salvato! L'autore potrà sbloccarlo con il suo PIN e scriverti nei DM!");
+            modalHandshake.classList.remove("open");
+            loadVaultData();
+          } else {
+            alert("Errore invio: " + (data ? data.error : error.message));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      // L'AUTORE SBLOCCA L'IG CON PIN
+      const modalAuthorUnlock = document.getElementById("modalAuthorUnlock");
+      window.openAuthorUnlockModal = function(id) {
+        activePostForAuthorUnlock = id;
+        document.getElementById("inputAuthorPinUnlock").value = "";
+        document.getElementById("authorResultBox").style.display = "none";
+        modalAuthorUnlock.classList.add("open");
+      };
+      document.getElementById("btnCloseAuthorUnlock").addEventListener("click", () => modalAuthorUnlock.classList.remove("open"));
+
+      document.getElementById("btnConfirmAuthorUnlock").addEventListener("click", async () => {
+        const pin = document.getElementById("inputAuthorPinUnlock").value.trim();
+        if (!pin || pin.length !== 4) {
+          alert("Inserisci il tuo PIN a 4 cifre.");
+          return;
+        }
+
+        const resBox = document.getElementById("authorResultBox");
+        try {
+          const { data, error } = await sbClient.rpc('sblocca_contatto_autore', {
+            p_id: activePostForAuthorUnlock,
+            p_pin: pin
+          });
+
+          resBox.style.display = "block";
+          if (!error && data.success) {
+            const ig = data.matched_ig.replace('@','');
+            resBox.style.background = "rgba(16, 185, 129, 0.15)";
+            resBox.style.border = "1px solid #10B981";
+            resBox.style.color = "#6EE7B7";
+            resBox.innerHTML = `
+              🎉 <strong>La persona che cercavi è:</strong><br>
+              <a href="https://ig.me/m/${ig}" target="_blank" style="font-size:16px; color:#fff; font-weight:800; text-decoration:underline;">@${ig}</a>
+              <div style="font-size:11px; margin-top:6px; color:#E7DEEA;">Tocca il link per aprire direttamente la chat Instagram!</div>
+            `;
+          } else {
+            resBox.style.background = "rgba(239, 68, 68, 0.15)";
+            resBox.style.border = "1px solid #EF4444";
+            resBox.style.color = "#FCA5A5";
+            resBox.innerHTML = `❌ PIN non valido. Ricontrolla il codice a 4 cifre inserito alla creazione.`;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      // CREAZIONE POST VAULT (PENDING DI DEFAULT)
       const modalVault = document.getElementById("modalVaultCreate");
       document.getElementById("btnOpenVaultModal").addEventListener("click", () => modalVault.classList.add("open"));
       document.getElementById("btnCloseVaultModal").addEventListener("click", () => modalVault.classList.remove("open"));
@@ -1243,23 +1534,15 @@
         const titolo = document.getElementById("vTitolo").value.trim();
         const testo = document.getElementById("vTesto").value.trim();
 
-        // Controllo Anti-Diffamazione
-        const phoneRegex = /(\+39|0039)?\s?3\d{2}[-.\s]?\d{6,7}/;
-        if (phoneRegex.test(testo) || phoneRegex.test(titolo)) {
-          alert("Non è consentito inserire numeri di telefono nei post anonimi.");
-          submitBtn.disabled = false;
-          return;
-        }
-
         let handshake_q = null;
         let handshake_hash = null;
-        let author_contact = null;
+        let author_pin = null;
 
         if (tipo === 'spotted') {
           handshake_q = document.getElementById("vHandshakeQ").value.trim() || null;
           const rawA = document.getElementById("vHandshakeA").value.trim();
           if (rawA) handshake_hash = await sha256(rawA);
-          author_contact = document.getElementById("vAuthorContact").value.trim() || null;
+          author_pin = document.getElementById("vAuthorPin").value.trim() || null;
         }
 
         const payload = {
@@ -1269,9 +1552,10 @@
           titolo,
           testo,
           soglia_sblocco: (tipo === 'gossip') ? 25 : 1,
+          status: 'pending',
           handshake_q,
           handshake_hash,
-          author_contact
+          author_pin
         };
 
         try {
@@ -1279,7 +1563,7 @@
           if (error) throw error;
           document.getElementById("vaultCreateForm").reset();
           modalVault.classList.remove("open");
-          showToast("Post inviato con successo nel Feed! ✨");
+          alert("Post inviato alla moderazione! Verrà analizzato con Gemini AI e rilasciato a breve ✨");
           await loadVaultData();
         } catch (err) {
           alert("Errore invio: " + err.message);
@@ -1288,9 +1572,7 @@
         }
       });
 
-      // ==========================================
-      // CARICAMENTO DATI SUPABASE (MARKET & VAULT)
-      // ==========================================
+      // CARICAMENTO DATI
       async function loadMarketData() {
         if (!sbClient) return;
         try {
@@ -1304,11 +1586,120 @@
         if (!sbClient) return;
         try {
           const { data } = await sbClient.from('vault_posts').select('*').order('created_at', { ascending: false });
-          if (data) vaultPosts = data;
+          if (data) {
+            vaultPosts = data;
+            pendingPosts = data.filter(p => p.status === 'pending');
+            document.getElementById("pendingCountBadge").innerText = pendingPosts.length;
+          }
         } catch (e) {}
         renderVault();
       }
 
+      setInterval(renderVault, 15000);
+
+      // GENERATORE IMMAGINI STORY IG 1080x1920
+      window.downloadStoryImage = function(id) {
+        const post = vaultPosts.find(p => p.id === id);
+        if (!post) return;
+        const canvas = document.getElementById("storyCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#050407";
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        const grad = ctx.createRadialGradient(540, 400, 50, 540, 400, 700);
+        grad.addColorStop(0, "rgba(232, 121, 249, 0.22)");
+        grad.addColorStop(1, "transparent");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        ctx.font = "bold 46px 'Cinzel', serif";
+        ctx.fillStyle = "#FDE8E1";
+        ctx.textAlign = "center";
+        ctx.fillText("AURA • UDA THE VAULT", 540, 260);
+
+        ctx.font = "bold 28px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#E2B49A";
+        ctx.fillText(`📍 ${post.polo.toUpperCase()} • ${post.luogo.toUpperCase()}`, 540, 330);
+
+        ctx.fillStyle = "rgba(18, 14, 25, 0.95)";
+        ctx.roundRect(100, 460, 880, 1050, 30);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(226, 180, 154, 0.4)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.font = "bold 46px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.textAlign = "left";
+        wrapText(ctx, post.titolo, 160, 570, 760, 60);
+
+        ctx.font = "400 36px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#E7DEEA";
+        const cleanText = post.testo.replace(/\[(.*?)\]/g, "████████");
+        wrapText(ctx, `“${cleanText}”`, 160, 740, 760, 56);
+
+        ctx.fillStyle = "#E879F9";
+        ctx.font = "bold 34px 'Plus Jakarta Sans', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Vota per sbloccare i dettagli completi", 540, 1640);
+
+        ctx.fillStyle = "#FAF5F8";
+        ctx.font = "500 28px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillText("Link in Bio • @aura.uda", 540, 1700);
+
+        const link = document.createElement("a");
+        link.download = `story_aura_${post.id.substring(0, 6)}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+        showToast("Grafica Story IG 1080x1920 pronta!");
+      };
+
+      function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(" ");
+        let line = "";
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + " ";
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line, x, y);
+            line = words[n] + " ";
+            y += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line, x, y);
+      }
+
+      window.reactVault = async function(id, type) {
+        const key = `aura_voted_${id}`;
+        if (localStorage.getItem(key)) {
+          showToast("Hai già votato questo post!");
+          return;
+        }
+        localStorage.setItem(key, "1");
+        try {
+          const { data } = await sbClient.rpc('vota_vault_post', { p_id: id, p_vote_type: type });
+          if (data && data.success) {
+            showToast(data.is_unlocked ? "🎉 Dettagli sbloccati!" : "Voto registrato! 🔥");
+            loadVaultData();
+          }
+        } catch (e) {}
+      };
+
+      window.flagVault = async function(id) {
+        if (!confirm("Segnalare questo post?")) return;
+        try {
+          const { data } = await sbClient.rpc('segnala_vault_post', { p_id: id });
+          if (data && data.success) {
+            showToast("Segnalazione inviata.");
+            if (data.quarantined) loadVaultData();
+          }
+        } catch (e) {}
+      };
+
+      // UTILITIES MARKET
       function renderMarketCards() {
         const grid = document.getElementById("listingsGrid");
         const query = (document.getElementById("searchInput").value || "").toLowerCase();
@@ -1340,11 +1731,9 @@
         `).join('');
       }
 
-      // MODALE MARKET
       const modalMarket = document.getElementById("modalMarketCreate");
       document.getElementById("btnOpenMarketModal").addEventListener("click", () => modalMarket.classList.add("open"));
       document.getElementById("btnCloseMarketModal").addEventListener("click", () => modalMarket.classList.remove("open"));
-
       document.getElementById("searchInput").addEventListener("input", renderMarketCards);
       document.getElementById("poloFilterMarket").addEventListener("change", renderMarketCards);
       document.getElementById("poloFilterVault").addEventListener("change", renderVault);
@@ -1358,12 +1747,11 @@
         });
       });
 
-      // INIT & REALTIME
       loadMarketData();
       loadVaultData();
 
       if (sbClient) {
-        sbClient.channel('realtime_all_aura')
+        sbClient.channel('realtime_aura_v4')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, loadMarketData)
           .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_posts' }, loadVaultData)
           .subscribe();
