@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA Market • UdA Chieti & Pescara</title>
+  <title>AURA • UdA Campus Ecosystem (Market & Vault)</title>
   
-  <!-- META TAG SOCIAL & WHATSAPP PREVIEW -->
-  <meta property="og:title" content="AURA Market • UdA Chieti & Pescara">
-  <meta property="og:description" content="Il mercatino ufficiale tra studenti UdA: affitti, stanze, libri, sbobine, vestiti e biglietti a portata di tap.">
+  <meta property="og:title" content="AURA • UdA Chieti & Pescara">
+  <meta property="og:description" content="L'ecosistema studentesco ufficiale UdA: Market compravendita, The Vault gossip e Radar spotted anonimi.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="logo.png">
   <meta name="theme-color" content="#050407">
   
-  <!-- SUPPORTO WEB APP -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="AURA Market">
+  <meta name="apple-mobile-web-app-title" content="AURA UdA">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
@@ -35,7 +33,6 @@
       --aura-magenta: #E879F9;
       --text-main: #FAF5F8;
       --text-muted: #A39BA8;
-      --whatsapp-color: #25D366;
       --danger: #EF4444;
       --font-serif: 'Cinzel', serif;
       --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -61,7 +58,7 @@
       background: linear-gradient(90deg, rgba(226, 180, 154, 0.12), rgba(232, 121, 249, 0.18), rgba(226, 180, 154, 0.12));
       border-bottom: 1px solid rgba(226, 180, 154, 0.2);
       text-align: center;
-      padding: 9px 16px;
+      padding: 8px 16px;
       font-size: 11px;
       letter-spacing: 0.6px;
       color: var(--rose-gold-light);
@@ -70,7 +67,7 @@
 
     header {
       position: relative;
-      padding: 34px 16px 20px;
+      padding: 24px 16px 14px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -79,12 +76,12 @@
 
     .aura-ambient-glow {
       position: absolute;
-      top: 15px;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
       width: 280px;
-      height: 170px;
-      background: radial-gradient(circle, rgba(232, 121, 249, 0.25) 0%, rgba(192, 132, 252, 0.10) 45%, transparent 75%);
+      height: 140px;
+      background: radial-gradient(circle, rgba(232, 121, 249, 0.22) 0%, rgba(192, 132, 252, 0.09) 45%, transparent 75%);
       filter: blur(34px);
       z-index: 1;
       pointer-events: none;
@@ -94,7 +91,7 @@
       position: relative;
       z-index: 2;
       width: 100%;
-      max-width: 320px;
+      max-width: 270px;
       margin: 0 auto;
       cursor: pointer;
     }
@@ -106,34 +103,81 @@
       mix-blend-mode: screen;
       -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 76%);
       mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 76%);
-      filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.25)) contrast(1.06);
-      user-select: none;
+      filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.25));
     }
 
-    .brand-subline {
+    /* SWITCHER PRINCIPALE DELLE SCHEDE */
+    .app-tabs-wrap {
+      max-width: 440px;
+      margin: 10px auto 14px;
+      padding: 0 16px;
+      position: relative;
+      z-index: 4;
+    }
+    .app-tabs-nav {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(226, 180, 154, 0.25);
+      border-radius: 40px;
+      padding: 4px;
+      backdrop-filter: blur(14px);
+    }
+    .app-tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 10px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-top: 12px;
-      font-size: 10.5px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--rose-gold-light);
-      opacity: 0.95;
-      position: relative;
-      z-index: 2;
+      justify-content: center;
+      gap: 6px;
     }
-    .brand-subline::before, .brand-subline::after {
-      content: "";
-      height: 1px;
-      width: 28px;
-      background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.5), transparent);
+    .app-tab-btn.active {
+      background: linear-gradient(135deg, rgba(226, 180, 154, 0.28), rgba(232, 121, 249, 0.22));
+      color: var(--rose-gold-light);
+      box-shadow: 0 2px 14px rgba(226, 180, 154, 0.25);
+      border: 1px solid rgba(226, 180, 154, 0.4);
+    }
+
+    /* BARRA ADMIN */
+    .admin-bar {
+      display: none;
+      max-width: 1050px;
+      margin: 0 auto 14px;
+      padding: 10px 16px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 12px;
+      font-size: 12px;
+      color: #FCA5A5;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .admin-bar.active { display: flex; }
+    .btn-admin-dash {
+      background: linear-gradient(135deg, #EF4444, #B91C1C);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .controls-wrapper {
       max-width: 1050px;
-      margin: 18px auto 10px;
+      margin: 10px auto 10px;
       padding: 0 16px;
       display: flex;
       flex-direction: column;
@@ -142,29 +186,11 @@
       z-index: 3;
     }
 
-    .search-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .input-box {
-      position: relative;
-      flex: 1;
-    }
-
+    .search-row { display: flex; gap: 10px; align-items: center; }
+    .input-box { position: relative; flex: 1; }
     .clear-search-btn {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      cursor: pointer;
-      display: none;
-      padding: 4px;
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; display: none;
     }
     .clear-search-btn.visible { display: block; }
 
@@ -181,13 +207,7 @@
       outline: none;
       transition: all 0.25s ease;
     }
-
-    textarea {
-      resize: vertical;
-      min-height: 85px;
-      line-height: 1.5;
-    }
-
+    textarea { resize: vertical; min-height: 85px; line-height: 1.5; }
     input:focus, textarea:focus, select:focus {
       border-color: var(--rose-gold);
       box-shadow: 0 0 16px rgba(226, 180, 154, 0.25);
@@ -218,126 +238,33 @@
     }
 
     .filter-pills {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 4px 0 4px;
-      scrollbar-width: none;
+      display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; scrollbar-width: none;
     }
     .filter-pills::-webkit-scrollbar { display: none; }
-
     .pill {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(226, 180, 154, 0.14);
       color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
+      padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
     }
-    .pill:hover { border-color: var(--rose-gold); color: #fff; }
     .pill.active {
       background: linear-gradient(135deg, rgba(226, 180, 154, 0.22), rgba(232, 121, 249, 0.18));
-      border-color: var(--rose-gold);
-      color: var(--rose-gold-light);
-      box-shadow: 0 0 14px rgba(226, 180, 154, 0.2);
+      border-color: var(--rose-gold); color: var(--rose-gold-light);
     }
 
-    .subfilter-row {
-      display: none;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 4px 0 4px;
-      scrollbar-width: none;
-      animation: fadeIn 0.25s ease;
-    }
+    .subfilter-row { display: none; gap: 8px; overflow-x: auto; padding: 4px 0; }
     .subfilter-row.active { display: flex; }
-    .subfilter-row::-webkit-scrollbar { display: none; }
-
     .sub-pill {
       background: rgba(255, 255, 255, 0.02);
       border: 1px dashed rgba(226, 180, 154, 0.25);
       color: var(--text-muted);
-      padding: 5px 13px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
+      padding: 5px 13px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap;
     }
-    .sub-pill:hover { color: #fff; border-color: var(--aura-magenta); }
     .sub-pill.active {
-      background: rgba(232, 121, 249, 0.15);
-      border: 1px solid var(--aura-magenta);
-      color: #fff;
+      background: rgba(232, 121, 249, 0.15); border: 1px solid var(--aura-magenta); color: #fff;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .ticket-safety-box {
-      display: none;
-      background: rgba(232, 121, 249, 0.08);
-      border: 1px solid rgba(232, 121, 249, 0.3);
-      border-radius: 10px;
-      padding: 11px 16px;
-      font-size: 11.5px;
-      color: #F5D0FE;
-      line-height: 1.45;
-    }
-    .ticket-safety-box.active { display: block; }
-
-    /* ADMIN BAR OTTIMIZZATA */
-    .admin-bar {
-      display: none;
-      max-width: 1050px;
-      margin: 0 auto 14px;
-      padding: 10px 16px;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      border-radius: 12px;
-      font-size: 12px;
-      color: #FCA5A5;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .admin-bar.active { display: flex; }
-    .admin-actions-group { display: flex; gap: 8px; align-items: center; }
-    
-    .btn-admin-dash {
-      background: linear-gradient(135deg, #EF4444, #B91C1C);
-      color: #fff;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: opacity 0.2s;
-    }
-    .btn-admin-dash:hover { opacity: 0.9; }
-
-    .btn-exit-admin {
-      background: transparent;
-      border: 1px solid rgba(239, 68, 68, 0.5);
-      color: #fff;
-      padding: 5px 12px;
-      border-radius: 8px;
-      font-size: 11px;
-      cursor: pointer;
-    }
-
+    /* GRIGLIA MARKET */
     .listings-container {
       max-width: 1050px;
       margin: 16px auto;
@@ -345,10 +272,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
       gap: 18px;
-      position: relative;
-      z-index: 3;
     }
-
     .card {
       background: var(--card-bg);
       backdrop-filter: blur(14px);
@@ -358,7 +282,6 @@
       display: flex;
       flex-direction: column;
       transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
       cursor: pointer;
     }
     .card:hover {
@@ -366,323 +289,269 @@
       border-color: var(--card-border-hover);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 22px rgba(232, 121, 249, 0.18);
     }
-
-    .card-cover-wrap {
-      position: relative;
-      width: 100%;
-      padding-top: 105%;
-      background: #09070D;
-      overflow: hidden;
-    }
-    .card-cover {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-    .card:hover .card-cover { transform: scale(1.04); }
-
+    .card-cover-wrap { position: relative; width: 100%; padding-top: 105%; background: #09070D; overflow: hidden; }
+    .card-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     .tag-campus {
-      position: absolute;
-      top: 9px; left: 9px;
-      background: rgba(7, 5, 10, 0.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(226, 180, 154, 0.35);
-      color: var(--rose-gold-light);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      position: absolute; top: 9px; left: 9px; background: rgba(7, 5, 10, 0.85);
+      backdrop-filter: blur(8px); border: 1px solid rgba(226, 180, 154, 0.35);
+      color: var(--rose-gold-light); padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 700;
+    }
+    .card-content { padding: 14px; display: flex; flex-direction: column; flex: 1; }
+    .card-price { font-family: var(--font-serif); font-size: 19px; font-weight: 700; color: var(--rose-gold-light); margin-bottom: 5px; }
+    .card-title { font-size: 13px; color: #E7DEEA; line-height: 1.4; margin-bottom: 12px; flex: 1; }
+    .btn-contact {
+      display: block; text-align: center; background: rgba(226, 180, 154, 0.08);
+      border: 1px solid rgba(226, 180, 154, 0.28); color: var(--rose-gold-light);
+      text-decoration: none; font-size: 11px; font-weight: 700; padding: 9px 0; border-radius: 8px;
     }
 
-    .tag-photo-count {
-      position: absolute;
-      bottom: 9px; right: 9px;
-      background: rgba(0, 0, 0, 0.75);
-      color: #fff;
-      padding: 3px 7px;
-      border-radius: 6px;
-      font-size: 10px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .tag-target {
-      position: absolute;
-      top: 9px; right: 9px;
-      background: rgba(232, 121, 249, 0.85);
-      backdrop-filter: blur(8px);
-      color: #07050A;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.4px;
-    }
-
-    .card-content {
-      padding: 14px;
+    /* FEED VAULT & RADAR */
+    .vault-container {
+      max-width: 680px;
+      margin: 16px auto;
+      padding: 0 16px;
       display: flex;
       flex-direction: column;
-      flex: 1;
+      gap: 16px;
     }
-    .card-meta-row {
+    .vault-card {
+      background: rgba(18, 14, 25, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(226, 180, 154, 0.18);
+      border-radius: 18px;
+      padding: 20px;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+    .vault-card:hover {
+      border-color: rgba(232, 121, 249, 0.35);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+    .vault-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
-    }
-    .card-meta-category {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--aura-purple);
-      font-weight: 600;
-    }
-    .card-meta-time {
-      font-size: 9.5px;
-      color: var(--text-muted);
-    }
-    .card-price {
-      font-family: var(--font-serif);
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--rose-gold-light);
-      letter-spacing: 0.5px;
-      margin-bottom: 5px;
-    }
-    .card-title {
-      font-size: 13px;
-      font-weight: 400;
-      color: #E7DEEA;
-      line-height: 1.4;
       margin-bottom: 12px;
-      flex: 1;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
-
-    .card-tap-hint {
+    .vault-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .vault-badge.gossip {
+      background: rgba(232, 121, 249, 0.15);
+      border: 1px solid rgba(232, 121, 249, 0.4);
+      color: #F5D0FE;
+    }
+    .vault-badge.spotted {
+      background: rgba(192, 132, 252, 0.15);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      color: #E9D5FF;
+    }
+    .vault-location {
       font-size: 11px;
       color: var(--rose-gold);
       font-weight: 600;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
     }
-
-    .card-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .btn-contact {
-      display: block;
-      text-align: center;
-      background: rgba(226, 180, 154, 0.08);
-      border: 1px solid rgba(226, 180, 154, 0.28);
-      color: var(--rose-gold-light);
-      text-decoration: none;
-      font-size: 11px;
+    .vault-title {
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: 0.5px;
-      padding: 9px 0;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    .btn-contact:hover {
-      background: linear-gradient(135deg, #FDE8E1, #E2B49A);
-      color: #07050A;
-      border-color: transparent;
-    }
-
-    .btn-card-secondary {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 10px;
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 3px 0 0;
-      text-align: center;
-      transition: color 0.2s;
-    }
-    .btn-card-secondary:hover { color: #fff; }
-
-    .btn-admin-delete {
-      display: none;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #F87171;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 7px 0;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 4px;
-    }
-    body.is-admin .btn-admin-delete { display: block; }
-
-    .empty-state-box {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 50px 20px;
-      background: rgba(18, 14, 25, 0.5);
-      border: 1px dashed rgba(226, 180, 154, 0.25);
-      border-radius: 16px;
-      margin: 10px 0;
-    }
-    .empty-state-title {
-      font-family: var(--font-serif);
-      font-size: 17px;
-      color: var(--rose-gold-light);
+      color: #fff;
       margin-bottom: 8px;
+      line-height: 1.35;
     }
-    .empty-state-p {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      max-width: 420px;
-      margin: 0 auto 16px;
-      line-height: 1.5;
-    }
-
-    .photo-preview-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .photo-preview-item {
-      position: relative;
-      width: 100%;
-      padding-top: 100%;
-      border-radius: 8px;
-      background: #1A1422;
-      border: 1px dashed rgba(226, 180, 154, 0.3);
-      overflow: hidden;
-    }
-    .photo-preview-item img {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    .photo-preview-badge {
-      position: absolute;
-      bottom: 4px; left: 4px;
-      background: rgba(0,0,0,0.8);
-      color: var(--rose-gold-light);
-      font-size: 9px;
-      padding: 2px 5px;
-      border-radius: 4px;
-      font-weight: 700;
-    }
-
-    .detail-window {
-      max-width: 580px !important;
-      padding: 22px !important;
-    }
-    .detail-gallery-main {
-      width: 100%;
-      padding-top: 75%;
-      position: relative;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-    .detail-gallery-main img {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      object-fit: contain;
-      background: #09070D;
-    }
-    .detail-thumbs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .detail-thumb-item {
-      width: 65px;
-      height: 65px;
-      border-radius: 8px;
-      border: 2px solid transparent;
-      overflow: hidden;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: all 0.2s;
-    }
-    .detail-thumb-item.active {
-      border-color: var(--rose-gold);
-      opacity: 1;
-      transform: scale(1.05);
-    }
-    .detail-thumb-item img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
-    .detail-badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-    .badge-pill {
-      font-size: 10.5px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: rgba(226, 180, 154, 0.12);
-      border: 1px solid rgba(226, 180, 154, 0.3);
-      color: var(--rose-gold-light);
-    }
-    .detail-price {
-      font-family: var(--font-serif);
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--rose-gold-light);
-      margin-bottom: 12px;
-    }
-    .detail-desc-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(226, 180, 154, 0.15);
-      border-radius: 10px;
-      padding: 14px;
-      margin: 14px 0;
-      font-size: 13px;
+    .vault-body {
+      font-size: 13.5px;
       color: #DDD4E2;
       line-height: 1.6;
       white-space: pre-wrap;
+      margin-bottom: 14px;
     }
 
-    footer {
-      text-align: center;
-      padding: 34px 16px 20px;
-      font-size: 11.5px;
-      color: var(--text-muted);
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-      margin-top: 50px;
-    }
-    footer a {
-      color: var(--rose-gold-light);
-      text-decoration: none;
-      font-weight: 600;
-      transition: opacity 0.2s;
-    }
-    .admin-trigger {
-      cursor: pointer;
-      opacity: 0.35;
-      font-size: 10px;
+    /* CENSURA A BARRE NERE */
+    .redacted-bar {
       display: inline-block;
-      margin-top: 10px;
+      background: #000;
+      color: transparent;
+      padding: 0 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(232, 121, 249, 0.4);
+      user-select: none;
+      cursor: help;
+      letter-spacing: 3px;
+    }
+    .unlocked-text {
+      background: rgba(226, 180, 154, 0.18);
+      color: var(--rose-gold-light);
+      padding: 0 4px;
+      border-radius: 4px;
+      font-weight: 600;
+      border-bottom: 1px dashed var(--rose-gold);
     }
 
+    /* BARRA DI PROGRESSO SBLOCCO */
+    .unlock-progress-wrap {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .unlock-progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--rose-gold-light);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .unlock-progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .unlock-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rose-gold), var(--aura-magenta));
+      transition: width 0.4s ease;
+    }
+
+    /* REAZIONI LIVE */
+    .vault-actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      flex-wrap: wrap;
+    }
+    .reaction-btns-group {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-react {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .btn-react:hover {
+      background: rgba(232, 121, 249, 0.15);
+      border-color: var(--aura-magenta);
+      transform: scale(1.04);
+    }
+    .btn-react.reacted {
+      background: rgba(226, 180, 154, 0.25);
+      border-color: var(--rose-gold);
+    }
+
+    /* TASTO SPOTTED "SONO IO" */
+    .btn-spotted-handshake {
+      background: linear-gradient(135deg, rgba(192, 132, 252, 0.25), rgba(232, 121, 249, 0.25));
+      border: 1px solid var(--aura-purple);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-spotted-handshake:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 14px rgba(192, 132, 252, 0.3);
+    }
+
+    /* CARD INTERLEAVED DALL'AURA MARKET NEL FEED GOSSIP */
+    .interleaved-market-card {
+      background: linear-gradient(135deg, rgba(226, 180, 154, 0.12), rgba(16, 12, 22, 0.9));
+      border: 1px solid var(--rose-gold);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .interleaved-market-img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #000;
+    }
+    .interleaved-market-info { flex: 1; }
+    .interleaved-market-tag {
+      font-size: 9.5px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--rose-gold);
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .interleaved-market-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .interleaved-market-price {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--rose-gold-light);
+      font-weight: 700;
+    }
+
+    /* BOTTONI SEGRETI ADMIN SUI POST VAULT */
+    .admin-vault-tools {
+      display: none;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(239, 68, 68, 0.3);
+    }
+    body.is-admin .admin-vault-tools { display: flex; }
+    .btn-tool-igstory {
+      background: linear-gradient(135deg, #E879F9, #C084FC);
+      color: #050407;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-tool-del {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #FCA5A5;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* MODALI */
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -695,21 +564,18 @@
       z-index: 9999;
     }
     .modal-backdrop.open { display: flex; }
-
     .modal-window {
       background: #110D17;
       border: 1px solid var(--rose-gold);
-      box-shadow: 0 10px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(226, 180, 154, 0.2);
+      box-shadow: 0 10px 45px rgba(0, 0, 0, 0.7);
       border-radius: 18px;
       width: 100%;
-      max-width: 440px;
-      padding: 26px;
+      max-width: 460px;
+      padding: 24px;
       position: relative;
       max-height: 90vh;
       overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
     }
-
     .modal-header-title {
       font-family: var(--font-serif);
       font-size: 17px;
@@ -717,199 +583,39 @@
       color: var(--rose-gold-light);
       text-align: center;
       letter-spacing: 1.5px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
-
-    .form-row { margin-bottom: 13px; display: flex; flex-direction: column; gap: 5px; }
-    .form-row label { font-size: 11px; font-weight: 600; color: var(--rose-gold); letter-spacing: 0.3px; }
-    .form-row small { font-size: 10px; color: var(--text-muted); }
-
     .btn-close-modal {
-      position: absolute;
-      top: 16px; right: 16px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 24px;
-      line-height: 1;
-      cursor: pointer;
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;
     }
-
-    /* STILI DELLA DASHBOARD LIVE */
-    .dashboard-window {
-      max-width: 860px !important;
-      padding: 24px !important;
-    }
-    .dash-kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .kpi-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(226, 180, 154, 0.2);
-      border-radius: 14px;
-      padding: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-    .kpi-title {
-      font-size: 10.5px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .kpi-val {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--rose-gold-light);
-    }
-    .kpi-sub {
-      font-size: 10px;
-      color: var(--aura-purple);
-      margin-top: 4px;
-    }
-
-    .dash-breakdown-box {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 20px;
-    }
-    .dash-section-title {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--rose-gold);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .cat-bar-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-      font-size: 11px;
-    }
-    .cat-bar-label { width: 110px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .cat-bar-track { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; }
-    .cat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--aura-purple), var(--aura-magenta)); border-radius: 10px; }
-    .cat-bar-count { width: 26px; text-align: right; font-weight: 700; color: #fff; }
-
-    .dash-table-wrap {
-      overflow-x: auto;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
-      max-height: 380px;
-      overflow-y: auto;
-    }
-    .dash-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 11.5px;
-      text-align: left;
-    }
-    .dash-table th {
-      background: rgba(20, 15, 28, 0.95);
-      padding: 10px 12px;
-      color: var(--rose-gold);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      border-bottom: 1px solid rgba(226, 180, 154, 0.2);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .dash-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      vertical-align: middle;
-      color: #E6DFEB;
-    }
-    .dash-table tr:hover { background: rgba(255, 255, 255, 0.02); }
-
-    .dash-pin-badge {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      color: #FBBF24;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 700;
-      font-family: monospace;
-    }
-
-    .btn-dash-action-del {
-      background: rgba(239, 68, 68, 0.18);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #F87171;
-      padding: 4px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 10.5px;
-      font-weight: 600;
-    }
-    .btn-dash-action-del:hover { background: var(--danger); color: #fff; }
-
-    .pulse-live {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: #10B981;
-      border-radius: 50%;
-      margin-right: 5px;
-      box-shadow: 0 0 8px #10B981;
-      animation: pulseAnim 1.6s infinite;
-    }
-    @keyframes pulseAnim {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.3); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
+    .form-row { margin-bottom: 13px; display: flex; flex-direction: column; gap: 5px; }
+    .form-row label { font-size: 11px; font-weight: 600; color: var(--rose-gold); }
+    .form-row small { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
 
     .toast-msg {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: linear-gradient(135deg, #FDE8E1, #E2B49A);
-      color: #07050A;
-      font-weight: 700;
-      font-size: 12px;
-      padding: 10px 20px;
-      border-radius: 30px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      z-index: 10000;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: linear-gradient(135deg, #FDE8E1, #E2B49A); color: #07050A; font-weight: 700;
+      font-size: 12px; padding: 10px 20px; border-radius: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      z-index: 10000; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;
     }
     .toast-msg.show { transform: translateX(-50%) translateY(0); }
+
+    /* CANVAS NASCOSTO PER RENDERING STORY IG 1080x1920 */
+    #storyCanvas { display: none; }
 
     @media (max-width: 640px) {
       .search-row { flex-direction: column; align-items: stretch; }
       .select-polo { width: 100%; }
       .listings-container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .card-price { font-size: 16px; }
-      .card-title { font-size: 12px; }
-      .logo-container { max-width: 250px; }
-      .detail-window, .dashboard-window { padding: 18px !important; }
-      .admin-bar { flex-direction: column; align-items: stretch; }
-      .admin-actions-group { justify-content: space-between; }
     }
   </style>
 </head>
 <body>
 
   <div class="promo-banner">
-    ✨ In arrivo l'AURA Pass • Convenzioni ed eventi esclusivi per gli studenti UdA
+    ✨ AURA Campus • Compravendita, gossip anonimi e spotted per studenti UdA
   </div>
 
   <header>
@@ -921,198 +627,192 @@
         <div style="font-size: 10px; letter-spacing: 5px; color: var(--rose-gold); margin-top: 4px;">UDA CHIETI PESCARA</div>
       </div>
     </div>
-    <div class="brand-subline">Compra, Vendi e Scambia tra Studenti UdA</div>
   </header>
 
-  <!-- BARRA MODERAZIONE CON TASTO DASHBOARD -->
+  <!-- SWITCHER SCHEDE (MARKET / VAULT) -->
+  <div class="app-tabs-wrap">
+    <div class="app-tabs-nav">
+      <button class="app-tab-btn active" id="tabBtnMarket">
+        🛒 AURA Market
+      </button>
+      <button class="app-tab-btn" id="tabBtnVault">
+        ⚡ Radar & The Vault
+      </button>
+    </div>
+  </div>
+
+  <!-- BARRA ADMIN CONDIVISA -->
   <div class="admin-bar" id="adminBar">
     <div style="display:flex; align-items:center;">
-      <span class="pulse-live"></span>
-      <span><strong>Modalità Admin:</strong> Master Key Attiva</span>
+      <span style="display:inline-block; width:8px; height:8px; background:#10B981; border-radius:50%; margin-right:6px;"></span>
+      <span><strong>Moderazione Attiva:</strong> Master Key Valida</span>
     </div>
-    <div class="admin-actions-group">
-      <button class="btn-admin-dash" id="btnOpenDashboard">
-        📊 Dashboard & Metriche Live
-      </button>
-      <button class="btn-exit-admin" id="btnExitAdmin">Esci</button>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-admin-dash" id="btnExitAdmin">Disconnetti</button>
     </div>
   </div>
 
-  <section class="controls-wrapper">
-    <div class="search-row">
-      <div class="input-box">
-        <input type="text" id="searchInput" placeholder="Cerca libro, stanza, felpa, biglietto...">
-        <button class="clear-search-btn" id="btnClearSearch">&times;</button>
+  <!-- ========================================== -->
+  <!-- SEZIONE 1: AURA MARKET                    -->
+  <!-- ========================================== -->
+  <section id="sectionMarket">
+    <div class="controls-wrapper">
+      <div class="search-row">
+        <div class="input-box">
+          <input type="text" id="searchInput" placeholder="Cerca libro, stanza, abbigliamento...">
+          <button class="clear-search-btn" id="btnClearSearch">&times;</button>
+        </div>
+        <select id="poloFilterMarket" class="select-polo">
+          <option value="ALL">Tutti i Campus</option>
+          <option value="Chieti Scalo">Campus Chieti</option>
+          <option value="Pescara">Polo Pescara</option>
+        </select>
+        <button class="btn-create" id="btnOpenMarketModal" type="button">
+          <span>+</span> Vendi / Affitta
+        </button>
       </div>
-      <select id="poloFilter" class="select-polo">
-        <option value="ALL">Tutti i Campus</option>
-        <option value="Chieti Scalo">Campus Chieti</option>
-        <option value="Pescara">Polo Pescara</option>
-      </select>
-      <button class="btn-create" id="btnOpenModal" type="button">
-        <span>+</span> Vendi / Scambia
-      </button>
+
+      <div class="filter-pills">
+        <div class="pill active" data-cat="ALL">Tutti</div>
+        <div class="pill" data-cat="Affitti">Affitti & Stanze</div>
+        <div class="pill" data-cat="Libri">Libri & Appunti</div>
+        <div class="pill" data-cat="Abbigliamento">Abbigliamento</div>
+        <div class="pill" data-cat="Biglietti">Biglietti & Serate</div>
+        <div class="pill" data-cat="Tech">Tech & Elettronica</div>
+        <div class="pill" data-cat="Altro">Altro</div>
+      </div>
     </div>
 
-    <!-- CATEGORIE -->
-    <div class="filter-pills">
-      <div class="pill active" data-cat="ALL">Tutti</div>
-      <div class="pill" data-cat="Affitti">Affitti & Stanze</div>
-      <div class="pill" data-cat="Libri">Libri & Appunti</div>
-      <div class="pill" data-cat="Abbigliamento">Abbigliamento</div>
-      <div class="pill" data-cat="Biglietti">Biglietti & Serate</div>
-      <div class="pill" data-cat="Tech">Tech & Elettronica</div>
-      <div class="pill" data-cat="Altro">Altro</div>
-    </div>
-
-    <!-- SOTTO-FILTRI AFFITTI -->
-    <div class="subfilter-row" id="subfilterAffitti">
-      <div class="sub-pill active" data-target="ALL">Tutti gli Affitti</div>
-      <div class="sub-pill" data-target="Solo Ragazze">Solo Ragazze</div>
-      <div class="sub-pill" data-target="Solo Ragazzi">Solo Ragazzi</div>
-      <div class="sub-pill" data-target="Misto / Tutti">Misto / Per Tutti</div>
-    </div>
-
-    <!-- SOTTO-FILTRI ABBIGLIAMENTO -->
-    <div class="subfilter-row" id="subfilterAbbigliamento">
-      <div class="sub-pill active" data-target="ALL">Tutti i Capi</div>
-      <div class="sub-pill" data-target="Donna">Donna</div>
-      <div class="sub-pill" data-target="Uomo">Uomo</div>
-      <div class="sub-pill" data-target="Unisex">Unisex</div>
-    </div>
-
-    <div class="ticket-safety-box" id="ticketSafetyNotice">
-      ⚠️ <strong>Regola AURA per i Biglietti:</strong> Paga sempre di persona al momento dello scambio o all'ingresso dell'evento. Non inviare mai bonifici o ricariche anticipate a sconosciuti.
-    </div>
+    <main class="listings-container" id="listingsGrid"></main>
   </section>
 
-  <main class="listings-container" id="listingsGrid"></main>
-
-  <footer>
-    <p>AURA Market • Entra nella community su Instagram <a href="https://instagram.com/aura.uda" target="_blank" rel="noopener">@aura.uda</a></p>
-    <p><span class="admin-trigger" id="adminTrigger">Accesso Riservato Moderatori</span></p>
-  </footer>
-
-  <!-- MODALE DETTAGLIO ANNUNCIO -->
-  <div class="modal-backdrop" id="detailModal">
-    <div class="modal-window detail-window">
-      <button class="btn-close-modal" id="btnCloseDetail" type="button">&times;</button>
-      <div class="detail-gallery-main">
-        <img id="detailMainImg" src="" alt="Dettaglio annuncio">
+  <!-- ========================================== -->
+  <!-- SEZIONE 2: AURA RADAR & THE VAULT         -->
+  <!-- ========================================== -->
+  <section id="sectionVault" style="display: none;">
+    <div class="controls-wrapper" style="max-width: 680px;">
+      <div class="search-row">
+        <select id="poloFilterVault" class="select-polo" style="flex: 1;">
+          <option value="ALL">Tutti i Campus</option>
+          <option value="Chieti Scalo">Campus Chieti</option>
+          <option value="Pescara">Polo Pescara</option>
+        </select>
+        <button class="btn-create" id="btnOpenVaultModal" type="button" style="background: linear-gradient(135deg, #FDE8E1, #C084FC);">
+          <span>✍️</span> Invia Anonimo
+        </button>
       </div>
-      <div class="detail-thumbs" id="detailThumbsContainer"></div>
 
-      <div class="detail-badge-row" id="detailBadges"></div>
-      <h2 id="detailTitle" style="font-size: 18px; margin-bottom: 6px; color: #fff;"></h2>
-      <div class="detail-price" id="detailPrice"></div>
-
-      <div class="detail-desc-box" id="detailDesc"></div>
-
-      <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 14px;">
-        <a id="detailIgBtn" href="#" target="_blank" rel="noopener" class="btn-create" style="justify-content: center; text-decoration: none; padding: 12px;">
-          Contatta Venditore su Instagram
-        </a>
-        <button type="button" id="btnShareNative" class="btn-contact" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-          <span>Condividi / Invia Annuncio</span> ↗
-        </button>
-        <button type="button" class="btn-card-secondary" id="btnDetailDelete">
-          Sei il proprietario? Rimuovi questo annuncio
-        </button>
+      <div class="filter-pills">
+        <div class="pill active" data-vault-type="ALL">Tutti i Feed</div>
+        <div class="pill" data-vault-type="gossip">💣 The Vault (Gossip)</div>
+        <div class="pill" data-vault-type="spotted">👀 Radar (Spotted)</div>
       </div>
     </div>
-  </div>
 
-  <!-- MODALE DASHBOARD AMMINISTRATIVA -->
-  <div class="modal-backdrop" id="dashboardModal">
-    <div class="modal-window dashboard-window">
-      <button class="btn-close-modal" id="btnCloseDashboard" type="button">&times;</button>
-      <div class="modal-header-title" style="text-align: left; display: flex; align-items: center; justify-content: space-between; padding-right: 30px;">
-        <div>
-          <span class="pulse-live"></span> AURA CONTROL CENTER
-        </div>
-        <button id="btnExportCsv" class="btn-dash-action-del" style="background: rgba(226, 180, 154, 0.15); border-color: var(--rose-gold); color: var(--rose-gold-light);">
-          📥 Esporta CSV
-        </button>
-      </div>
+    <main class="vault-container" id="vaultFeed"></main>
+  </section>
 
-      <!-- KPI METRICHE -->
-      <div class="dash-kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-title">Annunci Totali</div>
-          <div class="kpi-val" id="kpiTotal">0</div>
-          <div class="kpi-sub" id="kpiNewToday">+0 pubblicati oggi</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-title">Valore Circolante</div>
-          <div class="kpi-val" id="kpiTotalValue">0 €</div>
-          <div class="kpi-sub">Totale stimato bacheca</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-title">Campus Chieti</div>
-          <div class="kpi-val" id="kpiChieti">0%</div>
-          <div class="kpi-sub" id="kpiChietiCount">0 annunci</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-title">Polo Pescara</div>
-          <div class="kpi-val" id="kpiPescara">0%</div>
-          <div class="kpi-sub" id="kpiPescaraCount">0 annunci</div>
-        </div>
-      </div>
-
-      <!-- RIPARTIZIONE CATEGORIE -->
-      <div class="dash-breakdown-box">
-        <div class="dash-section-title">
-          <span>Distribuzione Categorie</span>
-          <span style="font-size: 10px; color: var(--text-muted);" id="dashLastSync">Live sync attivo</span>
-        </div>
-        <div id="dashCatBars"></div>
-      </div>
-
-      <!-- TABELLA DI GESTIONE & RECUPERO PIN -->
-      <div class="dash-section-title">
-        <span>Gestione Annunci & PIN Venditori</span>
-        <input type="text" id="dashSearchInput" placeholder="Filtra per titolo, IG o ID..." style="width: 200px; padding: 6px 10px; font-size: 11px;">
-      </div>
-
-      <div class="dash-table-wrap">
-        <table class="dash-table">
-          <thead>
-            <tr>
-              <th>Foto</th>
-              <th>Titolo</th>
-              <th>Prezzo</th>
-              <th>Polo</th>
-              <th>Venditore</th>
-              <th>PIN</th>
-              <th>Azione</th>
-            </tr>
-          </thead>
-          <tbody id="dashTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODALE CREAZIONE ANNUNCIO -->
-  <div class="modal-backdrop" id="modalBackdrop">
+  <!-- MODALE CREAZIONE POST VAULT / SPOTTED -->
+  <div class="modal-backdrop" id="modalVaultCreate">
     <div class="modal-window">
-      <button class="btn-close-modal" id="btnCloseModal" type="button">&times;</button>
+      <button class="btn-close-modal" id="btnCloseVaultModal">&times;</button>
+      <div class="modal-header-title">INVIA IN ANONIMO</div>
+      
+      <form id="vaultCreateForm">
+        <div class="form-row">
+          <label>Cosa vuoi condividere?</label>
+          <select id="vTipo" required>
+            <option value="gossip">💣 Gossip / Drama (The Vault)</option>
+            <option value="spotted">👀 Spotted nel Campus (Radar)</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label>Campus & Luogo Specifico</label>
+          <div style="display: flex; gap: 8px;">
+            <select id="vPolo" style="flex: 1;" required>
+              <option value="Chieti Scalo">Campus Chieti</option>
+              <option value="Pescara">Polo Pescara</option>
+              <option value="Tutti">Entrambi / Treno</option>
+            </select>
+            <input type="text" id="vLuogo" placeholder="Es. Biblioteca Medica, Aula 3" required style="flex: 1;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>Titolo del post</label>
+          <input type="text" id="vTitolo" placeholder="Es. La coinquilina e il cibo scomparso..." required maxlength="70">
+        </div>
+
+        <div class="form-row">
+          <label>Il Racconto</label>
+          <textarea id="vTesto" required placeholder="Racconta cosa è successo. Consiglio: metti tra parentesi quadre [così] le parole più calde per censurarle con le barre nere finché la community non le sblocca!"></textarea>
+          <small>⚠️ Regola d'oro: niente nomi e cognomi, diffamazione pesante o insulti d'odio.</small>
+        </div>
+
+        <!-- CAMPI SPECIFICI SPOTTED -->
+        <div id="spottedFields" style="display: none; background: rgba(192, 132, 252, 0.08); border: 1px dashed rgba(192, 132, 252, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
+          <div class="form-row">
+            <label>Domanda Segreta Anti-Fake (Secret Handshake)</label>
+            <input type="text" id="vHandshakeQ" placeholder="Es. Che colore aveva la mia borraccia sul tavolo?">
+            <small>Solo chi era davvero lì saprà rispondere per sbloccare il contatto.</small>
+          </div>
+          <div class="form-row">
+            <label>Risposta Esatta alla domanda</label>
+            <input type="text" id="vHandshakeA" placeholder="Es. Gialla (non sensibile alle maiuscole)">
+          </div>
+          <div class="form-row">
+            <label>Tuo Contatto Instagram (Verrà mostrato SOLO se risponde giusto!)</label>
+            <input type="text" id="vAuthorContact" placeholder="mariorossi">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-create" id="btnSubmitVault" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Invia al Feed Anonimo ✨
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE VERIFICA SPOTTED (SECRET HANDSHAKE) -->
+  <div class="modal-backdrop" id="modalHandshake">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseHandshakeModal">&times;</button>
+      <div class="modal-header-title">PROVA DEL NOVE 👀</div>
+      <p id="handshakePromptText" style="font-size: 13.5px; color: #E7DEEA; margin-bottom: 14px; text-align: center; line-height: 1.5;"></p>
+      
+      <div class="form-row">
+        <label>La tua risposta:</label>
+        <input type="text" id="inputHandshakeAnswer" placeholder="Inserisci la risposta...">
+        <small>Hai a disposizione pochi tentativi. Se indovini, si svelerà il contatto IG dell'autore!</small>
+      </div>
+
+      <div id="handshakeResultBox" style="display:none; margin: 12px 0; padding: 12px; border-radius: 10px; font-size: 13px; text-align: center;"></div>
+
+      <button type="button" class="btn-create" id="btnVerifyHandshake" style="width: 100%; justify-content: center;">
+        Verifica Risposta 🔓
+      </button>
+    </div>
+  </div>
+
+  <!-- MODALE CREAZIONE ANNUNCIO MARKET -->
+  <div class="modal-backdrop" id="modalMarketCreate">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseMarketModal">&times;</button>
       <div class="modal-header-title">NUOVO ANNUNCIO</div>
       <form id="createListingForm">
         <div class="form-row">
-          <label>Cosa vendi, affitti o cerchi?</label>
-          <input type="text" id="fTitolo" required placeholder="Es. Manuale Anatomia I (Edi-Ermes) o Stanza Singola">
+          <label>Titolo Annuncio</label>
+          <input type="text" id="fTitolo" required placeholder="Es. Manuale Anatomia I o Stanza Singola Chieti">
         </div>
-
         <div class="form-row">
-          <label>Prezzo (il simbolo € viene aggiunto in automatico)</label>
-          <input type="text" id="fPrezzo" required placeholder="Es. 20 oppure 220/mese o Trattabile">
+          <label>Prezzo</label>
+          <input type="text" id="fPrezzo" required placeholder="Es. 25 oppure 220/mese">
         </div>
-
         <div class="form-row">
           <label>Categoria</label>
           <select id="fCategoria">
-            <option value="Affitti">Affitti & Stanze (Subentri, Posti Letto)</option>
+            <option value="Affitti">Affitti & Stanze</option>
             <option value="Libri">Libri & Appunti</option>
             <option value="Abbigliamento">Abbigliamento</option>
             <option value="Biglietti">Biglietti & Serate</option>
@@ -1120,87 +820,39 @@
             <option value="Altro">Altro</option>
           </select>
         </div>
-
-        <div class="form-row" id="formRowTarget">
-          <label id="formLabelTarget">Destinatari Stanza</label>
-          <select id="fTarget"></select>
-        </div>
-
-        <div class="form-row" id="formRowCondizione">
-          <label>Condizione / Stato</label>
-          <select id="fCondizione">
-            <option value="Come Nuovo">Come Nuovo / Perfette Condizioni</option>
-            <option value="Ottime Condizioni">Ottime Condizioni</option>
-            <option value="Buono Stato">Buono Stato / Usato</option>
-            <option value="Non specificata">Non specificata / Altro</option>
-          </select>
-        </div>
-
         <div class="form-row">
-          <label>Polo / Posizione</label>
+          <label>Campus</label>
           <select id="fPolo">
             <option value="Chieti Scalo">Campus Chieti Scalo</option>
             <option value="Pescara">Polo Pindaro (Pescara)</option>
             <option value="Entrambi">Entrambi i Poli</option>
           </select>
         </div>
-
         <div class="form-row">
-          <label>Descrizione Dettagliata</label>
-          <textarea id="fDescrizione" placeholder="Descrivi l'articolo: condizioni del libro, taglia, spese incluse della stanza, disponibilità per lo scambio a mano..."></textarea>
+          <label>Tuo Instagram (senza @)</label>
+          <input type="text" id="fIg" required placeholder="nome_utente">
         </div>
-
         <div class="form-row">
-          <label>Tuo Username Instagram (senza @)</label>
-          <input type="text" id="fIg" required placeholder="mariorossi">
-          <small>Gli acquirenti ti scriveranno direttamente su Instagram DM.</small>
+          <label>Foto (Copertina)</label>
+          <input type="file" id="fFoto" accept="image/*" required>
         </div>
-
         <div class="form-row">
-          <label>Foto (Fino a 3 foto • La prima sarà la copertina)</label>
-          <input type="file" id="fFoto" accept="image/*" multiple required>
-          <div class="photo-preview-grid" id="photoPreviewContainer"></div>
-          <small>Le foto vengono compresse automaticamente prima del caricamento.</small>
-        </div>
-
-        <div class="form-row">
-          <label>Crea un PIN di 4 cifre per rimuovere l'annuncio</label>
+          <label>PIN a 4 cifre per rimuoverlo</label>
           <input type="password" id="fPin" maxlength="4" pattern="[0-9]{4}" required placeholder="1234">
-          <small>Ti servirà per cancellare l'annuncio una volta venduto.</small>
         </div>
-
-        <button type="submit" class="btn-create" id="btnSubmitForm" style="width: 100%; justify-content: center; margin-top: 14px;">
+        <button type="submit" class="btn-create" id="btnSubmitMarket" style="width: 100%; justify-content: center; margin-top: 10px;">
           Pubblica Subito (Gratis)
         </button>
       </form>
     </div>
   </div>
 
-  <!-- MODALE ELIMINAZIONE PROPRIETARIO -->
-  <div class="modal-backdrop" id="sellerDeleteModal">
-    <div class="modal-window">
-      <button class="btn-close-modal" id="btnCloseSellerModal" type="button">&times;</button>
-      <div class="modal-header-title">GESTIONE ANNUNCIO</div>
-      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px;">
-        Hai già venduto l'oggetto o affittato la stanza? Inserisci il PIN di 4 cifre per rimuoverlo.
-      </p>
-      <div class="form-row">
-        <label>PIN Personale (4 cifre)</label>
-        <input type="password" id="inputSellerPin" maxlength="4" placeholder="••••">
-      </div>
-      <button type="button" class="btn-create" id="btnConfirmSellerDelete" style="width: 100%; justify-content: center; margin-top: 12px; background: var(--danger); color: #fff;">
-        Segna come Concluso / Elimina
-      </button>
-    </div>
-  </div>
-
-  <!-- NOTIFICA TOAST -->
-  <div class="toast-msg" id="toastMsg">Link copiato negli appunti!</div>
+  <canvas id="storyCanvas" width="1080" height="1920"></canvas>
+  <div class="toast-msg" id="toastMsg"></div>
 
   <script>
     (function() {
       const MASTER_KEY_CORRETTA = "AURA2026MASTERMOHA";
-
       const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
 
@@ -1210,811 +862,512 @@
       }
 
       let listings = [];
-      let activeCategory = "ALL";
-      let activeSubfilter = "ALL";
-      let currentItemToDelete = null;
-      let activeDetailItem = null;
+      let vaultPosts = [];
+      let activeVaultType = "ALL";
+      let activePostForHandshake = null;
 
-      // CONTROLLO RIGOROSO CHIAVE SALVATA
-      let adminKey = localStorage.getItem("aura_admin_key") || null;
-      if (adminKey && adminKey.trim().toUpperCase() === MASTER_KEY_CORRETTA) {
-        document.body.classList.add("is-admin");
-        document.getElementById("adminBar").classList.add("active");
-      } else {
-        localStorage.removeItem("aura_admin_key");
-        adminKey = null;
+      // HASHING NATIVO SHA-256
+      async function sha256(str) {
+        const buffer = new TextEncoder().encode(str.trim().toLowerCase());
+        const hash = await crypto.subtle.digest("SHA-256", buffer);
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
       }
 
       function showToast(text) {
         const toast = document.getElementById("toastMsg");
         toast.innerText = text;
         toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 2500);
+        setTimeout(() => toast.classList.remove("show"), 2600);
       }
 
-      function getCategoryLabel(cat) {
-        const map = {
-          "Affitti": "Affitti & Stanze",
-          "Libri": "Libri & Appunti",
-          "Abbigliamento": "Abbigliamento",
-          "Biglietti": "Biglietti & Serate",
-          "Tech": "Tech & Elettronica",
-          "Altro": "Altro"
-        };
-        return map[cat] || cat;
+      // CONTROLLO ADMIN
+      let adminKey = localStorage.getItem("aura_admin_key") || null;
+      if (adminKey && adminKey.trim().toUpperCase() === MASTER_KEY_CORRETTA) {
+        document.body.classList.add("is-admin");
+        document.getElementById("adminBar").classList.add("active");
       }
 
-      function sanitizePrice(str, category) {
-        let val = (str || "").trim();
-        if (!val) return "Trattabile";
-        if (/^(regalo|gratis|in regalo)$/i.test(val)) return "In regalo";
-        if (/^(trattabile|tratt)$/i.test(val)) return "Trattabile";
-
-        if (val.includes("€")) {
-          return val.replace(/\s*€/, " €");
+      function triggerAdminPrompt() {
+        const input = prompt("Master Key di Moderazione AURA:");
+        if (input && input.trim().toUpperCase() === MASTER_KEY_CORRETTA) {
+          localStorage.setItem("aura_admin_key", MASTER_KEY_CORRETTA);
+          document.body.classList.add("is-admin");
+          document.getElementById("adminBar").classList.add("active");
+          showToast("Accesso Moderatore Effettuato 🛡️");
+          renderVault();
+        } else if (input !== null) {
+          alert("Chiave errata.");
         }
-
-        if (/(\d+)\s*\/\s*mese/i.test(val)) {
-          return val.replace(/(\d+)\s*\/\s*mese/i, "$1 € / mese");
-        }
-
-        if (/^\d+([.,]\d{1,2})?$/.test(val)) {
-          return `${val} €`;
-        }
-
-        return `${val} €`;
       }
+      document.getElementById("brandLogo").addEventListener("click", triggerAdminPrompt);
+      document.getElementById("btnExitAdmin").addEventListener("click", () => {
+        localStorage.removeItem("aura_admin_key");
+        document.body.classList.remove("is-admin");
+        document.getElementById("adminBar").classList.remove("active");
+        renderVault();
+      });
 
-      function formatTimeAgo(isoString) {
-        if (!isoString) return "";
-        const diffMs = Date.now() - new Date(isoString).getTime();
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        if (diffDays === 0) return "Oggi";
-        if (diffDays === 1) return "Ieri";
-        if (diffDays < 7) return `${diffDays} gg fa`;
-        return `${Math.floor(diffDays / 7)} sett fa`;
-      }
+      // SWITCH TABS
+      const tabMarket = document.getElementById("tabBtnMarket");
+      const tabVault = document.getElementById("tabBtnVault");
+      const secMarket = document.getElementById("sectionMarket");
+      const secVault = document.getElementById("sectionVault");
 
-      async function compressImageFile(file, maxWidth = 1200, quality = 0.8) {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-              let width = img.width;
-              let height = img.height;
-              if (width > height) {
-                if (width > maxWidth) {
-                  height = Math.round((height * maxWidth) / width);
-                  width = maxWidth;
-                }
-              } else {
-                if (height > maxWidth) {
-                  width = Math.round((width * maxWidth) / height);
-                  height = maxWidth;
-                }
-              }
-              const canvas = document.createElement('canvas');
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, width, height);
-              canvas.toBlob((blob) => {
-                resolve(new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' }));
-              }, 'image/jpeg', quality);
-            };
-            img.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
+      tabMarket.addEventListener("click", () => {
+        tabMarket.classList.add("active");
+        tabVault.classList.remove("active");
+        secMarket.style.display = "block";
+        secVault.style.display = "none";
+      });
+      tabVault.addEventListener("click", () => {
+        tabVault.classList.add("active");
+        tabMarket.classList.remove("active");
+        secVault.style.display = "block";
+        secMarket.style.display = "none";
+        renderVault();
+      });
+
+      // ==========================================
+      // RENDERING FEED VAULT & AUTO-CENSURA
+      // ==========================================
+      function parseCensorship(text, isUnlocked) {
+        if (!text) return "";
+        return text.replace(/\[(.*?)\]/g, (match, p1) => {
+          if (isUnlocked) {
+            return `<span class="unlocked-text">${p1}</span>`;
+          } else {
+            return `<span class="redacted-bar" title="Vota per sbloccare!">████████</span>`;
+          }
         });
       }
 
-      function renderCards() {
-        const query = (document.getElementById("searchInput").value || "").toLowerCase().trim();
-        const selectedPolo = document.getElementById("poloFilter").value;
-        const grid = document.getElementById("listingsGrid");
+      function renderVault() {
+        const feed = document.getElementById("vaultFeed");
+        const polo = document.getElementById("poloFilterVault").value;
 
-        const filtered = listings.filter(item => {
-          const catMatch = (activeCategory === "ALL" || item.categoria === activeCategory);
-          const poloMatch = (selectedPolo === "ALL" || item.polo === selectedPolo || item.polo === "Entrambi");
-          const targetMatch = (activeSubfilter === "ALL" || !item.target || item.target === activeSubfilter || item.target === "Misto / Tutti" || item.target === "Unisex");
-          const queryMatch = (item.titolo || "").toLowerCase().includes(query) || 
-                             (item.descrizione || "").toLowerCase().includes(query) || 
-                             (item.target || "").toLowerCase().includes(query);
-          return catMatch && poloMatch && targetMatch && queryMatch;
+        const filtered = vaultPosts.filter(p => {
+          const typeMatch = (activeVaultType === "ALL" || p.tipo === activeVaultType);
+          const poloMatch = (polo === "ALL" || p.polo === polo || p.polo === "Tutti");
+          return typeMatch && poloMatch;
         });
 
         if (filtered.length === 0) {
-          const searchWord = query ? ` per "${query}"` : '';
-          grid.innerHTML = `
-            <div class="empty-state-box">
-              <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
-              <div class="empty-state-title">Nessun annuncio trovato${searchWord}</div>
-              <p class="empty-state-p">
-                Stai cercando un libro, una stanza o degli appunti specifici?<br>
-                Chiedicelo su Instagram: pubblicheremo la tua richiesta nelle storie per trovarti subito un venditore!
+          feed.innerHTML = `
+            <div style="text-align:center; padding: 40px 20px; background: rgba(255,255,255,0.02); border-radius:16px;">
+              <div style="font-size:32px; margin-bottom:8px;">⚡</div>
+              <div style="font-size:16px; font-weight:700; color:var(--rose-gold-light);">Nessun gossip o spotted recente</div>
+              <p style="font-size:12px; color:var(--text-muted); margin: 8px auto 16px; max-width:320px;">
+                Sii il primo a lanciare una voce anonima o a cercare qualcuno nel campus!
               </p>
-              <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                <a href="https://ig.me/m/aura.uda" target="_blank" rel="noopener" class="btn-create" style="text-decoration:none;">
-                  Chiedi a @aura.uda nei DM ↗
-                </a>
-                <button type="button" class="btn-create" onclick="document.getElementById('btnOpenModal').click()" style="background: rgba(255,255,255,0.06); color:#fff; border:1px solid var(--rose-gold);">
-                  Pubblica tu il primo
-                </button>
-              </div>
+              <button class="btn-create" onclick="document.getElementById('btnOpenVaultModal').click()" style="margin: 0 auto;">
+                Invia in Anonimo
+              </button>
             </div>
           `;
           return;
         }
 
-        grid.innerHTML = filtered.map(item => {
-          const cleanIg = (item.contatto_ig || "").trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
-          const targetBadge = (item.target && item.target !== 'Misto / Tutti' && item.target !== 'Unisex' && item.target !== '') 
-            ? `<span class="tag-target">${item.target}</span>` 
-            : '';
+        let html = "";
+        let postCount = 0;
 
-          const extraCount = Array.isArray(item.foto_extra) ? item.foto_extra.length : 0;
-          const photoBadge = extraCount > 0 ? `<span class="tag-photo-count">📷 ${extraCount + 1}</span>` : '';
-          const timeAgoStr = formatTimeAgo(item.created_at);
+        filtered.forEach((p, index) => {
+          postCount++;
+          const isSpotted = p.tipo === 'spotted';
+          const badgeClass = isSpotted ? 'spotted' : 'gossip';
+          const badgeIcon = isSpotted ? '👀 SPOTTED' : '💣 THE VAULT';
+          const textParsed = parseCensorship(p.testo, p.is_unlocked);
 
-          return `
-            <article class="card" onclick="window.openDetailModal('${item.id}')">
-              <div class="card-cover-wrap">
-                <span class="tag-campus">${item.polo}</span>
-                ${targetBadge}
-                ${photoBadge}
-                <img class="card-cover" src="${item.foto_url}" alt="${item.titolo}" loading="lazy">
+          const pct = Math.min(100, Math.round((p.voti_totali / p.soglia_sblocco) * 100));
+          const unlockBar = (!p.is_unlocked && !isSpotted) ? `
+            <div class="unlock-progress-wrap">
+              <div class="unlock-progress-text">
+                <span>🔒 Dettagli censurati (${p.voti_totali}/${p.soglia_sblocco} reazioni)</span>
+                <span>${pct}%</span>
               </div>
-              <div class="card-content">
-                <div class="card-meta-row">
-                  <span class="card-meta-category">${getCategoryLabel(item.categoria)}</span>
-                  <span class="card-meta-time">${timeAgoStr}</span>
+              <div class="unlock-progress-track">
+                <div class="unlock-progress-fill" style="width: ${pct}%;"></div>
+              </div>
+            </div>
+          ` : '';
+
+          const handshakeBtn = (isSpotted && p.handshake_q) ? `
+            <button class="btn-spotted-handshake" onclick="window.openHandshakeModal('${p.id}')">
+              Penso di essere io 👀
+            </button>
+          ` : '';
+
+          html += `
+            <article class="vault-card">
+              <div class="vault-header">
+                <span class="vault-badge ${badgeClass}">${badgeIcon}</span>
+                <span class="vault-location">📍 ${p.polo} • ${p.luogo}</span>
+              </div>
+              <h3 class="vault-title">${p.titolo}</h3>
+              <div class="vault-body">${textParsed}</div>
+              ${unlockBar}
+              <div class="vault-actions-bar">
+                <div class="reaction-btns-group">
+                  <button class="btn-react" onclick="window.reactVault('${p.id}', 'fire')">🔥 ${p.voti_fire || 0}</button>
+                  <button class="btn-react" onclick="window.reactVault('${p.id}', 'skull')">💀 ${p.voti_skull || 0}</button>
+                  <button class="btn-react" onclick="window.reactVault('${p.id}', 'redflag')">🚩 ${p.voti_redflag || 0}</button>
                 </div>
-                <div class="card-price">${item.prezzo}</div>
-                <div class="card-title">${item.titolo}</div>
-                <div class="card-tap-hint">Tocca per aprire foto & dettagli ↗</div>
-                <div class="card-actions" onclick="event.stopPropagation()">
-                  <a href="https://ig.me/m/${cleanIg}" target="_blank" rel="noopener" class="btn-contact">
-                    Contatta @${cleanIg}
-                  </a>
-                  <button type="button" class="btn-card-secondary" onclick="window.openSellerDeleteModal('${item.id}')">
-                    Sei il venditore? Rimuovi
-                  </button>
-                  <button type="button" class="btn-admin-delete" onclick="window.adminDeleteListing('${item.id}')">
-                    🛡️ Elimina come Admin
-                  </button>
-                </div>
+                ${handshakeBtn}
+                <button style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;" onclick="window.flagVault('${p.id}')">Segnala</button>
+              </div>
+
+              <div class="admin-vault-tools">
+                <button class="btn-tool-igstory" onclick="window.downloadStoryImage('${p.id}')">📸 Scarica Story IG (1080x1920)</button>
+                <button class="btn-tool-del" onclick="window.deleteVaultAdmin('${p.id}')">Elimina</button>
               </div>
             </article>
           `;
-        }).join('');
-      }
 
-      // APERTURA DETTAGLIO
-      const detailModal = document.getElementById("detailModal");
-      window.openDetailModal = function(id, updateHash = true) {
-        const item = listings.find(l => String(l.id) === String(id));
-        if (!item) return;
-        activeDetailItem = item;
-
-        if (updateHash) {
-          history.replaceState(null, '', '#ad-' + item.id);
-        }
-
-        const cleanIg = (item.contatto_ig || "").trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
-
-        const allPhotos = [item.foto_url, ...(Array.isArray(item.foto_extra) ? item.foto_extra : [])].filter(Boolean);
-        const mainImg = document.getElementById("detailMainImg");
-        const thumbsBox = document.getElementById("detailThumbsContainer");
-        mainImg.src = allPhotos[0];
-
-        if (allPhotos.length > 1) {
-          thumbsBox.innerHTML = allPhotos.map((url, idx) => `
-            <div class="detail-thumb-item ${idx === 0 ? 'active' : ''}" onclick="window.switchDetailPhoto('${url}', this)">
-              <img src="${url}">
-            </div>
-          `).join('');
-          thumbsBox.style.display = 'flex';
-        } else {
-          thumbsBox.innerHTML = '';
-          thumbsBox.style.display = 'none';
-        }
-
-        const badgesBox = document.getElementById("detailBadges");
-        let badgesHtml = `
-          <span class="badge-pill">${item.polo}</span>
-          <span class="badge-pill">${getCategoryLabel(item.categoria)}</span>
-        `;
-        if (item.target) badgesHtml += `<span class="badge-pill" style="border-color: var(--aura-magenta); color: #F5D0FE;">${item.target}</span>`;
-        if (item.condizione && item.condizione !== 'Non specificata') badgesHtml += `<span class="badge-pill">${item.condizione}</span>`;
-        badgesBox.innerHTML = badgesHtml;
-
-        document.getElementById("detailTitle").innerText = item.titolo;
-        document.getElementById("detailPrice").innerText = item.prezzo;
-        document.getElementById("detailDesc").innerText = item.descrizione ? item.descrizione : "Nessuna descrizione aggiuntiva inserita dal venditore.";
-
-        document.getElementById("detailIgBtn").href = `https://ig.me/m/${cleanIg}`;
-        document.getElementById("detailIgBtn").innerText = `Scrivi su Instagram a @${cleanIg}`;
-
-        document.getElementById("btnShareNative").onclick = async () => {
-          const directUrl = `${window.location.origin}${window.location.pathname}#ad-${item.id}`;
-          const shareData = {
-            title: `AURA Market • ${item.titolo}`,
-            text: `Guarda questo annuncio su AURA Market UdA:\n${item.titolo} (${item.prezzo})`,
-            url: directUrl
-          };
-
-          if (navigator.share) {
-            try {
-              await navigator.share(shareData);
-            } catch (err) {}
-          } else {
-            navigator.clipboard.writeText(directUrl);
-            showToast("Link annuncio copiato negli appunti!");
-          }
-        };
-
-        document.getElementById("btnDetailDelete").onclick = () => {
-          detailModal.classList.remove("open");
-          window.openSellerDeleteModal(item.id);
-        };
-
-        detailModal.classList.add("open");
-      };
-
-      window.switchDetailPhoto = function(url, el) {
-        document.getElementById("detailMainImg").src = url;
-        document.querySelectorAll('.detail-thumb-item').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-      };
-
-      function closeDetailModal() {
-        detailModal.classList.remove("open");
-        history.replaceState(null, '', window.location.pathname + window.location.search);
-      }
-
-      document.getElementById("btnCloseDetail").addEventListener("click", closeDetailModal);
-      detailModal.addEventListener("click", (e) => {
-        if (e.target === detailModal) closeDetailModal();
-      });
-
-      function checkUrlDeepLink() {
-        const hash = window.location.hash;
-        if (hash && hash.startsWith('#ad-')) {
-          const targetId = hash.replace('#ad-', '').trim();
-          if (targetId) {
-            window.openDetailModal(targetId, false);
-          }
-        }
-      }
-
-      // ==========================================
-      // LOGICA DELLA DASHBOARD AMMINISTRATIVA LIVE
-      // ==========================================
-      const dashModal = document.getElementById("dashboardModal");
-      const btnOpenDash = document.getElementById("btnOpenDashboard");
-      const btnCloseDash = document.getElementById("btnCloseDashboard");
-
-      btnOpenDash.addEventListener("click", () => {
-        renderDashboard();
-        dashModal.classList.add("open");
-      });
-      btnCloseDash.addEventListener("click", () => dashModal.classList.remove("open"));
-      dashModal.addEventListener("click", (e) => {
-        if (e.target === dashModal) dashModal.classList.remove("open");
-      });
-
-      function renderDashboard() {
-        const total = listings.length;
-        document.getElementById("kpiTotal").innerText = total;
-
-        // Nuovi oggi
-        const now = Date.now();
-        const oneDayAgo = now - 24 * 60 * 60 * 1000;
-        const newToday = listings.filter(l => new Date(l.created_at).getTime() > oneDayAgo).length;
-        document.getElementById("kpiNewToday").innerText = `+${newToday} pubblicati oggi`;
-
-        // Calcolo valore circolante totale
-        let totalVal = 0;
-        listings.forEach(l => {
-          const digits = (l.prezzo || "").replace(/[^0-9.,]/g, '').replace(',', '.');
-          const parsed = parseFloat(digits);
-          if (!isNaN(parsed) && parsed > 0 && parsed < 2000) {
-            totalVal += parsed;
-          }
-        });
-        document.getElementById("kpiTotalValue").innerText = `${Math.round(totalVal)} €`;
-
-        // Percentuale Polo
-        const chietiCount = listings.filter(l => l.polo === 'Chieti Scalo').length;
-        const pescaraCount = listings.filter(l => l.polo === 'Pescara').length;
-        const chietiPct = total > 0 ? Math.round((chietiCount / total) * 100) : 0;
-        const pescaraPct = total > 0 ? Math.round((pescaraCount / total) * 100) : 0;
-
-        document.getElementById("kpiChieti").innerText = `${chietiPct}%`;
-        document.getElementById("kpiChietiCount").innerText = `${chietiCount} annunci`;
-        document.getElementById("kpiPescara").innerText = `${pescaraPct}%`;
-        document.getElementById("kpiPescaraCount").innerText = `${pescaraCount} annunci`;
-
-        // Ripartizione Categorie
-        const categories = ["Affitti", "Libri", "Abbigliamento", "Biglietti", "Tech", "Altro"];
-        const catBarsContainer = document.getElementById("dashCatBars");
-        catBarsContainer.innerHTML = categories.map(cat => {
-          const count = listings.filter(l => l.categoria === cat).length;
-          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-          return `
-            <div class="cat-bar-item">
-              <span class="cat-bar-label">${getCategoryLabel(cat)}</span>
-              <div class="cat-bar-track">
-                <div class="cat-bar-fill" style="width: ${pct}%;"></div>
+          // INTERLEAVING: INIETTA UN ANNUNCIO DAL MARKET OGNI 3 POST
+          if (postCount % 3 === 0 && listings.length > 0) {
+            const randomListing = listings[Math.floor(Math.random() * listings.length)];
+            html += `
+              <div class="interleaved-market-card" onclick="document.getElementById('tabBtnMarket').click();">
+                <img class="interleaved-market-img" src="${randomListing.foto_url}">
+                <div class="interleaved-market-info">
+                  <div class="interleaved-market-tag">Dall'AURA Market • ${randomListing.polo}</div>
+                  <div class="interleaved-market-title">${randomListing.titolo}</div>
+                  <div class="interleaved-market-price">${randomListing.prezzo}</div>
+                </div>
+                <div style="font-size: 18px; color: var(--rose-gold);">➔</div>
               </div>
-              <span class="cat-bar-count">${count}</span>
-            </div>
-          `;
-        }).join('');
-
-        renderDashTable();
-      }
-
-      // Tabella con filtro istantaneo
-      function renderDashTable() {
-        const query = (document.getElementById("dashSearchInput").value || "").toLowerCase().trim();
-        const tbody = document.getElementById("dashTableBody");
-
-        const filtered = listings.filter(l => 
-          (l.titolo || "").toLowerCase().includes(query) ||
-          (l.contatto_ig || "").toLowerCase().includes(query) ||
-          (l.id || "").toLowerCase().includes(query)
-        );
-
-        if (filtered.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:var(--text-muted);">Nessun annuncio trovato.</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = filtered.map(l => {
-          const cleanIg = (l.contatto_ig || "").replace('@','');
-          return `
-            <tr>
-              <td>
-                <img src="${l.foto_url}" style="width:36px; height:36px; object-fit:cover; border-radius:6px; background:#000;">
-              </td>
-              <td style="font-weight:600; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                ${l.titolo}
-              </td>
-              <td style="color:var(--rose-gold-light); font-weight:700;">${l.prezzo}</td>
-              <td><span style="font-size:9.5px; opacity:0.8;">${l.polo}</span></td>
-              <td>
-                <a href="https://ig.me/m/${cleanIg}" target="_blank" rel="noopener" style="color:var(--aura-purple); text-decoration:none; font-weight:600;">
-                  @${cleanIg}
-                </a>
-              </td>
-              <td><span class="dash-pin-badge">${l.seller_pin || '----'}</span></td>
-              <td>
-                <button class="btn-dash-action-del" onclick="window.adminDeleteListing('${l.id}')">
-                  Elimina
-                </button>
-              </td>
-            </tr>
-          `;
-        }).join('');
-      }
-
-      document.getElementById("dashSearchInput").addEventListener("input", renderDashTable);
-
-      // ESPORTAZIONE DATI IN CSV
-      document.getElementById("btnExportCsv").addEventListener("click", () => {
-        if (listings.length === 0) {
-          alert("Nessun annuncio da esportare.");
-          return;
-        }
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-        csvContent += "ID,Data,Titolo,Prezzo,Categoria,Polo,Target,Instagram,PIN\n";
-
-        listings.forEach(l => {
-          const date = new Date(l.created_at).toLocaleDateString('it-IT');
-          const cleanTitle = `"${(l.titolo || '').replace(/"/g, '""')}"`;
-          const cleanPrice = `"${(l.prezzo || '').replace(/"/g, '""')}"`;
-          csvContent += `${l.id},${date},${cleanTitle},${cleanPrice},${l.categoria},${l.polo},${l.target || ''},${l.contatto_ig},${l.seller_pin}\n`;
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `aura_market_annunci_${Date.now()}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
-
-      // CARICAMENTO DATI & ASCOLTO REALTIME
-      async function loadData() {
-        if (!sbClient) return;
-        try {
-          const { data, error } = await sbClient
-            .from('annunci')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-          if (!error && data) {
-            listings = data;
-          }
-        } catch (err) {
-          console.error("Errore fetch Supabase:", err);
-        } finally {
-          renderCards();
-          checkUrlDeepLink();
-          if (dashModal.classList.contains("open")) {
-            renderDashboard();
-          }
-        }
-      }
-
-      // Sottoscrizione al canale Realtime di Supabase
-      function setupRealtimeListener() {
-        if (!sbClient) return;
-        try {
-          sbClient
-            .channel('realtime_annunci_aura')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, (payload) => {
-              loadData();
-              showToast("⚡ Aggiornamento bacheca in tempo reale!");
-            })
-            .subscribe();
-        } catch (e) {
-          console.warn("Realtime non supportato:", e);
-        }
-      }
-
-      // GESTIONE FILTRI
-      const safetyBox = document.getElementById("ticketSafetyNotice");
-      const subAffitti = document.getElementById("subfilterAffitti");
-      const subAbbigliamento = document.getElementById("subfilterAbbigliamento");
-
-      document.querySelectorAll('.pill').forEach(pill => {
-        pill.addEventListener('click', () => {
-          document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          activeCategory = pill.dataset.cat;
-          activeSubfilter = "ALL";
-
-          document.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
-          document.querySelectorAll('.sub-pill[data-target="ALL"]').forEach(sp => sp.classList.add('active'));
-
-          subAffitti.classList.remove("active");
-          subAbbigliamento.classList.remove("active");
-          safetyBox.classList.remove("active");
-
-          if (activeCategory === "Affitti") {
-            subAffitti.classList.add("active");
-          } else if (activeCategory === "Abbigliamento") {
-            subAbbigliamento.classList.add("active");
-          } else if (activeCategory === "Biglietti") {
-            safetyBox.classList.add("active");
-          }
-
-          renderCards();
-        });
-      });
-
-      document.querySelectorAll('.sub-pill').forEach(subPill => {
-        subPill.addEventListener('click', () => {
-          const parent = subPill.parentElement;
-          parent.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
-          subPill.classList.add('active');
-          activeSubfilter = subPill.dataset.target;
-          renderCards();
-        });
-      });
-
-      const searchInput = document.getElementById("searchInput");
-      const btnClear = document.getElementById("btnClearSearch");
-
-      searchInput.addEventListener("input", () => {
-        if (searchInput.value.trim().length > 0) {
-          btnClear.classList.add("visible");
-        } else {
-          btnClear.classList.remove("visible");
-        }
-        renderCards();
-      });
-
-      btnClear.addEventListener("click", () => {
-        searchInput.value = "";
-        btnClear.classList.remove("visible");
-        searchInput.focus();
-        renderCards();
-      });
-
-      document.getElementById("poloFilter").addEventListener("change", renderCards);
-
-      const fCategoria = document.getElementById("fCategoria");
-      const formRowTarget = document.getElementById("formRowTarget");
-      const formLabelTarget = document.getElementById("formLabelTarget");
-      const fTarget = document.getElementById("fTarget");
-      const formRowCondizione = document.getElementById("formRowCondizione");
-
-      function updateFormTargetField() {
-        const cat = fCategoria.value;
-        if (cat === "Affitti") {
-          formRowTarget.style.display = "flex";
-          formLabelTarget.innerText = "Destinatari Stanza";
-          fTarget.innerHTML = `
-            <option value="Misto / Tutti">Misto / Per Tutti</option>
-            <option value="Solo Ragazze">Solo Ragazze</option>
-            <option value="Solo Ragazzi">Solo Ragazzi</option>
-          `;
-          formRowCondizione.style.display = "none";
-        } else if (cat === "Abbigliamento") {
-          formRowTarget.style.display = "flex";
-          formLabelTarget.innerText = "Reparto / Genere";
-          fTarget.innerHTML = `
-            <option value="Unisex">Unisex</option>
-            <option value="Donna">Donna</option>
-            <option value="Uomo">Uomo</option>
-          `;
-          formRowCondizione.style.display = "flex";
-        } else {
-          formRowTarget.style.display = "none";
-          fTarget.innerHTML = `<option value="">Nessuno</option>`;
-          formRowCondizione.style.display = (cat === "Biglietti") ? "none" : "flex";
-        }
-      }
-      fCategoria.addEventListener("change", updateFormTargetField);
-      updateFormTargetField();
-
-      const fFotoInput = document.getElementById("fFoto");
-      const previewContainer = document.getElementById("photoPreviewContainer");
-
-      fFotoInput.addEventListener("change", () => {
-        previewContainer.innerHTML = "";
-        const files = Array.from(fFotoInput.files).slice(0, 3);
-        if (fFotoInput.files.length > 3) {
-          alert("Puoi caricare al massimo 3 foto. Verranno considerate le prime 3.");
-        }
-
-        files.forEach((file, index) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const div = document.createElement("div");
-            div.className = "photo-preview-item";
-            div.innerHTML = `
-              <img src="${e.target.result}">
-              <span class="photo-preview-badge">${index === 0 ? 'Copertina' : '#' + (index + 1)}</span>
             `;
-            previewContainer.appendChild(div);
-          };
-          reader.readAsDataURL(file);
+          }
         });
-      });
 
-      const modal = document.getElementById("modalBackdrop");
-      const btnOpen = document.getElementById("btnOpenModal");
-      const btnClose = document.getElementById("btnCloseModal");
+        feed.innerHTML = html;
+      }
 
-      btnOpen.addEventListener("click", () => modal.classList.add("open"));
-      btnClose.addEventListener("click", () => modal.classList.remove("open"));
-      modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+      // REAZIONI RPC
+      window.reactVault = async function(id, type) {
+        const storedKey = `aura_voted_${id}`;
+        if (localStorage.getItem(storedKey)) {
+          showToast("Hai già votato questo post!");
+          return;
+        }
+        localStorage.setItem(storedKey, "1");
 
-      const sellerModal = document.getElementById("sellerDeleteModal");
-      const btnCloseSeller = document.getElementById("btnCloseSellerModal");
-
-      window.openSellerDeleteModal = function(id) {
-        currentItemToDelete = id;
-        document.getElementById("inputSellerPin").value = "";
-        sellerModal.classList.add("open");
+        try {
+          const { data, error } = await sbClient.rpc('vota_vault_post', { p_id: id, p_vote_type: type });
+          if (!error && data.success) {
+            if (data.is_unlocked) {
+              showToast("🎉 Quorum raggiunto! Dettagli sbloccati!");
+            } else {
+              showToast("Voto registrato! 🔥");
+            }
+            await loadVaultData();
+          }
+        } catch (e) {
+          console.error(e);
+        }
       };
 
-      btnCloseSeller.addEventListener("click", () => sellerModal.classList.remove("open"));
-      sellerModal.addEventListener("click", (e) => { if (e.target === sellerModal) sellerModal.classList.remove("open"); });
-
-      document.getElementById("btnConfirmSellerDelete").addEventListener("click", async () => {
-        const pin = document.getElementById("inputSellerPin").value.trim();
-        const confirmBtn = document.getElementById("btnConfirmSellerDelete");
-
-        if (!pin || pin.length !== 4) {
-          alert("Inserisci il PIN numerico di 4 cifre.");
-          return;
-        }
-
-        confirmBtn.disabled = true;
-        confirmBtn.innerText = "Verifica ed eliminazione...";
-
-        let deleted = false;
-
+      // SEGNALAZIONE RPC
+      window.flagVault = async function(id) {
+        if (!confirm("Vuoi segnalare questo post per contenuto non appropriato?")) return;
         try {
-          const { data, error } = await sbClient.rpc('elimina_annuncio_venditore', {
-            p_id: String(currentItemToDelete),
-            p_pin: String(pin)
-          });
-          if (!error && data === true) {
-            deleted = true;
+          const { data, error } = await sbClient.rpc('segnala_vault_post', { p_id: id });
+          if (!error && data.success) {
+            showToast("Segnalazione inviata. Grazie per l'aiuto!");
+            if (data.quarantined) loadVaultData();
           }
-        } catch (e) {
-          console.warn("RPC venditore fallito, provo fallback...", e);
-        }
-
-        if (!deleted) {
-          try {
-            const { data, error } = await sbClient
-              .from('annunci')
-              .delete()
-              .eq('id', currentItemToDelete)
-              .eq('seller_pin', pin)
-              .select();
-
-            if (!error && data && data.length > 0) {
-              deleted = true;
-            }
-          } catch (e) {
-            console.error("Errore fallback venditore:", e);
-          }
-        }
-
-        confirmBtn.disabled = false;
-        confirmBtn.innerText = "Segna come Concluso / Elimina";
-
-        if (deleted) {
-          alert("Annuncio rimosso con successo dal circuito!");
-          sellerModal.classList.remove("open");
-          closeDetailModal();
-          await loadData();
-        } else {
-          alert("PIN non corretto o annuncio non trovato. Ricontrolla il codice a 4 cifre inserito alla pubblicazione.");
-        }
-      });
+        } catch (e) {}
+      };
 
       // ELIMINAZIONE ADMIN
-      window.adminDeleteListing = async function(id) {
-        if (!confirm("Sei sicuro di voler eliminare definitivamente questo annuncio?")) return;
-
-        const currentKey = (adminKey || localStorage.getItem("aura_admin_key") || "").trim();
-        if (currentKey.toUpperCase() !== MASTER_KEY_CORRETTA) {
-          alert("Sessione non valida o scaduta.");
-          logoutAdmin();
-          return;
-        }
-
-        let deleted = false;
-
+      window.deleteVaultAdmin = async function(id) {
+        if (!confirm("Eliminare definitivamente questo post?")) return;
         try {
-          const { data, error } = await sbClient.rpc('elimina_annuncio_admin', {
-            p_id: String(id).trim(),
-            p_master_key: currentKey
-          });
-          if (!error && data === true) {
-            deleted = true;
-          }
-        } catch (e) {
-          console.warn("RPC Admin fallito, provo fallback...", e);
-        }
-
-        if (!deleted) {
-          const { error } = await sbClient.from('annunci').delete().eq('id', id);
-          if (!error) deleted = true;
-        }
-
-        if (deleted) {
-          showToast("Annuncio eliminato con successo.");
-          closeDetailModal();
-          await loadData();
-        } else {
-          alert("Errore durante l'eliminazione dell'annuncio.");
-        }
+          await sbClient.rpc('elimina_vault_admin', { p_id: id, p_master_key: MASTER_KEY_CORRETTA });
+          showToast("Post eliminato.");
+          loadVaultData();
+        } catch (e) {}
       };
 
-      function logoutAdmin() {
-        localStorage.removeItem("aura_admin_key");
-        adminKey = null;
-        document.body.classList.remove("is-admin");
-        document.getElementById("adminBar").classList.remove("active");
-        dashModal.classList.remove("open");
-        renderCards();
-      }
+      // ==========================================
+      // GENERATORE AUTOMATICO STORY INSTAGRAM (1080x1920)
+      // ==========================================
+      window.downloadStoryImage = function(id) {
+        const post = vaultPosts.find(p => p.id === id);
+        if (!post) return;
 
-      document.getElementById("btnExitAdmin").addEventListener("click", logoutAdmin);
+        const canvas = document.getElementById("storyCanvas");
+        const ctx = canvas.getContext("2d");
 
-      let clickCount = 0;
-      function triggerAdminPrompt() {
-        const input = prompt("Inserisci la Master Key di Moderazione AURA:");
-        if (input === null) return;
+        // 1. Sfondo profondo
+        ctx.fillStyle = "#050407";
+        ctx.fillRect(0, 0, 1080, 1920);
 
-        const cleanKey = input.trim();
-        if (cleanKey.toUpperCase() === MASTER_KEY_CORRETTA) {
-          adminKey = cleanKey;
-          localStorage.setItem("aura_admin_key", cleanKey);
-          document.body.classList.add("is-admin");
-          document.getElementById("adminBar").classList.add("active");
-          renderCards();
-          showToast("Modalità Moderatore Attivata 🛡️");
-        } else {
-          alert("Accesso negato: Master Key non valida.");
-          logoutAdmin();
+        // 2. Glow radiale Rose Gold / Purple
+        const grad = ctx.createRadialGradient(540, 400, 50, 540, 400, 700);
+        grad.addColorStop(0, "rgba(232, 121, 249, 0.22)");
+        grad.addColorStop(1, "transparent");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        // 3. Header e Brand
+        ctx.font = "bold 46px 'Cinzel', serif";
+        ctx.fillStyle = "#FDE8E1";
+        ctx.textAlign = "center";
+        ctx.fillText("AURA • UDA THE VAULT", 540, 260);
+
+        // Badge Polo
+        ctx.font = "bold 28px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#E2B49A";
+        ctx.fillText(`📍 ${post.polo.toUpperCase()} • ${post.luogo.toUpperCase()}`, 540, 330);
+
+        // Linea divisoria
+        ctx.strokeStyle = "rgba(226, 180, 154, 0.35)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(340, 370);
+        ctx.lineTo(740, 370);
+        ctx.stroke();
+
+        // 4. Box Contenuto
+        ctx.fillStyle = "rgba(18, 14, 25, 0.95)";
+        ctx.roundRect(100, 460, 880, 1050, 30);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(226, 180, 154, 0.4)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Titolo Post
+        ctx.font = "bold 48px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.textAlign = "left";
+        wrapText(ctx, post.titolo, 160, 570, 760, 60);
+
+        // Corpo Testo (con virgolette stilizzate)
+        ctx.font = "400 36px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#E7DEEA";
+        const cleanText = post.testo.replace(/\[(.*?)\]/g, "████████");
+        wrapText(ctx, `“${cleanText}”`, 160, 740, 760, 56);
+
+        // 5. Footer Call to Action
+        ctx.fillStyle = "#E879F9";
+        ctx.font = "bold 34px 'Plus Jakarta Sans', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Vota per sbloccare i dettagli completi", 540, 1640);
+
+        ctx.fillStyle = "#FAF5F8";
+        ctx.font = "500 28px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillText("Link in Bio • @aura.uda", 540, 1700);
+
+        // Download automatico PNG
+        const link = document.createElement("a");
+        link.download = `story_aura_${post.id.substring(0, 6)}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+        showToast("Grafica Story IG 1080x1920 generata!");
+      };
+
+      function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(" ");
+        let line = "";
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + " ";
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line, x, y);
+            line = words[n] + " ";
+            y += lineHeight;
+          } else {
+            line = testLine;
+          }
         }
+        ctx.fillText(line, x, y);
       }
 
-      document.getElementById("adminTrigger").addEventListener("click", triggerAdminPrompt);
-      document.getElementById("brandLogo").addEventListener("click", () => {
-        clickCount++;
-        if (clickCount >= 3) {
-          clickCount = 0;
-          triggerAdminPrompt();
+      // ==========================================
+      // SECRET HANDSHAKE (SPOTTED)
+      // ==========================================
+      const modalHandshake = document.getElementById("modalHandshake");
+      window.openHandshakeModal = function(id) {
+        const post = vaultPosts.find(p => p.id === id);
+        if (!post) return;
+        activePostForHandshake = post;
+        document.getElementById("handshakePromptText").innerText = `Domanda dell'autore:\n"${post.handshake_q}"`;
+        document.getElementById("inputHandshakeAnswer").value = "";
+        document.getElementById("handshakeResultBox").style.display = "none";
+        modalHandshake.classList.add("open");
+      };
+
+      document.getElementById("btnCloseHandshakeModal").addEventListener("click", () => modalHandshake.classList.remove("open"));
+
+      document.getElementById("btnVerifyHandshake").addEventListener("click", async () => {
+        const ans = document.getElementById("inputHandshakeAnswer").value.trim();
+        if (!ans) return;
+
+        const hash = await sha256(ans);
+        const resultBox = document.getElementById("handshakeResultBox");
+        resultBox.style.display = "block";
+
+        if (hash === activePostForHandshake.handshake_hash) {
+          resultBox.style.background = "rgba(16, 185, 129, 0.15)";
+          resultBox.style.border = "1px solid #10B981";
+          resultBox.style.color = "#6EE7B7";
+          const ig = (activePostForHandshake.author_contact || "").replace("@", "");
+          resultBox.innerHTML = `🎉 <strong>Risposta Esatta!</strong><br>Contatta l'autore su Instagram: <a href="https://ig.me/m/${ig}" target="_blank" style="color:#fff; font-weight:700;">@${ig}</a>`;
+        } else {
+          resultBox.style.background = "rgba(239, 68, 68, 0.15)";
+          resultBox.style.border = "1px solid #EF4444";
+          resultBox.style.color = "#FCA5A5";
+          resultBox.innerHTML = `❌ <strong>Risposta non corretta.</strong> Riprova solo se eri davvero tu!`;
         }
       });
 
-      document.getElementById("createListingForm").addEventListener("submit", async (e) => {
+      // ==========================================
+      // SUBMIT VAULT POST (CON FILTRO ANTI-DIFFAMAZIONE)
+      // ==========================================
+      const modalVault = document.getElementById("modalVaultCreate");
+      document.getElementById("btnOpenVaultModal").addEventListener("click", () => modalVault.classList.add("open"));
+      document.getElementById("btnCloseVaultModal").addEventListener("click", () => modalVault.classList.remove("open"));
+
+      document.getElementById("vTipo").addEventListener("change", (e) => {
+        document.getElementById("spottedFields").style.display = (e.target.value === 'spotted') ? 'block' : 'none';
+      });
+
+      document.getElementById("vaultCreateForm").addEventListener("submit", async (e) => {
         e.preventDefault();
-        const submitBtn = document.getElementById("btnSubmitForm");
-        submitBtn.innerText = "Compressione e caricamento in corso...";
+        const submitBtn = document.getElementById("btnSubmitVault");
         submitBtn.disabled = true;
 
-        const rawFiles = Array.from(document.getElementById("fFoto").files).slice(0, 3);
-        const titolo = document.getElementById("fTitolo").value.trim();
-        const categoria = document.getElementById("fCategoria").value;
-        const prezzo = sanitizePrice(document.getElementById("fPrezzo").value, categoria);
-        const target = (categoria === "Affitti" || categoria === "Abbigliamento") ? document.getElementById("fTarget").value : "";
-        const condizione = (categoria === "Affitti" || categoria === "Biglietti") ? "Non specificata" : document.getElementById("fCondizione").value;
-        const polo = document.getElementById("fPolo").value;
-        const descrizione = document.getElementById("fDescrizione").value.trim();
-        const rawIg = document.getElementById("fIg").value.trim();
-        const contatto_ig = rawIg.replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '').trim();
-        const seller_pin = document.getElementById("fPin").value.trim();
+        const tipo = document.getElementById("vTipo").value;
+        const polo = document.getElementById("vPolo").value;
+        const luogo = document.getElementById("vLuogo").value.trim();
+        const titolo = document.getElementById("vTitolo").value.trim();
+        const testo = document.getElementById("vTesto").value.trim();
+
+        // Controllo Anti-Diffamazione
+        const phoneRegex = /(\+39|0039)?\s?3\d{2}[-.\s]?\d{6,7}/;
+        if (phoneRegex.test(testo) || phoneRegex.test(titolo)) {
+          alert("Non è consentito inserire numeri di telefono nei post anonimi.");
+          submitBtn.disabled = false;
+          return;
+        }
+
+        let handshake_q = null;
+        let handshake_hash = null;
+        let author_contact = null;
+
+        if (tipo === 'spotted') {
+          handshake_q = document.getElementById("vHandshakeQ").value.trim() || null;
+          const rawA = document.getElementById("vHandshakeA").value.trim();
+          if (rawA) handshake_hash = await sha256(rawA);
+          author_contact = document.getElementById("vAuthorContact").value.trim() || null;
+        }
+
+        const payload = {
+          tipo,
+          polo,
+          luogo,
+          titolo,
+          testo,
+          soglia_sblocco: (tipo === 'gossip') ? 25 : 1,
+          handshake_q,
+          handshake_hash,
+          author_contact
+        };
 
         try {
-          const uploadPromises = rawFiles.map(async (file, idx) => {
-            const compressed = await compressImageFile(file);
-            const cleanFileName = `${Date.now()}_${idx}_${Math.random().toString(36).substring(2, 7)}.jpg`;
-            const { error: uploadError } = await sbClient.storage.from('foto_annunci').upload(cleanFileName, compressed);
-            if (uploadError) throw uploadError;
-            const { data: urlData } = sbClient.storage.from('foto_annunci').getPublicUrl(cleanFileName);
-            return urlData.publicUrl;
-          });
-
-          const uploadedUrls = await Promise.all(uploadPromises);
-          const foto_url = uploadedUrls[0];
-          const foto_extra = uploadedUrls.slice(1);
-
-          const payload = {
-            titolo,
-            prezzo,
-            categoria,
-            polo,
-            contatto_ig,
-            seller_pin,
-            foto_url,
-            foto_extra,
-            descrizione,
-            condizione,
-            target
-          };
-
-          let { error: dbError } = await sbClient.from('annunci').insert([payload]);
-
-          if (dbError) {
-            delete payload.foto_extra;
-            delete payload.descrizione;
-            delete payload.condizione;
-            const retry = await sbClient.from('annunci').insert([payload]);
-            if (retry.error) throw retry.error;
-          }
-
-          document.getElementById("createListingForm").reset();
-          previewContainer.innerHTML = "";
-          updateFormTargetField();
-          modal.classList.remove("open");
-          showToast("Annuncio pubblicato con successo! ✨");
-          await loadData();
+          const { error } = await sbClient.from('vault_posts').insert([payload]);
+          if (error) throw error;
+          document.getElementById("vaultCreateForm").reset();
+          modalVault.classList.remove("open");
+          showToast("Post inviato con successo nel Feed! ✨");
+          await loadVaultData();
         } catch (err) {
-          alert("Errore durante la pubblicazione: " + err.message);
+          alert("Errore invio: " + err.message);
         } finally {
-          submitBtn.innerText = "Pubblica Subito (Gratis)";
           submitBtn.disabled = false;
         }
       });
 
-      renderCards();
-      loadData();
-      setupRealtimeListener();
+      // ==========================================
+      // CARICAMENTO DATI SUPABASE (MARKET & VAULT)
+      // ==========================================
+      async function loadMarketData() {
+        if (!sbClient) return;
+        try {
+          const { data } = await sbClient.from('annunci').select('*').order('created_at', { ascending: false });
+          if (data) listings = data;
+        } catch (e) {}
+        renderMarketCards();
+      }
+
+      async function loadVaultData() {
+        if (!sbClient) return;
+        try {
+          const { data } = await sbClient.from('vault_posts').select('*').order('created_at', { ascending: false });
+          if (data) vaultPosts = data;
+        } catch (e) {}
+        renderVault();
+      }
+
+      function renderMarketCards() {
+        const grid = document.getElementById("listingsGrid");
+        const query = (document.getElementById("searchInput").value || "").toLowerCase();
+        const polo = document.getElementById("poloFilterMarket").value;
+
+        const filtered = listings.filter(item => {
+          const poloMatch = (polo === "ALL" || item.polo === polo || item.polo === "Entrambi");
+          const queryMatch = (item.titolo || "").toLowerCase().includes(query);
+          return poloMatch && queryMatch;
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Nessun annuncio trovato.</div>`;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(item => `
+          <article class="card">
+            <div class="card-cover-wrap">
+              <span class="tag-campus">${item.polo}</span>
+              <img class="card-cover" src="${item.foto_url}">
+            </div>
+            <div class="card-content">
+              <div class="card-price">${item.prezzo}</div>
+              <div class="card-title">${item.titolo}</div>
+              <a href="https://ig.me/m/${item.contatto_ig}" target="_blank" class="btn-contact">Contatta @${item.contatto_ig}</a>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      // MODALE MARKET
+      const modalMarket = document.getElementById("modalMarketCreate");
+      document.getElementById("btnOpenMarketModal").addEventListener("click", () => modalMarket.classList.add("open"));
+      document.getElementById("btnCloseMarketModal").addEventListener("click", () => modalMarket.classList.remove("open"));
+
+      document.getElementById("searchInput").addEventListener("input", renderMarketCards);
+      document.getElementById("poloFilterMarket").addEventListener("change", renderMarketCards);
+      document.getElementById("poloFilterVault").addEventListener("change", renderVault);
+
+      document.querySelectorAll('[data-vault-type]').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('[data-vault-type]').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeVaultType = pill.dataset.vaultType;
+          renderVault();
+        });
+      });
+
+      // INIT & REALTIME
+      loadMarketData();
+      loadVaultData();
+
+      if (sbClient) {
+        sbClient.channel('realtime_all_aura')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, loadMarketData)
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_posts' }, loadVaultData)
+          .subscribe();
+      }
     })();
   </script>
 </body>
