@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AURA • Staff & Moderator Control Center</title>
+  
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#050407">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #07050A;
+      --card-bg: rgba(18, 14, 25, 0.92);
+      --border: rgba(226, 180, 154, 0.22);
+      --rose-gold: #E2B49A;
+      --rose-gold-light: #FDE8E1;
+      --aura-magenta: #E879F9;
+      --aura-purple: #C084FC;
+      --text: #FAF5F8;
+      --text-muted: #9E94A3;
+      --font-serif: 'Cinzel', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      padding: 20px 16px 80px;
+    }
+
+    .container { max-width: 760px; margin: 0 auto; }
+
+    /* SCHERMATA LOGIN */
+    #loginScreen {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .login-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+
+    /* HEADER DASHBOARD */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .badge-role {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-master { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid #EF4444; }
+    .badge-staff { background: rgba(192, 132, 252, 0.2); color: #E9D5FF; border: 1px solid #C084FC; }
+
+    input, textarea {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-family: var(--font-sans);
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: var(--rose-gold); }
+
+    .btn {
+      background: linear-gradient(135deg, #FDE8E1, #E2B49A);
+      color: #07050A;
+      border: none;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+
+    /* TOOLBAR AZIONI GEMINI & BATCH */
+    .ai-toolbar {
+      background: rgba(192, 132, 252, 0.08);
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ai-actions-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* SCHEDE CODA PENDING */
+    .pending-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      transition: all 0.25s ease;
+    }
+    .pending-card.ai-safe { border-color: #10B981; background: rgba(16, 185, 129, 0.06); }
+    .pending-card.ai-danger { border-color: #EF4444; background: rgba(239, 68, 68, 0.08); }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .ai-badge.safe { background: rgba(16, 185, 129, 0.2); color: #6EE7B7; border: 1px solid #10B981; }
+    .ai-badge.danger { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid #EF4444; }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-act-now { background: #10B981; color: #050407; }
+    .btn-act-queue { background: linear-gradient(135deg, var(--rose-gold), var(--aura-magenta)); color: #050407; }
+    .btn-act-story { background: linear-gradient(135deg, #E879F9, #C084FC); color: #050407; }
+    .btn-act-del { background: rgba(239, 68, 68, 0.2); border: 1px solid #EF4444; color: #FCA5A5; }
+
+    #storyCanvas { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- 1. LOGIN ACCESSO SELETTIVO -->
+    <div id="loginScreen">
+      <div class="login-box">
+        <h2 style="font-family: var(--font-serif); font-size: 22px; color: var(--rose-gold-light); margin-bottom: 6px;">AURA STAFF</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Inserisci la Master Key o la Staff Key:</p>
+        <input type="password" id="inputAuthKey" placeholder="••••••••••••" style="margin-bottom: 14px; text-align: center;">
+        <button class="btn" id="btnLogin" style="width: 100%;">Accedi alla Dashboard</button>
+      </div>
+    </div>
+
+    <!-- 2. DASHBOARD OPERATIVA -->
+    <div id="dashboardScreen" style="display: none;">
+      <div class="dashboard-header">
+        <div>
+          <h1 style="font-family: var(--font-serif); font-size: 20px; color: var(--rose-gold-light);">AURA MODERATION CONTROL</h1>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;" id="statusSummaryText">Caricamento coda...</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="badge-role" id="roleBadge">STAFF</span>
+          <button class="btn" id="btnLogout" style="padding: 6px 12px; font-size: 11px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff;">Esci</button>
+        </div>
+      </div>
+
+      <!-- TOOLBAR GEMINI AI -->
+      <div class="ai-toolbar">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label style="font-size:11px; font-weight:700; color:var(--rose-gold-light);">Chiave Google Gemini (1.5 Flash):</label>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:10.5px; color:var(--aura-magenta); text-decoration:underline;">Ottieni Chiave Gratis ➔</a>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <input type="password" id="inputGeminiKey" placeholder="Incolla AIzaSy..." style="flex:1;">
+          <button class="btn" id="btnSaveGeminiKey" style="padding: 0 16px;">Salva</button>
+        </div>
+        <div class="ai-actions-row">
+          <button class="btn" id="btnRunAiBatch" style="flex:1; background:linear-gradient(135deg, #E879F9, #C084FC);">
+            🪄 Analizza & Censura Coda con Gemini
+          </button>
+          <button class="btn" id="btnApproveAllSafe" style="flex:1; background:#10B981;">
+            ⚡ Approva Tutti i Sicuri in Coda (+1 min)
+          </button>
+        </div>
+      </div>
+
+      <!-- LISTA POST IN ATTESA -->
+      <div id="pendingContainer"></div>
+    </div>
+
+  </div>
+
+  <canvas id="storyCanvas" width="1080" height="1920"></canvas>
+
+  <script>
+    (function() {
+      const MASTER_KEY = "AURA2026MASTERMOHA";
+      const STAFF_KEY = "AURASTAFF2026";
+      const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
+
+      let sbClient = null;
+      if (window.supabase && typeof window.supabase.createClient === 'function') {
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+
+      let currentAuthKey = localStorage.getItem("aura_staff_session_key") || null;
+      let pendingList = [];
+      let aiResults = {}; // id -> { safe, reason, censored_text }
+
+      // CONTROLLO LOGIN
+      function checkAuth() {
+        if (currentAuthKey === MASTER_KEY || currentAuthKey === STAFF_KEY) {
+          document.getElementById("loginScreen").style.display = "none";
+          document.getElementById("dashboardScreen").style.display = "block";
+          const isMaster = (currentAuthKey === MASTER_KEY);
+          const badge = document.getElementById("roleBadge");
+          badge.innerText = isMaster ? "MASTER ADMIN" : "STAFF MODERATOR";
+          badge.className = `badge-role ${isMaster ? "badge-master" : "badge-staff"}`;
+          loadPendingQueue();
+        } else {
+          document.getElementById("loginScreen").style.display = "flex";
+          document.getElementById("dashboardScreen").style.display = "none";
+        }
+      }
+
+      document.getElementById("btnLogin").addEventListener("click", () => {
+        const inputKey = document.getElementById("inputAuthKey").value.trim().toUpperCase();
+        if (inputKey === MASTER_KEY || inputKey === STAFF_KEY) {
+          currentAuthKey = inputKey;
+          localStorage.setItem("aura_staff_session_key", currentAuthKey);
+          checkAuth();
+        } else {
+          alert("Chiave non valida.");
+        }
+      });
+
+      document.getElementById("btnLogout").addEventListener("click", () => {
+        localStorage.removeItem("aura_staff_session_key");
+        currentAuthKey = null;
+        checkAuth();
+      });
+
+      // GEMINI STORAGE
+      const geminiInput = document.getElementById("inputGeminiKey");
+      geminiInput.value = localStorage.getItem("aura_gemini_key") || "";
+      document.getElementById("btnSaveGeminiKey").addEventListener("click", () => {
+        const k = geminiInput.value.trim();
+        if (k) {
+          localStorage.setItem("aura_gemini_key", k);
+          alert("Chiave Google Gemini salvata!");
+        }
+      });
+
+      // CARICAMENTO CODA PENDING TRAMITE RPC
+      async function loadPendingQueue() {
+        if (!sbClient || !currentAuthKey) return;
+        try {
+          const { data, error } = await sbClient.rpc('get_pending_posts', { p_auth_key: currentAuthKey });
+          if (error) throw error;
+          pendingList = data || [];
+          document.getElementById("statusSummaryText").innerText = `${pendingList.length} post in attesa di consenso`;
+          renderQueue();
+        } catch (err) {
+          alert("Errore caricamento coda: " + err.message);
+        }
+      }
+
+      function renderQueue() {
+        const container = document.getElementById("pendingContainer");
+        if (pendingList.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:50px 20px; background:rgba(255,255,255,0.02); border-radius:16px;">
+              <div style="font-size:36px; margin-bottom:10px;">☕</div>
+              <h3 style="font-size:16px; color:var(--rose-gold-light);">Nessun post in attesa!</h3>
+              <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">Tutto il feed è aggiornato e revisionato.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = pendingList.map(p => {
+          const ai = aiResults[p.id];
+          let cardClass = "";
+          let aiBadge = "";
+          let curText = p.testo;
+
+          if (ai) {
+            if (ai.safe) {
+              cardClass = "ai-safe";
+              aiBadge = `<div class="ai-badge safe">✅ GEMINI: SICURO (${ai.reason})</div>`;
+              curText = ai.censored_text;
+            } else {
+              cardClass = "ai-danger";
+              aiBadge = `<div class="ai-badge danger">⛔ GEMINI: RISCHIOSO (${ai.reason})</div>`;
+            }
+          }
+
+          const isSpotted = (p.tipo === 'spotted');
+          const extraInfo = isSpotted ? `
+            <div style="font-size:11.5px; color:#C084FC; margin: 6px 0; background:rgba(192,132,252,0.06); padding:6px 10px; border-radius:6px;">
+              <strong>Domanda Handshake:</strong> "${p.handshake_q || 'N/A'}"
+            </div>
+          ` : '';
+
+          return `
+            <div class="pending-card ${cardClass}" id="card-${p.id}">
+              ${aiBadge}
+              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="font-size:11px; font-weight:800; color:var(--rose-gold);">${p.tipo.toUpperCase()} • ${p.polo}</span>
+                <span style="font-size:10.5px; color:var(--text-muted);">${p.luogo}</span>
+              </div>
+              <div style="font-weight:700; font-size:14.5px; color:#fff; margin-bottom:6px;">${p.titolo}</div>
+              ${extraInfo}
+              
+              <label style="font-size:10.5px; color:var(--rose-gold); font-weight:600;">Testo (puoi modificarlo o applicare le censure [parola]):</label>
+              <textarea id="edit-testo-${p.id}" style="margin-top:4px; font-size:12.5px;">${curText}</textarea>
+
+              <div class="card-actions">
+                <button class="btn btn-act-now" onclick="window.approveItem('${p.id}', 0)">✅ Live Subito</button>
+                <button class="btn btn-act-queue" onclick="window.approveItem('${p.id}', 60)">⏱️ In Coda (+1 min)</button>
+                <button class="btn btn-act-story" onclick="window.generateStory('${p.id}')">📸 Story IG</button>
+                <button class="btn btn-act-del" onclick="window.rejectItem('${p.id}')">❌ Rifiuta</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // INTEGRAZIONE GEMINI AI (BATCH)
+      async function callGemini(apiKey, post) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const prompt = `Sei il redattore e moderatore di AURA, community studentesca universitaria UdA Chieti-Pescara.
+Analizza questo post "${post.tipo}" inviato per il polo "${post.polo} - ${post.luogo}":
+
+TITOLO: "${post.titolo}"
+TESTO: "${post.testo}"
+
+COMPITI:
+1. Valuta la sicurezza (safe): imposta safe=false solo se contiene nomi e cognomi reali, numeri di telefono, minacce o insulti gravi. Lo slang, l'ironia e la vita universitaria senza nomi sono safe=true.
+2. Censura strategica: se safe=true, individua 1 o 2 dettagli piccanti o colpi di scena e racchiudili tra parentesi quadre [...] per creare suspense. Non censurare tutto.
+
+Restituisci ESCLUSIVAMENTE un JSON valido con questa struttura:
+{
+  "safe": true,
+  "reason": "motivazione sintetica in italiano",
+  "censored_text": "testo con [parentesi] inserite"
+}`;
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json" }
+          })
+        });
+
+        if (!res.ok) throw new Error("Errore Gemini: " + res.statusText);
+        const jsonRes = await res.json();
+        return JSON.parse(jsonRes.candidates[0].content.parts[0].text);
+      }
+
+      document.getElementById("btnRunAiBatch").addEventListener("click", async () => {
+        const key = localStorage.getItem("aura_gemini_key");
+        if (!key) {
+          alert("Inserisci e salva prima la chiave Google Gemini API in alto.");
+          return;
+        }
+        if (pendingList.length === 0) return;
+
+        const btn = document.getElementById("btnRunAiBatch");
+        btn.disabled = true;
+        btn.innerText = "⏳ Analisi in corso...";
+
+        for (const p of pendingList) {
+          try {
+            aiResults[p.id] = await callGemini(key, p);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        btn.disabled = false;
+        btn.innerText = "🪄 Analizza & Censura Coda con Gemini";
+        renderQueue();
+      });
+
+      // APPROVAZIONE MASSIVA TUTTI I SICURI
+      document.getElementById("btnApproveAllSafe").addEventListener("click", async () => {
+        const safeItems = pendingList.filter(p => aiResults[p.id] && aiResults[p.id].safe === true);
+        if (safeItems.length === 0) {
+          alert("Nessun post validato come 'Sicuro' pronto. Esegui prima l'analisi AI!");
+          return;
+        }
+
+        if (!confirm(`Approvare ${safeItems.length} post programmati con intervallo di 1 minuto ciascuno?`)) return;
+
+        let delay = 60;
+        for (const p of safeItems) {
+          const txt = aiResults[p.id].censored_text || p.testo;
+          await sbClient.rpc('approva_vault_post', {
+            p_id: p.id,
+            p_auth_key: currentAuthKey,
+            p_testo: txt,
+            p_delay_seconds: delay
+          });
+          delay += 60;
+        }
+
+        alert("Tutti i post sicuri sono stati approvati e messi in coda temporizzata!");
+        await loadPendingQueue();
+      });
+
+      // AZIONI SINGOLE
+      window.approveItem = async function(id, delaySeconds) {
+        const textVal = document.getElementById(`edit-testo-${id}`).value.trim();
+        try {
+          const { data, error } = await sbClient.rpc('approva_vault_post', {
+            p_id: id,
+            p_auth_key: currentAuthKey,
+            p_testo: textVal,
+            p_delay_seconds: delaySeconds
+          });
+
+          if (!error && data.success) {
+            const pubDate = new Date(data.published_at);
+            const timeStr = pubDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            alert(delaySeconds > 0 ? `Post in coda! Live alle ${timeStr}` : "Post pubblicato subito live!");
+            await loadPendingQueue();
+          } else {
+            alert("Errore: " + (error ? error.message : data.error));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      window.rejectItem = async function(id) {
+        if (!confirm("Rifiutare ed eliminare questo post?")) return;
+        try {
+          await sbClient.rpc('rifiuta_vault_post', { p_id: id, p_auth_key: currentAuthKey });
+          await loadPendingQueue();
+        } catch (e) {}
+      };
+
+      // GENERATORE STORY INSTAGRAM A 1-CLICK (1080x1920)
+      window.generateStory = function(id) {
+        const post = pendingList.find(p => p.id === id);
+        if (!post) return;
+        const textVal = document.getElementById(`edit-testo-${id}`).value.trim();
+
+        const canvas = document.getElementById("storyCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#050407";
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        const grad = ctx.createRadialGradient(540, 400, 50, 540, 400, 700);
+        grad.addColorStop(0, "rgba(232, 121, 249, 0.25)");
+        grad.addColorStop(1, "transparent");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        ctx.font = "bold 46px 'Cinzel', serif";
+        ctx.fillStyle = "#FDE8E1";
+        ctx.textAlign = "center";
+        const brandTag = (post.tipo === 'spotted') ? "AURA • 👀 SPOTTED UDA" : "AURA • 💣💅 GOSSIP UDA";
+        ctx.fillText(brandTag, 540, 260);
+
+        ctx.font = "bold 28px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#E2B49A";
+        ctx.fillText(`📍 ${post.polo.toUpperCase()} • ${post.luogo.toUpperCase()}`, 540, 330);
+
+        ctx.fillStyle = "rgba(18, 14, 25, 0.95)";
+        ctx.roundRect(100, 460, 880, 1050, 30);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(226, 180, 154, 0.4)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.font = "bold 46px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.textAlign = "left";
+        wrapText(ctx, post.titolo, 160, 570, 760, 60);
+
+        ctx.font = "400 36px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#E7DEEA";
+        const cleanText = textVal.replace(/\[(.*?)\]/g, "████████");
+        wrapText(ctx, `“${cleanText}”`, 160, 740, 760, 56);
+
+        ctx.fillStyle = "#E879F9";
+        ctx.font = "bold 34px 'Plus Jakarta Sans', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Vota per sbloccare i dettagli censurati", 540, 1640);
+
+        ctx.fillStyle = "#FAF5F8";
+        ctx.font = "500 28px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillText("Link in Bio • @aura.uda", 540, 1700);
+
+        const link = document.createElement("a");
+        link.download = `aura_story_${post.id.substring(0,6)}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      };
+
+      function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(" ");
+        let line = "";
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + " ";
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line, x, y);
+            line = words[n] + " ";
+            y += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line, x, y);
+      }
+
+      checkAuth();
+    })();
+  </script>
+</body>
+</html>
