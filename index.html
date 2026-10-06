@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA • UdA Campus Ecosystem (Market, Gossip & Spotted)</title>
+  <title>AURA • UdA Campus Ecosystem</title>
   
   <meta property="og:title" content="AURA • UdA Chieti & Pescara">
   <meta property="og:description" content="L'ecosistema studentesco ufficiale UdA: Market compravendita, 💣💅 Gossip anonimi e 👀 Spotted di campus.">
@@ -17,13 +17,13 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
     :root {
       --bg: #050407;
-      --card-bg: rgba(16, 12, 22, 0.82);
+      --card-bg: rgba(16, 12, 22, 0.85);
       --card-border: rgba(226, 180, 154, 0.16);
       --card-border-hover: rgba(232, 121, 249, 0.45);
       --rose-gold: #E2B49A;
@@ -33,7 +33,6 @@
       --aura-magenta: #E879F9;
       --text-main: #FAF5F8;
       --text-muted: #A39BA8;
-      --danger: #EF4444;
       --font-serif: 'Cinzel', serif;
       --font-sans: 'Plus Jakarta Sans', sans-serif;
     }
@@ -67,7 +66,7 @@
 
     header {
       position: relative;
-      padding: 20px 16px 12px;
+      padding: 22px 16px 14px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -91,7 +90,7 @@
       position: relative;
       z-index: 2;
       width: 100%;
-      max-width: 260px;
+      max-width: 250px;
       margin: 0 auto;
     }
 
@@ -105,40 +104,10 @@
       filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.25));
     }
 
-    /* FILTRO CAMPUS UNIFICATO CHIETI VS PESCARA */
-    .campus-filter-bar {
-      max-width: 520px;
-      margin: 10px auto 14px;
-      padding: 0 16px;
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      position: relative;
-      z-index: 4;
-    }
-    .campus-filter-pill {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(226, 180, 154, 0.2);
-      color: var(--text-muted);
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 7px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .campus-filter-pill.active {
-      background: linear-gradient(135deg, rgba(226, 180, 154, 0.25), rgba(232, 121, 249, 0.22));
-      border-color: var(--rose-gold);
-      color: var(--rose-gold-light);
-      box-shadow: 0 0 12px rgba(226, 180, 154, 0.2);
-    }
-
-    /* SWITCHER SCHEDE (MARKET / GOSSIP & SPOTTED) */
+    /* SWITCHER SCHEDE PRINCIPALE */
     .app-tabs-wrap {
-      max-width: 480px;
-      margin: 0 auto 16px;
+      max-width: 440px;
+      margin: 6px auto 14px;
       padding: 0 16px;
       position: relative;
       z-index: 4;
@@ -176,11 +145,11 @@
       border: 1px solid rgba(226, 180, 154, 0.4);
     }
 
-    /* COUNTDOWN PROSSIMO POST IN ARRIVO */
+    /* COUNTDOWN DRIP-FEED */
     .drip-countdown-banner {
       display: none;
       max-width: 680px;
-      margin: 0 auto 14px;
+      margin: 0 auto 12px;
       padding: 8px 16px;
       background: rgba(232, 121, 249, 0.12);
       border: 1px solid rgba(232, 121, 249, 0.35);
@@ -196,6 +165,7 @@
       50% { opacity: 1; box-shadow: 0 0 16px rgba(232, 121, 249, 0.3); }
     }
 
+    /* BARRA DI CONTROLLO CON SELETTORE CAMPUS INTEGRATO (VARIANTE 2) */
     .controls-wrapper {
       max-width: 1050px;
       margin: 0 auto 12px;
@@ -206,14 +176,33 @@
       position: relative;
       z-index: 3;
     }
-
-    .search-row { display: flex; gap: 10px; align-items: center; }
-    .input-box { position: relative; flex: 1; }
-    .clear-search-btn {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; display: none;
+    .search-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
-    .clear-search-btn.visible { display: block; }
+    .input-box { position: relative; flex: 1; }
+
+    /* SELETTORE CAMPUS COMPATTO NELLA SEARCH BAR */
+    .select-campus-inline {
+      width: auto;
+      min-width: 145px;
+      background: rgba(18, 14, 25, 0.9);
+      border: 1px solid var(--card-border);
+      color: var(--rose-gold-light);
+      font-weight: 600;
+      font-size: 12.5px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      outline: none;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+    }
+    .select-campus-inline:focus {
+      border-color: var(--rose-gold);
+      box-shadow: 0 0 14px rgba(226, 180, 154, 0.25);
+    }
 
     input[type="text"], input[type="password"], textarea, select {
       width: 100%;
@@ -229,7 +218,7 @@
       transition: all 0.25s ease;
     }
     textarea { resize: vertical; min-height: 85px; line-height: 1.5; }
-    input:focus, textarea:focus, select:focus {
+    input:focus, textarea:focus {
       border-color: var(--rose-gold);
       box-shadow: 0 0 16px rgba(226, 180, 154, 0.25);
     }
@@ -239,15 +228,15 @@
       color: #08060A;
       border: none;
       font-weight: 700;
-      padding: 13px 22px;
+      padding: 13px 20px;
       border-radius: 12px;
-      font-size: 12.5px;
-      letter-spacing: 0.5px;
+      font-size: 12px;
+      letter-spacing: 0.4px;
       cursor: pointer;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 4px 18px rgba(226, 180, 154, 0.28);
     }
@@ -264,11 +253,33 @@
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(226, 180, 154, 0.14);
       color: var(--text-muted);
-      padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+      padding: 7px 15px; border-radius: 30px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
     }
     .pill.active {
       background: linear-gradient(135deg, rgba(226, 180, 154, 0.22), rgba(232, 121, 249, 0.18));
       border-color: var(--rose-gold); color: var(--rose-gold-light);
+    }
+
+    /* SUB-FILTER SPOTTED STATUS */
+    .spotted-status-row {
+      display: none;
+      gap: 6px;
+      padding-top: 2px;
+    }
+    .sub-pill {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(192, 132, 252, 0.3);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .sub-pill.active {
+      background: rgba(192, 132, 252, 0.18);
+      border-color: var(--aura-purple);
+      color: #E9D5FF;
     }
 
     /* GRIGLIA MARKET */
@@ -333,6 +344,10 @@
       border-color: rgba(232, 121, 249, 0.35);
       box-shadow: 0 8px 30px rgba(0,0,0,0.5);
     }
+    .vault-card.trending {
+      border-color: var(--rose-gold);
+      box-shadow: 0 0 24px rgba(226, 180, 154, 0.22);
+    }
     .vault-card.highlight-pulse {
       animation: highlightCard 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
@@ -341,11 +356,26 @@
       100% { border-color: rgba(226, 180, 154, 0.18); box-shadow: none; transform: scale(1); }
     }
 
+    .badge-trending {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, rgba(226, 180, 154, 0.3), rgba(232, 121, 249, 0.25));
+      border: 1px solid var(--rose-gold);
+      color: var(--rose-gold-light);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
     .vault-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .vault-badge {
       display: inline-flex;
@@ -368,11 +398,15 @@
       border: 1px solid rgba(192, 132, 252, 0.4);
       color: #E9D5FF;
     }
-    .vault-location {
+    .vault-meta {
       font-size: 11px;
-      color: var(--rose-gold);
-      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      gap: 6px;
+      align-items: center;
     }
+    .vault-meta .loc { color: var(--rose-gold); font-weight: 600; }
+
     .vault-title {
       font-size: 15px;
       font-weight: 700;
@@ -388,18 +422,29 @@
       margin-bottom: 14px;
     }
 
-    /* CENSURA A BARRE NERE */
+    /* BARRE DI CENSURA CON FEEDBACK SHAKE & TAP */
     .redacted-bar {
       display: inline-block;
       background: #000;
       color: transparent;
       padding: 0 6px;
       border-radius: 4px;
-      border: 1px solid rgba(232, 121, 249, 0.4);
+      border: 1px solid rgba(232, 121, 249, 0.45);
       user-select: none;
-      cursor: help;
+      cursor: pointer;
       letter-spacing: 3px;
+      transition: border-color 0.2s;
     }
+    .redacted-bar.shake {
+      animation: shakeAnim 0.4s ease-in-out;
+      border-color: #EF4444;
+    }
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
     .unlocked-text {
       background: rgba(226, 180, 154, 0.18);
       color: var(--rose-gold-light);
@@ -490,7 +535,11 @@
       transform: scale(1.04);
     }
 
-    /* TASTO CONDIVIDI SU WHATSAPP */
+    .share-actions-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
     .btn-share-wa {
       background: rgba(37, 211, 102, 0.15);
       border: 1px solid rgba(37, 211, 102, 0.4);
@@ -509,6 +558,24 @@
       background: rgba(37, 211, 102, 0.25);
       transform: scale(1.03);
     }
+    .btn-copy-link {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--rose-gold-light);
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .btn-copy-link:hover {
+      border-color: var(--rose-gold);
+      background: rgba(226, 180, 154, 0.12);
+    }
 
     .btn-spotted-handshake {
       background: linear-gradient(135deg, rgba(192, 132, 252, 0.25), rgba(232, 121, 249, 0.25));
@@ -524,7 +591,6 @@
       gap: 5px;
     }
 
-    /* INTERLEAVING MARKET NEL FEED GOSSIP */
     .interleaved-market-card {
       background: linear-gradient(135deg, rgba(226, 180, 154, 0.12), rgba(16, 12, 22, 0.9));
       border: 1px solid var(--rose-gold);
@@ -618,6 +684,7 @@
 
     @media (max-width: 640px) {
       .search-row { flex-direction: column; align-items: stretch; }
+      .select-campus-inline { width: 100%; }
       .listings-container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     }
   </style>
@@ -639,14 +706,7 @@
     </div>
   </header>
 
-  <!-- FILTRO CAMPUS UNIFICATO (CHIETI VS PESCARA) -->
-  <div class="campus-filter-bar">
-    <div class="campus-filter-pill active" data-campus="ALL">🏛️🌊 Tutti i Campus</div>
-    <div class="campus-filter-pill" data-campus="Chieti Scalo">🏛️ Chieti Scalo</div>
-    <div class="campus-filter-pill" data-campus="Pescara">🌊 Polo Pescara</div>
-  </div>
-
-  <!-- SWITCHER SCHEDE (MARKET / GOSSIP & SPOTTED) -->
+  <!-- SWITCHER SCHEDE PRINCIPALE -->
   <div class="app-tabs-wrap">
     <div class="app-tabs-nav">
       <button class="app-tab-btn active" id="tabBtnMarket">
@@ -669,8 +729,13 @@
       <div class="search-row">
         <div class="input-box">
           <input type="text" id="searchInputMarket" placeholder="Cerca libro, stanza, abbigliamento...">
-          <button class="clear-search-btn" id="btnClearSearch">&times;</button>
         </div>
+        <!-- FILTRO CAMPUS INTEGRATO (VARIANTE 2) -->
+        <select class="select-campus-inline" id="campusFilterMarket">
+          <option value="ALL">🏛️🌊 Tutti i Campus</option>
+          <option value="Chieti Scalo">🏛️ Chieti Scalo</option>
+          <option value="Pescara">🌊 Polo Pescara</option>
+        </select>
         <button class="btn-create" id="btnOpenMarketModal" type="button">
           <span>+</span> Vendi / Affitta
         </button>
@@ -697,8 +762,14 @@
     <div class="controls-wrapper" style="max-width: 680px;">
       <div class="search-row">
         <div class="input-box">
-          <input type="text" id="searchInputFeed" placeholder="Cerca corso, luogo, felpa...">
+          <input type="text" id="searchInputFeed" placeholder="Cerca parole chiave, aula, corso...">
         </div>
+        <!-- FILTRO CAMPUS INTEGRATO (VARIANTE 2) -->
+        <select class="select-campus-inline" id="campusFilterFeed">
+          <option value="ALL">🏛️🌊 Tutti i Campus</option>
+          <option value="Chieti Scalo">🏛️ Chieti Scalo</option>
+          <option value="Pescara">🌊 Polo Pescara</option>
+        </select>
         <button class="btn-create" id="btnOpenVaultModal" type="button" style="background: linear-gradient(135deg, #FDE8E1, #C084FC);">
           <span>✍️</span> Invia Anonimo
         </button>
@@ -708,6 +779,13 @@
         <div class="pill active" data-feed-type="ALL">Tutti i Feed</div>
         <div class="pill" data-feed-type="gossip">💣💅 Gossip</div>
         <div class="pill" data-feed-type="spotted">👀 Spotted</div>
+      </div>
+
+      <!-- SUB-FILTRO DI STATO SPOTTED -->
+      <div class="spotted-status-row" id="spottedStatusFilterRow">
+        <div class="sub-pill active" data-spotted-status="ALL">Tutti gli Spotted</div>
+        <div class="sub-pill" data-spotted-status="waiting">In cerca 👀</div>
+        <div class="sub-pill" data-spotted-status="matched">Risolti 🎯</div>
       </div>
     </div>
 
@@ -743,16 +821,16 @@
 
         <div class="form-row">
           <label>Titolo del post</label>
-          <input type="text" id="vTitolo" placeholder="Es. Ragazzo felpa verde biblioteca..." required maxlength="70">
+          <input type="text" id="vTitolo" placeholder="Es. Coinquilina e ladro di pasta..." required maxlength="70">
         </div>
 
         <div class="form-row">
           <label>Il Racconto / Descrizione</label>
-          <textarea id="vTesto" required placeholder="Racconta cosa hai visto. I moderatori e l'AI applicheranno le barre nere [censura] sulle parole calde prima della pubblicazione!"></textarea>
-          <small>⚠️ Verrà controllato dal sistema prima della pubblicazione. Zero nomi reali.</small>
+          <textarea id="vTesto" required placeholder="Racconta cosa è successo nei dettagli. Scrivi liberamente: le parti più calde verranno oscurate con le barre nere dal sistema per creare suspense!"></textarea>
+          <small>⚠️ Zero nomi e cognomi reali o diffamazione: ogni post viene verificato prima della pubblicazione.</small>
         </div>
 
-        <!-- CAMPI SPOTTED (FLUSSO INVERTITO PROTETTO) -->
+        <!-- CAMPI SPOTTED PROTETTI -->
         <div id="spottedFields" style="display: none; background: rgba(192, 132, 252, 0.08); border: 1px dashed rgba(192, 132, 252, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
           <div class="form-row">
             <label>Domanda Segreta Anti-Fake</label>
@@ -777,7 +855,7 @@
     </div>
   </div>
 
-  <!-- MODALE VERIFICA SPOTTED (CHI SI RICONOSCE LASCIA IL SUO IG) -->
+  <!-- MODALE VERIFICA SPOTTED -->
   <div class="modal-backdrop" id="modalHandshake">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseHandshakeModal">&times;</button>
@@ -868,7 +946,7 @@
           <input type="text" id="fIg" required placeholder="nome_utente">
         </div>
         <div class="form-row">
-          <label>Foto (Copertina URL o ImgBB link)</label>
+          <label>Foto (URL immagine o ImgBB link)</label>
           <input type="text" id="fFoto" required placeholder="https://i.ibb.co/esempio.jpg">
         </div>
         <div class="form-row">
@@ -896,8 +974,9 @@
 
       let listings = [];
       let vaultPosts = [];
-      let activeCampus = localStorage.getItem("aura_campus_filter") || "ALL";
+      let activeCampus = localStorage.getItem("aura_campus_choice") || "ALL";
       let activeFeedType = "ALL";
+      let activeSpottedStatus = "ALL";
       let activeMarketCat = "ALL";
       let activePostForHandshake = null;
       let activePostForAuthorUnlock = null;
@@ -915,23 +994,41 @@
         setTimeout(() => toast.classList.remove("show"), 2600);
       }
 
-      // FILTRO CAMPUS UNIFICATO
-      const campusPills = document.querySelectorAll(".campus-filter-pill");
-      campusPills.forEach(p => {
-        if (p.dataset.campus === activeCampus) p.classList.add("active");
-        else p.classList.remove("active");
+      // FORMATTATORE RELATIVO UMANO DEL TEMPO
+      function timeAgo(dateString) {
+        if (!dateString) return "Poco fa";
+        const d = new Date(dateString);
+        const diffSec = Math.floor((Date.now() - d.getTime()) / 1000);
+        if (diffSec < 60) return "Pochi istanti fa";
+        const diffMin = Math.floor(diffSec / 60);
+        if (diffMin < 60) return `${diffMin} min fa`;
+        const diffHours = Math.floor(diffMin / 60);
+        if (diffHours < 24) return `${diffHours} ore fa`;
+        const diffDays = Math.floor(diffHours / 24);
+        if (diffDays === 1) return "Ieri";
+        if (diffDays < 7) return `${diffDays} giorni fa`;
+        return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+      }
 
-        p.addEventListener("click", () => {
-          campusPills.forEach(x => x.classList.remove("active"));
-          p.classList.add("active");
-          activeCampus = p.dataset.campus;
-          localStorage.setItem("aura_campus_filter", activeCampus);
-          renderMarketCards();
-          renderVault();
-        });
-      });
+      // SINCRONIZZAZIONE SELETTORI CAMPUS
+      const campusSelMarket = document.getElementById("campusFilterMarket");
+      const campusSelFeed = document.getElementById("campusFilterFeed");
+      campusSelMarket.value = activeCampus;
+      campusSelFeed.value = activeCampus;
 
-      // SWITCH TABS
+      function updateCampusSelection(val) {
+        activeCampus = val;
+        localStorage.setItem("aura_campus_choice", val);
+        campusSelMarket.value = val;
+        campusSelFeed.value = val;
+        renderMarketCards();
+        renderVault();
+      }
+
+      campusSelMarket.addEventListener("change", (e) => updateCampusSelection(e.target.value));
+      campusSelFeed.addEventListener("change", (e) => updateCampusSelection(e.target.value));
+
+      // SWITCHER SCHEDE
       const tabMarket = document.getElementById("tabBtnMarket");
       const tabVault = document.getElementById("tabBtnVault");
       const secMarket = document.getElementById("sectionMarket");
@@ -951,17 +1048,25 @@
         renderVault();
       });
 
-      // CENSURA TESTO
+      // CENSURA TESTO CON BARRE NERE
       function parseCensorship(text, isUnlocked) {
         if (!text) return "";
         return text.replace(/\[(.*?)\]/g, (match, p1) => {
           if (isUnlocked) {
             return `<span class="unlocked-text">${p1}</span>`;
           } else {
-            return `<span class="redacted-bar" title="Vota per sbloccare!">████████</span>`;
+            return `<span class="redacted-bar" onclick="window.onRedactedTap(event)">████████</span>`;
           }
         });
       }
+
+      // FEEDBACK TATTIL TAP & SHAKE SULLA BARRA NERA
+      window.onRedactedTap = function(e) {
+        const bar = e.currentTarget;
+        bar.classList.add("shake");
+        setTimeout(() => bar.classList.remove("shake"), 400);
+        showToast("🔒 Dettagli censurati! Vota 🔥 sotto per sbloccarli!");
+      };
 
       // RENDERING FEED GOSSIP & SPOTTED
       function renderVault() {
@@ -969,27 +1074,44 @@
         const searchQuery = (document.getElementById("searchInputFeed").value || "").toLowerCase();
         const now = new Date();
 
-        // Check countdown post in arrivo (drip feed)
         updateDripCountdown(now);
+
+        // Calcola Post Trending (#1 nelle ultime 24 ore)
+        let maxVotes = -1;
+        let trendingId = null;
+        vaultPosts.forEach(p => {
+          if (p.tipo === 'gossip' && p.status === 'active' && p.voti_totali > maxVotes && p.voti_totali > 0) {
+            maxVotes = p.voti_totali;
+            trendingId = p.id;
+          }
+        });
 
         const filtered = vaultPosts.filter(p => {
           const isLive = (p.status === 'active') && (!p.published_at || new Date(p.published_at) <= now);
           if (!isLive) return false;
+          
           const campusMatch = (activeCampus === "ALL" || p.polo === activeCampus || p.polo === "Tutti");
           const typeMatch = (activeFeedType === "ALL" || p.tipo === activeFeedType);
+          
+          let spottedStatusMatch = true;
+          if (p.tipo === 'spotted' && activeSpottedStatus !== "ALL") {
+            if (activeSpottedStatus === "waiting") spottedStatusMatch = !p.has_match;
+            if (activeSpottedStatus === "matched") spottedStatusMatch = p.has_match;
+          }
+
           const searchMatch = !searchQuery || 
             p.titolo.toLowerCase().includes(searchQuery) || 
             p.testo.toLowerCase().includes(searchQuery) || 
             p.luogo.toLowerCase().includes(searchQuery);
 
-          return campusMatch && typeMatch && searchMatch;
+          return campusMatch && typeMatch && spottedStatusMatch && searchMatch;
         });
 
         if (filtered.length === 0) {
           feed.innerHTML = `
             <div style="text-align:center; padding: 40px 20px; background: rgba(255,255,255,0.02); border-radius:16px;">
               <div style="font-size:32px; margin-bottom:8px;">⚡</div>
-              <div style="font-size:16px; font-weight:700; color:var(--rose-gold-light);">Nessun post attivo in questo campus</div>
+              <div style="font-size:16px; font-weight:700; color:var(--rose-gold-light);">Nessun post attivo al momento</div>
               <p style="font-size:12px; color:var(--text-muted); margin: 8px auto 16px; max-width:320px;">
                 I post vengono verificati e approvati a intervalli regolari. Invia tu il prossimo!
               </p>
@@ -1006,10 +1128,14 @@
 
         filtered.forEach((p) => {
           count++;
-          const isSpotted = p.tipo === 'spotted';
+          const isSpotted = (p.tipo === 'spotted');
+          const isTrending = (!isSpotted && p.id === trendingId);
           const badgeClass = isSpotted ? 'spotted' : 'gossip';
           const badgeIcon = isSpotted ? '👀 SPOTTED' : '💣💅 GOSSIP';
           const textParsed = parseCensorship(p.testo, p.is_unlocked);
+          const timeLabel = timeAgo(p.published_at || p.created_at);
+
+          const trendingHtml = isTrending ? `<div class="badge-trending">👑 #1 TRENDING UDA</div>` : '';
 
           const pct = Math.min(100, Math.round((p.voti_totali / p.soglia_sblocco) * 100));
           const unlockBar = (!p.is_unlocked && !isSpotted) ? `
@@ -1024,7 +1150,6 @@
             </div>
           ` : '';
 
-          // Box match spotted
           let spottedBox = "";
           if (isSpotted) {
             if (p.has_match) {
@@ -1049,20 +1174,36 @@
             }
           }
 
-          // Link WhatsApp virale
+          // Link WhatsApp & Copia Link
           const deepLink = `${window.location.origin}${window.location.pathname}#post-${p.id}`;
           const waText = encodeURIComponent(`Regà leggete questo drama su AURA, mancano poche reazioni per sbloccare la parte censurata! 👀👇\n${deepLink}`);
-          const waBtn = (!isSpotted) ? `
-            <a href="https://api.whatsapp.com/send?text=${waText}" target="_blank" class="btn-share-wa">
-              📲 Invia su WhatsApp
-            </a>
-          ` : '';
+          
+          const shareGroup = (!isSpotted) ? `
+            <div class="share-actions-group">
+              <a href="https://api.whatsapp.com/send?text=${waText}" target="_blank" class="btn-share-wa">
+                📲 WhatsApp
+              </a>
+              <button class="btn-copy-link" onclick="window.copyPostLink('${p.id}')">
+                🔗 Copia
+              </button>
+            </div>
+          ` : `
+            <div class="share-actions-group">
+              <button class="btn-copy-link" onclick="window.copyPostLink('${p.id}')">
+                🔗 Condividi
+              </button>
+            </div>
+          `;
 
           html += `
-            <article class="vault-card" id="post-${p.id}">
+            <article class="vault-card ${isTrending ? 'trending' : ''}" id="post-${p.id}">
+              ${trendingHtml}
               <div class="vault-header">
                 <span class="vault-badge ${badgeClass}">${badgeIcon}</span>
-                <span class="vault-location">📍 ${p.polo} • ${p.luogo}</span>
+                <div class="vault-meta">
+                  <span class="loc">📍 ${p.polo} • ${p.luogo}</span>
+                  <span>• ${timeLabel}</span>
+                </div>
               </div>
               <h3 class="vault-title">${p.titolo}</h3>
               <div class="vault-body">${textParsed}</div>
@@ -1074,7 +1215,7 @@
                   <button class="btn-react" onclick="window.reactVault('${p.id}', 'skull')">💀 ${p.voti_skull || 0}</button>
                   <button class="btn-react" onclick="window.reactVault('${p.id}', 'redflag')">🚩 ${p.voti_redflag || 0}</button>
                 </div>
-                ${waBtn}
+                ${shareGroup}
                 <button style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;" onclick="window.flagVault('${p.id}')">Segnala</button>
               </div>
             </article>
@@ -1101,6 +1242,16 @@
         checkDeepLinkScroll();
       }
 
+      // COPIA LINK DIRETTO CON TOAST
+      window.copyPostLink = function(id) {
+        const link = `${window.location.origin}${window.location.pathname}#post-${id}`;
+        navigator.clipboard.writeText(link).then(() => {
+          showToast("Link copiato negli appunti! 📋");
+        }).catch(() => {
+          showToast("Impossibile copiare il link.");
+        });
+      };
+
       // COUNTDOWN DRIP FEED
       function updateDripCountdown(now) {
         const banner = document.getElementById("dripCountdown");
@@ -1111,7 +1262,7 @@
         if (upcoming.length > 0) {
           const nextTime = new Date(upcoming[0].published_at);
           const diffMs = nextTime - now;
-          if (diffMs > 0 && diffMs <= 1800000) { // entro 30 minuti
+          if (diffMs > 0 && diffMs <= 1800000) {
             const mins = Math.floor(diffMs / 60000);
             const secs = Math.floor((diffMs % 60000) / 1000);
             banner.style.display = "block";
@@ -1122,7 +1273,7 @@
         banner.style.display = "none";
       }
 
-      // DEEP LINKING AUTO-SCROLL
+      // DEEP LINKING SCROLL
       let hasScrolledToDeepLink = false;
       function checkDeepLinkScroll() {
         if (hasScrolledToDeepLink) return;
@@ -1140,7 +1291,7 @@
         }
       }
 
-      // SPOTTED SECRET HANDSHAKE CON ANTI-BRUTE FORCE & SINGLE MATCH
+      // SPOTTED SECRET HANDSHAKE CON PROTEZIONE BRUTE-FORCE
       const modalHandshake = document.getElementById("modalHandshake");
       window.openHandshakeModal = function(id) {
         const post = vaultPosts.find(p => p.id === id);
@@ -1150,7 +1301,6 @@
           return;
         }
 
-        // Check Anti-Brute Force (max 3 tentativi errati, blocco 30 min)
         const bfKey = `aura_bf_${id}`;
         const bfData = JSON.parse(localStorage.getItem(bfKey) || '{"attempts":0, "lockedUntil":0}');
         if (bfData.lockedUntil > Date.now()) {
@@ -1185,7 +1335,7 @@
         } else {
           bfData.attempts += 1;
           if (bfData.attempts >= 3) {
-            bfData.lockedUntil = Date.now() + 30 * 60 * 1000; // 30 min blocco
+            bfData.lockedUntil = Date.now() + 30 * 60 * 1000;
             localStorage.setItem(bfKey, JSON.stringify(bfData));
             alert("Risposta non corretta. Hai esaurito i 3 tentativi! Bloccato per 30 minuti.");
             modalHandshake.classList.remove("open");
@@ -1271,7 +1421,7 @@
         }
       });
 
-      // INVIO POST CON RATE-LIMITING ANTI-SPAM (10 MIN COOLDOWN)
+      // INVIO POST CON RATE-LIMITING 10 MIN
       const modalVault = document.getElementById("modalVaultCreate");
       document.getElementById("btnOpenVaultModal").addEventListener("click", () => modalVault.classList.add("open"));
       document.getElementById("btnCloseVaultModal").addEventListener("click", () => modalVault.classList.remove("open"));
@@ -1283,7 +1433,6 @@
       document.getElementById("vaultCreateForm").addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Controllo Rate Limit 10 minuti
         const lastPostTs = parseInt(localStorage.getItem("aura_last_post_ts") || "0", 10);
         const cooldownMs = 10 * 60 * 1000;
         if (Date.now() - lastPostTs < cooldownMs) {
@@ -1368,7 +1517,7 @@
         } catch (e) {}
       };
 
-      // MARKET UTILITIES
+      // MARKETPLACE
       function renderMarketCards() {
         const grid = document.getElementById("listingsGrid");
         const query = (document.getElementById("searchInputMarket").value || "").toLowerCase();
@@ -1381,7 +1530,7 @@
         });
 
         if (filtered.length === 0) {
-          grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Nessun annuncio in questo campus.</div>`;
+          grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Nessun annuncio per questo campus.</div>`;
           return;
         }
 
@@ -1442,6 +1591,25 @@
           document.querySelectorAll('#sectionVault .pill').forEach(p => p.classList.remove('active'));
           pill.classList.add('active');
           activeFeedType = pill.dataset.feedType;
+          
+          const statusRow = document.getElementById("spottedStatusFilterRow");
+          if (activeFeedType === 'spotted') {
+            statusRow.style.display = 'flex';
+          } else {
+            statusRow.style.display = 'none';
+            activeSpottedStatus = 'ALL';
+            document.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
+            document.querySelector('.sub-pill[data-spotted-status="ALL"]').classList.add('active');
+          }
+          renderVault();
+        });
+      });
+
+      document.querySelectorAll('.sub-pill').forEach(subPill => {
+        subPill.addEventListener('click', () => {
+          document.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
+          subPill.classList.add('active');
+          activeSpottedStatus = subPill.dataset.spottedStatus;
           renderVault();
         });
       });
@@ -1449,7 +1617,6 @@
       document.getElementById("searchInputMarket").addEventListener("input", renderMarketCards);
       document.getElementById("searchInputFeed").addEventListener("input", renderVault);
 
-      // CARICAMENTO DATI
       async function loadMarketData() {
         if (!sbClient) return;
         try {
@@ -1470,10 +1637,10 @@
 
       loadMarketData();
       loadVaultData();
-      setInterval(renderVault, 10000); // refresh timer drip-feed
+      setInterval(renderVault, 10000);
 
       if (sbClient) {
-        sbClient.channel('realtime_public_aura')
+        sbClient.channel('realtime_public_aura_v5')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, loadMarketData)
           .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_posts' }, loadVaultData)
           .subscribe();
