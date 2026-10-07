@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <!-- [HTML-STAFF: 01-HEAD] -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AURA • Staff & Control Center</title>
+  
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#07050A">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #07050A;
+      --card-bg: rgba(18, 14, 25, 0.92);
+      --border: rgba(226, 180, 154, 0.2);
+      --rose-gold: #E2B49A;
+      --rose-gold-light: #FDE8E1;
+      --aura-magenta: #E879F9;
+      --aura-purple: #C084FC;
+      --text: #FAF5F8;
+      --text-muted: #9E94A3;
+      --font-serif: 'Cinzel', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); min-height: 100vh; padding: 18px 14px 80px; }
+    .container { max-width: 860px; margin: 0 auto; }
+    
+    /* Login */
+    #loginScreen { min-height: 75vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .login-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 34px 24px; width: 100%; max-width: 380px; box-shadow: 0 10px 45px rgba(0,0,0,0.7); }
+    
+    /* Header & Nav */
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 10px; }
+    .badge-role { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-master { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid #EF4444; }
+    .badge-staff { background: rgba(192, 132, 252, 0.2); color: #E9D5FF; border: 1px solid #C084FC; }
+    .staff-nav { display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 20px; gap: 4px; overflow-x: auto; }
+    .staff-tab-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); font-weight: 700; font-size: 11.5px; padding: 10px 8px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; transition: all 0.2s; }
+    .staff-tab-btn.active { background: linear-gradient(135deg, rgba(226, 180, 154, 0.25), rgba(232, 121, 249, 0.2)); color: var(--rose-gold-light); border: 1px solid var(--rose-gold); }
+    .badge-counter { background: #EF4444; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; }
+    .badge-counter-live { background: var(--aura-magenta); color: #07050A; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; }
+    
+    /* Inputs & Buttons */
+    input, textarea, select { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; font-family: var(--font-sans); outline: none; }
+    input:focus, textarea:focus, select:focus { border-color: var(--rose-gold); }
+    .btn { background: linear-gradient(135deg, #FDE8E1, #E2B49A); color: #07050A; border: none; font-weight: 700; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    
+    /* Cards & Components */
+    .ai-toolbar { background: rgba(192, 132, 252, 0.08); border: 1px solid rgba(192, 132, 252, 0.3); border-radius: 14px; padding: 14px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; }
+    .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .stat-val { font-family: var(--font-serif); font-size: 24px; font-weight: 900; color: var(--rose-gold-light); }
+    .stat-sub { font-size: 11px; color: var(--rose-gold); margin-top: 4px; font-weight: 600; }
+    .intelligence-box { background: linear-gradient(135deg, rgba(232, 121, 249, 0.12), rgba(16, 12, 22, 0.95)); border: 1px solid var(--aura-magenta); border-radius: 16px; padding: 18px; margin-bottom: 20px; }
+    .intel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .intel-content { font-size: 13.5px; line-height: 1.6; color: #E7DEEA; white-space: pre-wrap; }
+    .item-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 14px; position: relative; }
+    .item-card.top-trending { border-color: var(--rose-gold); box-shadow: 0 0 20px rgba(226, 180, 154, 0.25); }
+    .item-card.ai-safe { border-color: #10B981; background: rgba(16, 185, 129, 0.05); }
+    .item-card.ai-danger { border-color: #EF4444; background: rgba(239, 68, 68, 0.08); }
+    .ai-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px; margin-bottom: 8px; }
+    .ai-badge.safe { background: rgba(16, 185, 129, 0.2); color: #6EE7B7; border: 1px solid #10B981; }
+    .ai-badge.danger { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid #EF4444; }
+    .card-actions { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+    .btn-act-now { background: #10B981; color: #050407; }
+    .btn-act-queue { background: linear-gradient(135deg, var(--rose-gold), var(--aura-magenta)); color: #050407; }
+    .btn-act-story { background: linear-gradient(135deg, #E879F9, #C084FC); color: #050407; }
+    .btn-act-del { background: rgba(239, 68, 68, 0.2); border: 1px solid #EF4444; color: #FCA5A5; }
+    .reactions-bar-staff { display: flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 8px 12px; margin: 10px 0; font-size: 12px; flex-wrap: wrap; }
+    .react-chip { background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 6px; font-weight: 700; color: var(--rose-gold-light); }
+    .badge-trending-tag { background: linear-gradient(135deg, #E2B49A, #E879F9); color: #07050A; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; margin-bottom: 8px; display: inline-block; }
+    .market-admin-item { display: flex; gap: 12px; align-items: center; }
+    .market-admin-img { width: 65px; height: 65px; border-radius: 10px; object-fit: cover; background: #000; }
+    .market-admin-info { flex: 1; }
+    #storyCanvas { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- [HTML-STAFF: 02-LOGIN] -->
+    <div id="loginScreen">
+      <div class="login-box">
+        <h2 style="font-family: var(--font-serif); font-size: 22px; color: var(--rose-gold-light); margin-bottom: 6px;">AURA STAFF</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;">Inserisci la Master Key o la Staff Key:</p>
+        <input type="password" id="inputAuthKey" placeholder="••••••••••••" style="margin-bottom: 14px; text-align: center;">
+        <button class="btn" id="btnLogin" style="width: 100%;">Accedi al Control Center</button>
+      </div>
+    </div>
+
+    <!-- [HTML-STAFF: 03-HEADER-NAV] -->
+    <div id="dashboardScreen" style="display: none;">
+      <div class="dashboard-header">
+        <div>
+          <h1 style="font-family: var(--font-serif); font-size: 19px; color: var(--rose-gold-light);">AURA • CONTROL CENTER</h1>
+          <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;" id="statusSummaryText">Controllo sessione...</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge-role" id="roleBadge">STAFF</span>
+          <button class="btn" id="btnLogout" style="padding: 6px 12px; font-size: 11px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff;">Esci</button>
+        </div>
+      </div>
+
+      <div class="staff-nav">
+        <button class="staff-tab-btn active" id="tabBtnMod">📥 Coda <span class="badge-counter" id="badgePendingCount">0</span></button>
+        <button class="staff-tab-btn" id="tabBtnActive">🔥 Post Live & Reazioni <span class="badge-counter-live" id="badgeActiveCount">0</span></button>
+        <button class="staff-tab-btn" id="tabBtnStats" style="display: none;">📊 Trend & Intelligence 🔒</button>
+        <button class="staff-tab-btn" id="tabBtnMarket" style="display: none;">🛒 Gestione Market 🔒</button>
+      </div>
+
+      <!-- [HTML-STAFF: 04-PANE-MOD] -->
+      <div id="paneMod">
+        <div class="ai-toolbar">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label style="font-size:11px; font-weight:700; color:var(--rose-gold-light);">Chiave Gemini Cloud:</label>
+            <span id="geminiStatusBadge" style="font-size:10px; color:#10B981; font-weight:700;">● Connessa</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <input type="password" id="inputSharedGeminiKey" placeholder="Incolla AIzaSy..." style="flex:1;">
+            <button class="btn" id="btnSaveSharedGeminiKey" style="padding:0 16px;">Salva</button>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
+            <button class="btn" id="btnRunAiBatch" style="flex:1; background:linear-gradient(135deg, #E879F9, #C084FC);">🪄 Analizza & Censura con Gemini</button>
+            <button class="btn" id="btnApproveAllSafe" style="flex:1; background:#10B981;">⚡ Approva Tutti i Sicuri (+1 min)</button>
+          </div>
+        </div>
+        <div id="pendingContainer"></div>
+      </div>
+
+      <!-- [HTML-STAFF: 05-PANE-ACTIVE] -->
+      <div id="paneActive" style="display: none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px; flex-wrap:wrap;">
+          <input type="text" id="inputSearchActive" placeholder="Cerca tra i post live..." style="flex:1; min-width:180px;">
+          <select id="filterCampusActive" style="width:auto; min-width:130px;">
+            <option value="ALL">Tutti i Campus</option>
+            <option value="Chieti Scalo">Chieti Scalo</option>
+            <option value="Pescara">Pescara</option>
+          </select>
+          <select id="filterSortActive" style="width:auto; min-width:130px;">
+            <option value="votes">🔥 Più Gettonati</option>
+            <option value="recent">⏱️ Più Recenti</option>
+          </select>
+        </div>
+        <div id="activePostsContainer"></div>
+      </div>
+
+      <!-- [HTML-STAFF: 06-PANE-STATS] -->
+      <div id="paneStats" style="display: none;">
+        <div class="intelligence-box">
+          <div class="intel-header">
+            <div>
+              <span style="font-size:11px; font-weight:800; color:var(--aura-magenta); text-transform:uppercase; letter-spacing:1px;">AI Campus Intelligence Report</span>
+              <h3 style="font-size:15px; color:#fff; font-weight:700;">Analisi Strategica UdA (Trend, Sentiment & Social)</h3>
+            </div>
+            <button class="btn" id="btnGenerateAiReport" style="background:var(--aura-magenta); color:#050407; padding:8px 14px;">🧠 Genera Report Live</button>
+          </div>
+          <div class="intel-content" id="intelReportBox">Clicca "Genera Report Live" per analizzare trend e gossip.</div>
+        </div>
+        <div class="stats-grid" id="statsGridContainer">
+          <div class="stat-card"><span class="stat-label">Reazioni Totali</span><span class="stat-val" id="statReactions">-</span><span class="stat-sub">🔥💀🚩 nel feed</span></div>
+          <div class="stat-card"><span class="stat-label">Gossip Sbloccati</span><span class="stat-val" id="statUnlocked">-</span><span class="stat-sub" id="statUnlockedSub">Censura rimossa</span></div>
+          <div class="stat-card"><span class="stat-label">Spotted Match Rate</span><span class="stat-val" id="statSpottedRate">-</span><span class="stat-sub" id="statSpottedMatchedCount">Risolti con Instagram</span></div>
+          <div class="stat-card"><span class="stat-label">Attività per Campus</span><span class="stat-val" id="statCampusBattle">-</span><span class="stat-sub" id="statCampusDetail">Chieti vs Pescara</span></div>
+          <div class="stat-card"><span class="stat-label">Annunci Marketplace</span><span class="stat-val" id="statMarketTotal">-</span><span class="stat-sub" id="statMarketCampus">Attivi al momento</span></div>
+          <div class="stat-card"><span class="stat-label">Top Categoria Market</span><span class="stat-val" id="statTopCat">-</span><span class="stat-sub">La più cercata dagli studenti</span></div>
+        </div>
+      </div>
+
+      <!-- [HTML-STAFF: 07-PANE-MARKET] -->
+      <div id="paneMarket" style="display: none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px;">
+          <input type="text" id="inputSearchMarketAdmin" placeholder="Filtra per titolo o venditore @..." style="flex:1;">
+          <select id="filterCampusMarketAdmin" style="width:auto; min-width:140px;">
+            <option value="ALL">Tutti i Campus</option>
+            <option value="Chieti Scalo">Chieti Scalo</option>
+            <option value="Pescara">Pescara</option>
+          </select>
+        </div>
+        <div id="marketAdminContainer"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <canvas id="storyCanvas" width="1080" height="1920"></canvas>
+
+  <!-- [HTML-STAFF: 08-SCRIPTS] -->
+  <script src="staff.js"></script>
+</body>
+</html>

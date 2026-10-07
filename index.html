@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <!-- ========================================== -->
+  <!-- [HTML: 01-HEAD]                           -->
+  <!-- ========================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AURA • UdA Campus Ecosystem</title>
+  
+  <meta name="theme-color" content="#07050A">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FOGLIO DI STILE DEDICATO -->
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- ========================================== -->
+    <!-- [HTML: 02-NAV]                             -->
+    <!-- ========================================== -->
+    <header class="app-header">
+      <div class="brand-title">AURA</div>
+      <div class="brand-subtitle">CAMPUS ECOSYSTEM • CHIETI & PESCARA</div>
+
+      <!-- SELETTORE POLO UNIVERSITARIO -->
+      <div class="campus-selector">
+        <button class="campus-btn active" data-campus="Tutti">🏛️ Tutti i Campus</button>
+        <button class="campus-btn" data-campus="Chieti Scalo">🏛️ Chieti Scalo</button>
+        <button class="campus-btn" data-campus="Pescara">🌊 Pescara</button>
+      </div>
+
+      <!-- SWITCH TRA LE FUNZIONALITÀ PRINCIPALI -->
+      <nav class="main-tabs">
+        <button class="tab-btn active" id="tabBtnMarket">
+          🛒 AURA Market
+        </button>
+        <button class="tab-btn" id="tabBtnVault">
+          💣 Gossip & 👀 Spotted
+        </button>
+      </nav>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- [HTML: 03-CONTAINERS]                      -->
+    <!-- ========================================== -->
+    <main>
+      <!-- SEZIONE 1: MARKETPLACE -->
+      <section id="paneMarket" class="pane-active">
+        <div class="toolbar-market">
+          <input type="text" id="marketSearchInput" placeholder="Cerca appunti, libri, case, oggetti...">
+          <button class="btn btn-primary" id="btnOpenCreateMarket">+ Vendi Oggetto</button>
+        </div>
+        <div id="marketListContainer" class="market-grid"></div>
+      </section>
+
+      <!-- SEZIONE 2: GOSSIP & SPOTTED (VAULT) -->
+      <section id="paneVault" style="display: none;">
+        <div class="toolbar-vault">
+          <div class="vault-filters">
+            <button class="filter-chip active" data-filter="ALL">Tutti</button>
+            <button class="filter-chip" data-filter="gossip">💣 Solo Gossip</button>
+            <button class="filter-chip" data-filter="spotted">👀 Solo Spotted</button>
+          </div>
+          <button class="btn btn-accent" id="btnOpenCreateVault">+ Spia / Confessa</button>
+        </div>
+        <div id="vaultListContainer" class="vault-feed"></div>
+      </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- [HTML: 04-FOOTER]                          -->
+    <!-- ========================================== -->
+    <footer class="app-footer">
+      © 2026 AURA • <a href="https://instagram.com/aura.uda" target="_blank" rel="noopener">@aura.uda</a>
+    </footer>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- [HTML: 05-MODALS]                          -->
+  <!-- ========================================== -->
+
+  <!-- MODALE CREA POST (GOSSIP / SPOTTED) -->
+  <div class="modal-backdrop" id="modalVaultCreate">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Nuovo Post Anonimo</h3>
+        <button class="modal-close" data-close="modalVaultCreate">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label>Cosa vuoi condividere?</label>
+          <div class="radio-toggle">
+            <label><input type="radio" name="vaultType" value="gossip" checked> 💣 Gossip Anonimo</label>
+            <label><input type="radio" name="vaultType" value="spotted"> 👀 Spotted Studente</label>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Campus & Polo</label>
+          <select id="vaultPoloInput">
+            <option value="Chieti Scalo">Chieti Scalo</option>
+            <option value="Pescara">Pescara</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Luogo Esatto (es. Aula A, Bar Lettere, Mensa)</label>
+          <input type="text" id="vaultLuogoInput" placeholder="Dove è successo?">
+        </div>
+        <div class="input-group">
+          <label>Titolo ad Effetto</label>
+          <input type="text" id="vaultTitoloInput" placeholder="Es. Ragazzo felpa verde a Medicina...">
+        </div>
+        <div class="input-group">
+          <label>Testo Completo</label>
+          <textarea id="vaultTestoInput" rows="4" placeholder="Scrivi i dettagli... I nomi reali verranno filtrati."></textarea>
+        </div>
+        <!-- CAMPO OPZIONALE SPOTTED: DOMANDA HANDSHAKE -->
+        <div class="input-group" id="spottedExtraFields" style="display: none;">
+          <label>Domanda Segreta per Riconoscersi (Opzionale)</label>
+          <input type="text" id="vaultHandshakeQ" placeholder="Es. Di che colore era il mio zaino?">
+          <input type="text" id="vaultHandshakeA" placeholder="Risposta esatta (verrà cifrata)">
+          <input type="text" id="vaultContactIG" placeholder="Il tuo Instagram (rivelato solo a chi indovina)">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btnSubmitVault">Invia in Moderazione</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE RISPONDI A SPOTTED (HANDSHAKE) -->
+  <div class="modal-backdrop" id="modalHandshake">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Sei tu la persona cercata?</h3>
+        <button class="modal-close" data-close="modalHandshake">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="handshakeQuestionText" class="handshake-q-box"></p>
+        <div class="input-group">
+          <label>La tua Risposta:</label>
+          <input type="text" id="handshakeAnswerInput" placeholder="Inserisci la parola esatta">
+        </div>
+        <div id="handshakeResultBox"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-accent" id="btnSubmitHandshake">Verifica e Sblocca Contatto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE CREA ANNUNCIO MARKETPLACE -->
+  <div class="modal-backdrop" id="modalMarketCreate">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Vendi su AURA Market</h3>
+        <button class="modal-close" data-close="modalMarketCreate">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label>Titolo Annuncio</label>
+          <input type="text" id="marketTitoloInput" placeholder="Es. Manuale Anatomia Netter 7a Ed.">
+        </div>
+        <div class="input-group">
+          <label>Categoria</label>
+          <select id="marketCatInput">
+            <option value="Libri & Appunti">Libri & Appunti</option>
+            <option value="Alloggi & Stanze">Alloggi & Stanze</option>
+            <option value="Tecnologia">Tecnologia</option>
+            <option value="Altro">Altro</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Campus</label>
+          <select id="marketPoloInput">
+            <option value="Chieti Scalo">Chieti Scalo</option>
+            <option value="Pescara">Pescara</option>
+            <option value="Tutti">Entrambi</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Prezzo (€)</label>
+          <input type="text" id="marketPrezzoInput" placeholder="Es. 25€ oppure Gratis">
+        </div>
+        <div class="input-group">
+          <label>Tuo Profilo Instagram (Senza @)</label>
+          <input type="text" id="marketIgInput" placeholder="es. mario_rossi">
+        </div>
+        <div class="input-group">
+          <label>Link Foto (ImgBB, Postimages o URL diretto)</label>
+          <input type="url" id="marketFotoInput" placeholder="https://i.ibb.co/...">
+        </div>
+        <div class="input-group">
+          <label>Scegli un PIN a 4 cifre (ti servirà per rimuovere l'annuncio quando venduto)</label>
+          <input type="password" id="marketPinInput" maxlength="4" placeholder="••••">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btnSubmitMarket">Pubblica Annuncio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE ELIMINA ANNUNCIO CON PIN -->
+  <div class="modal-backdrop" id="modalMarketDelete">
+    <div class="modal-box modal-box-sm">
+      <div class="modal-header">
+        <h3>Rimuovi Annuncio</h3>
+        <button class="modal-close" data-close="modalMarketDelete">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">Hai già venduto l'oggetto? Inserisci il PIN a 4 cifre scelto alla creazione:</p>
+        <input type="password" id="deletePinInput" maxlength="4" placeholder="••••" style="text-align: center; font-size: 20px; letter-spacing: 6px;">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="btnConfirmDeleteMarket">Conferma ed Elimina</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- [HTML: 06-SCRIPTS]                         -->
+  <!-- ========================================== -->
+  <script src="app.js"></script>
+</body>
+</html>
