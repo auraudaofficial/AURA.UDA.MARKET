@@ -1,511 +1,814 @@
 /* ==============================================
-   [JS: 01-CONFIG] - CLIENT SUPABASE & STATO GLOBALE
+   [JS: 01-CONFIG & STATE]
    ============================================== */
-const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
+(function() {
+  const SUPABASE_URL = "https://pspbdtmwagsuxgrlobcd.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcGJkdG13YWdzdXhncmxvYmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMzk1OTcsImV4cCI6MjEwNjcxNTU5N30.6CpEusUnubJHdp0KTGWnretigjMECOBsVCd_FXmGack";
 
-let sbClient = null;
-if (window.supabase && typeof window.supabase.createClient === 'function') {
-  sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
+  let sbClient = null;
+  if (window.supabase && typeof window.supabase.createClient === 'function') {
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
 
-// Stato dell'applicazione
-const state = {
-  campus: 'Tutti',
-  vaultFilter: 'ALL',
-  vaultPosts: [],
-  marketItems: [],
-  activeHandshakePost: null,
-  pendingDeleteMarketId: null
-};
+  let listings = [];
+  let vaultPosts = [];
+  let activeCampus = localStorage.getItem("aura_campus_choice") || "ALL";
+  let activeFeedType = "ALL";
+  let activeSpottedStatus = "ALL";
+  let activeMarketCat = "ALL";
+  
+  let activePostForHandshake = null;
+  let activePostForAuthorUnlock = null;
+  let activeMarketIdToDelete = null;
 
-// Funzione crittografica per Handshake e PIN
-async function hashSHA256(text) {
-  const msgBuffer = new TextEncoder().encode(text.trim().toLowerCase());
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-
-/* ==============================================
-   [JS: 02-NAV] - SELETTORE CAMPUS & TAB PRINCIPALI
-   ============================================== */
-document.addEventListener("DOMContentLoaded", () => {
-  // Cambio Campus
-  document.querySelectorAll(".campus-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".campus-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      state.campus = btn.getAttribute("data-campus");
-      renderVaultFeed();
-      renderMarketFeed();
-    });
-  });
-
-  // Switch Schede (Market vs Vault)
-  const tabBtnMarket = document.getElementById("tabBtnMarket");
-  const tabBtnVault = document.getElementById("tabBtnVault");
-  const paneMarket = document.getElementById("paneMarket");
-  const paneVault = document.getElementById("paneVault");
-
-  tabBtnMarket.addEventListener("click", () => {
-    tabBtnMarket.classList.add("active");
-    tabBtnVault.classList.remove("active");
-    paneMarket.style.display = "block";
-    paneVault.style.display = "none";
-  });
-
-  tabBtnVault.addEventListener("click", () => {
-    tabBtnVault.classList.add("active");
-    tabBtnMarket.classList.remove("active");
-    paneVault.style.display = "block";
-    paneMarket.style.display = "none";
-  });
-
-  // Filtri feed Vault (Tutti, Gossip, Spotted)
-  document.querySelectorAll(".filter-chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-      document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
-      chip.classList.add("active");
-      state.vaultFilter = chip.getAttribute("data-filter");
-      renderVaultFeed();
-    });
-  });
-
-  // Ricerca live Market
-  document.getElementById("marketSearchInput").addEventListener("input", renderMarketFeed);
-
-  // Inizializzazione caricamento dati
-  loadVaultPosts();
-  loadMarketItems();
-  initModals();
-});
-
-
-/* ==============================================
-   [JS: 03-VAULT-FEED] - CARICAMENTO, RENDERING & VOTI
-   ============================================== */
-async function loadVaultPosts() {
-  if (!sbClient) return;
-  try {
-    const { data, error } = await sbClient
-      .from('vault_posts')
-      .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      state.vaultPosts = data;
-      renderVaultFeed();
+  /* ==============================================
+     [JS: 02-HELPERS & UTILS]
+     ============================================== */
+  function triggerHaptic(pattern = [30]) {
+    if (navigator.vibrate) {
+      try { navigator.vibrate(pattern); } catch (e) {}
     }
-  } catch (err) {
-    console.error("Errore recupero Vault:", err);
   }
-}
 
-function renderVaultFeed() {
-  const container = document.getElementById("vaultListContainer");
-  if (!container) return;
+  function escapeHTML(str) {
+    if (!str) return "";
+    return String(str).replace(/[&<>'"]/g, tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag));
+  }
 
-  const filtered = state.vaultPosts.filter(p => {
-    const matchCampus = (state.campus === 'Tutti' || p.polo === state.campus || p.polo === 'Tutti');
-    const matchType = (state.vaultFilter === 'ALL' || p.tipo === state.vaultFilter);
-    return matchCampus && matchType;
+  async function sha256(str) {
+    const buffer = new TextEncoder().encode(str.trim().toLowerCase());
+    const hash = await crypto.subtle.digest("SHA-256", buffer);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  let toastTimer = null;
+  function showToast(text) {
+    const toast = document.getElementById("toastMsg");
+    toast.innerText = text;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+  }
+
+  function timeAgo(dateString) {
+    if (!dateString) return "Poco fa";
+    const d = new Date(dateString);
+    const diffSec = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (diffSec < 60) return "Pochi istanti fa";
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin} min fa`;
+    const diffHours = Math.floor(diffMin / 60);
+    if (diffHours < 24) return `${diffHours} ore fa`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays === 1) return "Ieri";
+    if (diffDays < 7) return `${diffDays} giorni fa`;
+    return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+  }
+
+  function debounce(func, wait = 150) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  function getCategoryIcon(cat) {
+    switch(cat) {
+      case 'Libri': return '📚';
+      case 'Affitti': return '🏠';
+      case 'Abbigliamento': return '👗';
+      case 'Biglietti': return '🎟️';
+      case 'Tech': return '💻';
+      default: return '🛍️';
+    }
+  }
+
+  /* ==============================================
+     [JS: 03-NAV-SWITCH-CAMPUS]
+     ============================================== */
+  const campusSelMarket = document.getElementById("campusFilterMarket");
+  const campusSelFeed = document.getElementById("campusFilterFeed");
+  campusSelMarket.value = activeCampus;
+  campusSelFeed.value = activeCampus;
+
+  function updateCampusSelection(val) {
+    activeCampus = val;
+    localStorage.setItem("aura_campus_choice", val);
+    campusSelMarket.value = val;
+    campusSelFeed.value = val;
+    renderMarketCards();
+    renderVault();
+  }
+
+  campusSelMarket.addEventListener("change", (e) => updateCampusSelection(e.target.value));
+  campusSelFeed.addEventListener("change", (e) => updateCampusSelection(e.target.value));
+
+  const tabMarket = document.getElementById("tabBtnMarket");
+  const tabVault = document.getElementById("tabBtnVault");
+  const secMarket = document.getElementById("sectionMarket");
+  const secVault = document.getElementById("sectionVault");
+
+  tabMarket.addEventListener("click", () => {
+    tabMarket.classList.add("active");
+    tabVault.classList.remove("active");
+    secMarket.style.display = "block";
+    secVault.style.display = "none";
+  });
+  tabVault.addEventListener("click", () => {
+    tabVault.classList.add("active");
+    tabMarket.classList.remove("active");
+    secVault.style.display = "block";
+    secMarket.style.display = "none";
+    renderVault();
   });
 
-  if (filtered.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 40px 16px; color: var(--text-muted); font-size: 13px;">
-        Nessun post presente per questa selezione.
-      </div>
-    `;
-    return;
+  /* ==============================================
+     [JS: 04-VAULT-FEED-ENGINE]
+     ============================================== */
+  function parseCensorship(text, isUnlocked) {
+    if (!text) return "";
+    const clean = escapeHTML(text);
+    return clean.replace(/\[(.*?)\]/g, (match, p1) => {
+      if (isUnlocked) {
+        return `<span class="unlocked-text">${p1}</span>`;
+      } else {
+        return `<span class="redacted-bar" onclick="window.onRedactedTap(event)">████████</span>`;
+      }
+    });
   }
 
-  container.innerHTML = filtered.map(p => {
-    const isSpotted = (p.tipo === 'spotted');
-    const badgeClass = isSpotted ? 'badge-spotted' : 'badge-gossip';
-    const badgeLabel = isSpotted ? '👀 SPOTTED' : '💣 GOSSIP';
+  window.onRedactedTap = function(e) {
+    triggerHaptic([40, 30, 40]);
+    const bar = e.currentTarget;
+    bar.classList.add("shake");
+    setTimeout(() => bar.classList.remove("shake"), 400);
+    showToast("🔒 Dettagli censurati! Vota 🔥 sotto per sbloccarli!");
+  };
 
-    // Gestione testo con censura parziale o sbloccato
-    let bodyHtml = '';
-    if (p.is_unlocked) {
-      bodyHtml = `<div class="vault-body-text">${p.testo.replace(/\[(.*?)\]/g, '<strong>$1</strong>')}</div>`;
-    } else {
-      const masked = p.testo.replace(/\[(.*?)\]/g, '████████');
-      bodyHtml = `
-        <div class="vault-body-text">${masked}</div>
-        <div class="censored-block">
-          🔒 Dettaglio censurato • Sblocco a ${p.soglia_sblocco || 25} reazioni (Attuali: ${p.voti_totali || 0})
+  function updateDripCountdown(now) {
+    const banner = document.getElementById("dripCountdown");
+    const upcoming = vaultPosts
+      .filter(p => p.status === 'active' && p.published_at && new Date(p.published_at) > now)
+      .sort((a,b) => new Date(a.published_at) - new Date(b.published_at));
+
+    if (upcoming.length > 0) {
+      const nextTime = new Date(upcoming[0].published_at);
+      const diffMs = nextTime - now;
+      if (diffMs > 0 && diffMs <= 1800000) {
+        const mins = Math.floor(diffMs / 60000);
+        const secs = Math.floor((diffMs % 60000) / 1000);
+        banner.style.display = "block";
+        banner.innerText = `🔥 1 nuovo post in arrivo tra ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}...`;
+        return;
+      }
+    }
+    banner.style.display = "none";
+  }
+
+  let hasScrolledToDeepLink = false;
+  function checkDeepLinkScroll() {
+    if (hasScrolledToDeepLink) return;
+    const hash = window.location.hash;
+    if (hash && hash.startsWith("#post-")) {
+      const el = document.querySelector(hash);
+      if (el) {
+        hasScrolledToDeepLink = true;
+        tabVault.click();
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add("highlight-pulse");
+        }, 300);
+      }
+    }
+  }
+
+  function renderVault() {
+    const feed = document.getElementById("vaultFeed");
+    const searchQuery = (document.getElementById("searchInputFeed").value || "").trim().toLowerCase();
+    const now = new Date();
+
+    updateDripCountdown(now);
+
+    let maxVotes = -1;
+    let trendingId = null;
+    vaultPosts.forEach(p => {
+      if (p.tipo === 'gossip' && p.status === 'active' && p.voti_totali > maxVotes && p.voti_totali > 0) {
+        maxVotes = p.voti_totali;
+        trendingId = p.id;
+      }
+    });
+
+    const filtered = vaultPosts.filter(p => {
+      const isLive = (p.status === 'active') && (!p.published_at || new Date(p.published_at) <= now);
+      if (!isLive) return false;
+      
+      const campusMatch = (activeCampus === "ALL" || p.polo === activeCampus || p.polo === "Tutti");
+      const typeMatch = (activeFeedType === "ALL" || p.tipo === activeFeedType);
+      
+      let spottedStatusMatch = true;
+      if (p.tipo === 'spotted' && activeSpottedStatus !== "ALL") {
+        if (activeSpottedStatus === "waiting") spottedStatusMatch = !p.has_match;
+        if (activeSpottedStatus === "matched") spottedStatusMatch = p.has_match;
+      }
+
+      const searchMatch = !searchQuery || 
+        (p.titolo && p.titolo.toLowerCase().includes(searchQuery)) || 
+        (p.testo && p.testo.toLowerCase().includes(searchQuery)) || 
+        (p.luogo && p.luogo.toLowerCase().includes(searchQuery));
+
+      return campusMatch && typeMatch && spottedStatusMatch && searchMatch;
+    });
+
+    if (filtered.length === 0) {
+      feed.innerHTML = `
+        <div style="text-align:center; padding: 40px 20px; background: rgba(255,255,255,0.02); border-radius:16px;">
+          <div style="font-size:32px; margin-bottom:8px;">⚡</div>
+          <div style="font-size:16px; font-weight:700; color:var(--rose-gold-light);">Nessun post attivo al momento</div>
+          <p style="font-size:12px; color:var(--text-muted); margin: 8px auto 16px; max-width:320px;">
+            I post vengono verificati e approvati a intervalli regolari. Invia tu il prossimo!
+          </p>
+          <button class="btn-create" onclick="document.getElementById('btnOpenVaultModal').click()" style="margin: 0 auto;">
+            Invia in Anonimo
+          </button>
         </div>
       `;
+      return;
     }
 
-    // Se è Spotted con handshake
-    let handshakeBtn = '';
-    if (isSpotted && p.handshake_hash) {
-      handshakeBtn = `
-        <button class="btn btn-accent" style="padding: 5px 10px; font-size: 11px; margin-left: auto;" onclick="openHandshakeModal('${p.id}')">
-          ${p.has_match ? '🎯 Risolto' : '👀 Sono io!'}
-        </button>
+    let html = "";
+    let count = 0;
+
+    filtered.forEach((p) => {
+      count++;
+      const isSpotted = (p.tipo === 'spotted');
+      const isTrending = (!isSpotted && p.id === trendingId);
+      const badgeClass = isSpotted ? 'spotted' : 'gossip';
+      const badgeIcon = isSpotted ? '👀 SPOTTED' : '💣 GOSSIP';
+      const textParsed = parseCensorship(p.testo, p.is_unlocked);
+      const timeLabel = timeAgo(p.published_at || p.created_at);
+
+      const trendingHtml = isTrending ? `<div class="badge-trending">👑 #1 TRENDING UDA</div>` : '';
+
+      const pct = Math.min(100, Math.round((p.voti_totali / p.soglia_sblocco) * 100));
+      const unlockBar = (!p.is_unlocked && !isSpotted) ? `
+        <div class="unlock-progress-wrap">
+          <div class="unlock-progress-text">
+            <span>🔒 Dettagli censurati (${p.voti_totali}/${p.soglia_sblocco} reazioni)</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="unlock-progress-track">
+            <div class="unlock-progress-fill" style="width: ${pct}%;"></div>
+          </div>
+        </div>
+      ` : '';
+
+      let spottedBox = "";
+      if (isSpotted) {
+        if (p.has_match) {
+          spottedBox = `
+            <div class="spotted-matched-box">
+              <span style="font-size: 11.5px; color: #6EE7B7; font-weight: 600;">
+                🎯 Qualcuno si è riconosciuto per questo spotted!
+              </span>
+              <button class="btn-unlock-author" onclick="window.openAuthorUnlockModal('${p.id}')">
+                🔑 Sei l'autore? Sblocca con PIN
+              </button>
+            </div>
+          `;
+        } else if (p.handshake_q) {
+          spottedBox = `
+            <div style="margin-bottom: 12px;">
+              <button class="btn-spotted-handshake" onclick="window.openHandshakeModal('${p.id}')">
+                Penso di essere io 👀
+              </button>
+            </div>
+          `;
+        }
+      }
+
+      const hasVoted = !!localStorage.getItem(`aura_voted_${p.id}`);
+      const deepLink = `${window.location.origin}${window.location.pathname}#post-${p.id}`;
+      const waText = encodeURIComponent(`Regà leggete questo drama su AURA, mancano poche reazioni per sbloccare la parte censurata! 👀👇\n${deepLink}`);
+      
+      const shareGroup = (!isSpotted) ? `
+        <div class="share-actions-group">
+          <a href="https://api.whatsapp.com/send?text=${waText}" target="_blank" class="btn-share-wa">
+            📲 WhatsApp
+          </a>
+          <button class="btn-share-general" onclick="window.shareOrCopyPost('${p.id}', '${escapeHTML(p.titolo)}')">
+            🔗 Condividi
+          </button>
+        </div>
+      ` : `
+        <div class="share-actions-group">
+          <button class="btn-share-general" onclick="window.shareOrCopyPost('${p.id}', '${escapeHTML(p.titolo)}')">
+            🔗 Condividi
+          </button>
+        </div>
       `;
-    }
 
-    return `
-      <article class="vault-card" id="vault-card-${p.id}">
-        <div class="vault-header">
-          <span class="vault-badge ${badgeClass}">${badgeLabel} • ${p.polo}</span>
-          <span class="vault-place">📍 ${p.luogo}</span>
-        </div>
-        <h4 class="vault-title">${p.titolo}</h4>
-        ${bodyHtml}
-        <div class="reactions-bar">
-          <button class="react-btn" onclick="voteVault('${p.id}', 'fire')">🔥 ${p.voti_fire || 0}</button>
-          <button class="react-btn" onclick="voteVault('${p.id}', 'skull')">💀 ${p.voti_skull || 0}</button>
-          <button class="react-btn" onclick="voteVault('${p.id}', 'redflag')">🚩 ${p.voti_redflag || 0}</button>
-          ${handshakeBtn}
-        </div>
-      </article>
-    `;
-  }).join('');
-}
+      html += `
+        <article class="vault-card ${isTrending ? 'trending' : ''}" id="post-${p.id}">
+          ${trendingHtml}
+          <div class="vault-header">
+            <span class="vault-badge ${badgeClass}">${badgeIcon}</span>
+            <div class="vault-meta">
+              <span class="loc">📍 ${escapeHTML(p.polo)} • ${escapeHTML(p.luogo)}</span>
+              <span>• ${timeLabel}</span>
+            </div>
+          </div>
+          <h3 class="vault-title">${escapeHTML(p.titolo)}</h3>
+          <div class="vault-body">${textParsed}</div>
+          ${unlockBar}
+          ${spottedBox}
+          <div class="vault-actions-bar">
+            <div class="reaction-btns-group">
+              <button class="btn-react ${hasVoted ? 'voted' : ''}" onclick="window.reactVault('${p.id}', 'fire')">🔥 <span id="cnt-fire-${p.id}">${p.voti_fire || 0}</span></button>
+              <button class="btn-react ${hasVoted ? 'voted' : ''}" onclick="window.reactVault('${p.id}', 'skull')">💀 <span id="cnt-skull-${p.id}">${p.voti_skull || 0}</span></button>
+              <button class="btn-react ${hasVoted ? 'voted' : ''}" onclick="window.reactVault('${p.id}', 'redflag')">🚩 <span id="cnt-redflag-${p.id}">${p.voti_redflag || 0}</span></button>
+            </div>
+            ${shareGroup}
+            <button style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;" onclick="window.flagVault('${p.id}')">Segnala</button>
+          </div>
+        </article>
+      `;
 
-async function voteVault(id, reactionType) {
-  const storageKey = `aura_voted_${id}`;
-  if (localStorage.getItem(storageKey)) {
-    alert("Hai già votato questo post!");
-    return;
-  }
-
-  try {
-    const { data, error } = await sbClient.rpc('vota_vault_post', {
-      p_id: id,
-      p_reaction: reactionType
+      if (count % 3 === 0 && listings.length > 0) {
+        const randomListing = listings[Math.floor(Math.random() * listings.length)];
+        html += `
+          <div class="interleaved-market-card" onclick="document.getElementById('tabBtnMarket').click();">
+            <img class="interleaved-market-img" src="${escapeHTML(randomListing.foto_url)}" onerror="this.src='logo.png';">
+            <div class="interleaved-market-info">
+              <div class="interleaved-market-tag">Dall'AURA Market • ${escapeHTML(randomListing.polo)}</div>
+              <div class="interleaved-market-title">${escapeHTML(randomListing.titolo)}</div>
+              <div class="interleaved-market-price">${escapeHTML(randomListing.prezzo)}</div>
+            </div>
+            <div style="font-size: 18px; color: var(--rose-gold);">➔</div>
+          </div>
+        `;
+      }
     });
 
-    if (!error) {
-      localStorage.setItem(storageKey, reactionType);
-      await loadVaultPosts();
+    feed.innerHTML = html;
+    checkDeepLinkScroll();
+  }
+
+  window.shareOrCopyPost = async function(id, title) {
+    const link = `${window.location.origin}${window.location.pathname}#post-${id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `AURA UdA • ${title}`,
+          text: `Guarda questo post su AURA UdA:`,
+          url: link
+        });
+        return;
+      } catch (e) {}
     }
-  } catch (err) {
-    console.error("Errore voto:", err);
-  }
-}
 
-// Invia Post anonimo alla moderazione
-// Invia Post anonimo alla moderazione (con Cooldown Anti-Spam di 5 min)
-document.getElementById("btnSubmitVault").addEventListener("click", async () => {
-  // --- CONTROLLO COOLDOWN ANTI-SPAM ---
-  const lastPostTime = localStorage.getItem("aura_last_post_ts");
-  if (lastPostTime && (Date.now() - parseInt(lastPostTime)) < 5 * 60 * 1000) {
-    const minRestanti = Math.ceil((5 * 60 * 1000 - (Date.now() - parseInt(lastPostTime))) / 60000);
-    alert(`Frena! Devi attendere ancora ${minRestanti} minuti prima di pubblicare un altro post.`);
-    return;
-  }
+    navigator.clipboard.writeText(link).then(() => {
+      triggerHaptic([30]);
+      showToast("Link copiato negli appunti! 📋");
+    }).catch(() => {
+      showToast("Impossibile copiare il link.");
+    });
+  };
 
-  const tipo = document.querySelector('input[name="vaultType"]:checked').value;
-  const polo = document.getElementById("vaultPoloInput").value;
-  const luogo = document.getElementById("vaultLuogoInput").value.trim();
-  const titolo = document.getElementById("vaultTitoloInput").value.trim();
-  const testo = document.getElementById("vaultTestoInput").value.trim();
-
-  if (!luogo || !titolo || !testo) {
-    alert("Compila tutti i campi obbligatori!");
-    return;
-  }
-
-  let handshakeData = { handshake_q: null, handshake_hash: null, contact_ig: null };
-  if (tipo === 'spotted') {
-    const q = document.getElementById("vaultHandshakeQ").value.trim();
-    const a = document.getElementById("vaultHandshakeA").value.trim();
-    const ig = document.getElementById("vaultContactIG").value.trim().replace('@', '');
-    if (q && a && ig) {
-      handshakeData.handshake_q = q;
-      handshakeData.handshake_hash = await hashSHA256(a);
-      handshakeData.contact_ig = ig;
+  /* ==============================================
+     [JS: 05-SPOTTED-HANDSHAKE-AND-AUTH]
+     ============================================== */
+  const modalHandshake = document.getElementById("modalHandshake");
+  window.openHandshakeModal = function(id) {
+    const post = vaultPosts.find(p => p.id === id);
+    if (!post) return;
+    if (post.has_match) {
+      alert("Qualcuno si è già fatto avanti per questo spotted!");
+      return;
     }
-  }
 
-  try {
-    const { error } = await sbClient.from('vault_posts').insert([{
+    const bfKey = `aura_bf_${id}`;
+    const bfData = JSON.parse(localStorage.getItem(bfKey) || '{"attempts":0, "lockedUntil":0}');
+    if (bfData.lockedUntil > Date.now()) {
+      const remainMins = Math.ceil((bfData.lockedUntil - Date.now()) / 60000);
+      alert(`Hai effettuato troppi tentativi errati. Riprova tra ${remainMins} minuti 🔒`);
+      return;
+    }
+
+    activePostForHandshake = post;
+    document.getElementById("handshakePromptText").innerText = `Domanda dell'autore:\n"${post.handshake_q}"`;
+    document.getElementById("inputHandshakeAnswer").value = "";
+    document.getElementById("inputMyIg").value = "";
+    document.getElementById("attemptsRemainingText").innerText = `Tentativi rimasti: ${3 - bfData.attempts}`;
+    modalHandshake.classList.add("open");
+  };
+  document.getElementById("btnCloseHandshakeModal").addEventListener("click", () => modalHandshake.classList.remove("open"));
+
+  document.getElementById("btnVerifyAndSubmitHandshake").addEventListener("click", async () => {
+    const ans = document.getElementById("inputHandshakeAnswer").value.trim();
+    const rawIg = document.getElementById("inputMyIg").value.trim().replace(/^@+/, '');
+    
+    if (!ans) {
+      alert("Inserisci la risposta alla domanda segreta.");
+      return;
+    }
+    if (!rawIg) {
+      alert("Inserisci il tuo username Instagram.");
+      return;
+    }
+
+    const bfKey = `aura_bf_${activePostForHandshake.id}`;
+    let bfData = JSON.parse(localStorage.getItem(bfKey) || '{"attempts":0, "lockedUntil":0}');
+
+    const btn = document.getElementById("btnVerifyAndSubmitHandshake");
+    btn.disabled = true;
+    btn.innerText = "Verifica in corso...";
+
+    try {
+      const { data, error } = await sbClient.rpc('verifica_e_invia_spotted', {
+        p_id: activePostForHandshake.id,
+        p_risposta: ans,
+        p_target_ig: rawIg
+      });
+
+      if (!error && data && data.success) {
+        triggerHaptic([30, 40, 60]);
+        localStorage.removeItem(bfKey);
+        alert("Risposta esatta! Il tuo profilo Instagram è stato recapitato all'autore!");
+        modalHandshake.classList.remove("open");
+        loadVaultData();
+      } else {
+        triggerHaptic([60, 50, 60]);
+        bfData.attempts += 1;
+        if (bfData.attempts >= 3) {
+          bfData.lockedUntil = Date.now() + 30 * 60 * 1000;
+          localStorage.setItem(bfKey, JSON.stringify(bfData));
+          alert("Risposta non corretta. Hai esaurito i 3 tentativi! Bloccato per 30 minuti.");
+          modalHandshake.classList.remove("open");
+        } else {
+          localStorage.setItem(bfKey, JSON.stringify(bfData));
+          document.getElementById("attemptsRemainingText").innerText = `Tentativi rimasti: ${3 - bfData.attempts}`;
+          alert(`Risposta non corretta! Ti rimangono ${3 - bfData.attempts} tentativi.`);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "Conferma & Invia Profilo 🚀";
+    }
+  });
+
+  const modalAuthorUnlock = document.getElementById("modalAuthorUnlock");
+  window.openAuthorUnlockModal = function(id) {
+    activePostForAuthorUnlock = id;
+    document.getElementById("inputAuthorPinUnlock").value = "";
+    document.getElementById("authorResultBox").style.display = "none";
+    modalAuthorUnlock.classList.add("open");
+  };
+  document.getElementById("btnCloseAuthorUnlock").addEventListener("click", () => modalAuthorUnlock.classList.remove("open"));
+
+  document.getElementById("btnConfirmAuthorUnlock").addEventListener("click", async () => {
+    const pin = document.getElementById("inputAuthorPinUnlock").value.trim();
+    if (!pin || pin.length !== 4) {
+      alert("Inserisci il tuo PIN a 4 cifre.");
+      return;
+    }
+
+    const resBox = document.getElementById("authorResultBox");
+    try {
+      const { data, error } = await sbClient.rpc('sblocca_contatto_autore', {
+        p_id: activePostForAuthorUnlock,
+        p_pin: pin
+      });
+
+      resBox.style.display = "block";
+      if (!error && data && data.success) {
+        triggerHaptic([50, 50]);
+        const ig = data.matched_ig.replace('@','');
+        resBox.style.background = "rgba(16, 185, 129, 0.15)";
+        resBox.style.border = "1px solid #10B981";
+        resBox.style.color = "#6EE7B7";
+        resBox.innerHTML = `
+          🎉 <strong>La persona che cercavi è:</strong><br>
+          <a href="https://ig.me/m/${ig}" target="_blank" style="font-size:16px; color:#fff; font-weight:800; text-decoration:underline;">@${ig}</a>
+          <div style="font-size:11px; margin-top:6px; color:#E7DEEA;">Tocca per aprire direttamente la chat Instagram!</div>
+        `;
+      } else {
+        triggerHaptic([60]);
+        resBox.style.background = "rgba(239, 68, 68, 0.15)";
+        resBox.style.border = "1px solid #EF4444";
+        resBox.style.color = "#FCA5A5";
+        resBox.innerHTML = `❌ PIN non valido o nessun contatto ancora registrato.`;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  });
+
+  /* ==============================================
+     [JS: 06-CREATE-POST-COOLDOWN]
+     ============================================== */
+  const modalVault = document.getElementById("modalVaultCreate");
+  document.getElementById("btnOpenVaultModal").addEventListener("click", () => modalVault.classList.add("open"));
+  document.getElementById("btnCloseVaultModal").addEventListener("click", () => modalVault.classList.remove("open"));
+
+  document.getElementById("vTipo").addEventListener("change", (e) => {
+    document.getElementById("spottedFields").style.display = (e.target.value === 'spotted') ? 'block' : 'none';
+  });
+
+  document.getElementById("vaultCreateForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const lastPostTs = parseInt(localStorage.getItem("aura_last_post_ts") || "0", 10);
+    const cooldownMs = 10 * 60 * 1000;
+    if (Date.now() - lastPostTs < cooldownMs) {
+      const remainMins = Math.ceil((cooldownMs - (Date.now() - lastPostTs)) / 60000);
+      alert(`Hai inviato un post di recente! Attendi ${remainMins} minuti prima di condividerne un altro ✨`);
+      return;
+    }
+
+    const submitBtn = document.getElementById("btnSubmitVault");
+    submitBtn.disabled = true;
+
+    const tipo = document.getElementById("vTipo").value;
+    const polo = document.getElementById("vPolo").value;
+    const luogo = document.getElementById("vLuogo").value.trim();
+    const titolo = document.getElementById("vTitolo").value.trim();
+    const testo = document.getElementById("vTesto").value.trim();
+
+    let handshake_q = null;
+    let handshake_hash = null;
+    let author_pin = null;
+
+    if (tipo === 'spotted') {
+      handshake_q = document.getElementById("vHandshakeQ").value.trim() || null;
+      const rawA = document.getElementById("vHandshakeA").value.trim();
+      if (rawA) handshake_hash = await sha256(rawA);
+      author_pin = document.getElementById("vAuthorPin").value.trim() || null;
+    }
+
+    const payload = {
       tipo,
       polo,
       luogo,
       titolo,
       testo,
+      soglia_sblocco: (tipo === 'gossip') ? 25 : 1,
       status: 'pending',
-      handshake_q: handshakeData.handshake_q,
-      handshake_hash: handshakeData.handshake_hash,
-      contact_ig: handshakeData.contact_ig,
-      soglia_sblocco: 25
-    }]);
+      handshake_q,
+      handshake_hash,
+      author_pin
+    };
 
-    if (!error) {
-      // Salva il timestamp per bloccare lo spam
+    try {
+      const { error } = await sbClient.from('vault_posts').insert([payload]);
+      if (error) throw error;
       localStorage.setItem("aura_last_post_ts", Date.now().toString());
-
-      alert("Post inviato! Verrà pubblicato appena revisionato dallo staff.");
-      closeModal('modalVaultCreate');
-      document.getElementById("vaultLuogoInput").value = '';
-      document.getElementById("vaultTitoloInput").value = '';
-      document.getElementById("vaultTestoInput").value = '';
-    } else {
-      alert("Errore invio: " + error.message);
+      document.getElementById("vaultCreateForm").reset();
+      modalVault.classList.remove("open");
+      triggerHaptic([30, 40]);
+      alert("Post inviato alla moderazione! Verrà revisionato e rilasciato a breve ✨");
+      await loadVaultData();
+    } catch (err) {
+      alert("Errore invio: " + err.message);
+    } finally {
+      submitBtn.disabled = false;
     }
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-/* ==============================================
-   [JS: 04-HANDSHAKE] - SPOTTED VERIFICA & SBLOCCO
-   ============================================== */
-window.openHandshakeModal = function(id) {
-  const post = state.vaultPosts.find(p => p.id === id);
-  if (!post || !post.handshake_q) return;
-
-  state.activeHandshakePost = post;
-  document.getElementById("handshakeQuestionText").innerText = `Domanda di verifica: "${post.handshake_q}"`;
-  document.getElementById("handshakeAnswerInput").value = '';
-  document.getElementById("handshakeResultBox").innerHTML = '';
-  openModal('modalHandshake');
-};
-
-document.getElementById("btnSubmitHandshake").addEventListener("click", async () => {
-  if (!state.activeHandshakePost) return;
-
-  const answer = document.getElementById("handshakeAnswerInput").value.trim();
-  if (!answer) return;
-
-  const computedHash = await hashSHA256(answer);
-  const resultBox = document.getElementById("handshakeResultBox");
-
-  if (computedHash === state.activeHandshakePost.handshake_hash) {
-    const ig = state.activeHandshakePost.contact_ig;
-    resultBox.innerHTML = `
-      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--aura-green); padding: 12px; border-radius: 8px; margin-top: 12px; text-align: center;">
-        <div style="color: #6EE7B7; font-weight: 800; font-size: 13px;">Risposta corretta! È un match! 🎉</div>
-        <div style="font-size: 12px; margin-top: 6px;">Contatta la persona su Instagram:</div>
-        <a href="https://instagram.com/${ig}" target="_blank" style="color: var(--rose-gold-light); font-weight: 800; font-size: 14px; text-decoration: underline;">@${ig}</a>
-      </div>
-    `;
-    // Aggiorna stato match nel database
-    await sbClient.from('vault_posts').update({ has_match: true }).eq('id', state.activeHandshakePost.id);
-  } else {
-    resultBox.innerHTML = `
-      <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid var(--aura-red); color: #FCA5A5; padding: 10px; border-radius: 8px; margin-top: 12px; font-size: 12px; text-align: center;">
-        Risposta errata. Riprova con un'altra risposta.
-      </div>
-    `;
-  }
-});
-
-
-/* ==============================================
-   [JS: 05-MARKET-FEED] - CARICAMENTO & RICERCA MARKET
-   ============================================== */
-async function loadMarketItems() {
-  if (!sbClient) return;
-  try {
-    const { data, error } = await sbClient
-      .from('annunci_market')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      state.marketItems = data;
-      renderMarketFeed();
-    }
-  } catch (err) {
-    console.error("Errore caricamento Market:", err);
-  }
-}
-
-function renderMarketFeed() {
-  const container = document.getElementById("marketListContainer");
-  if (!container) return;
-
-  const query = (document.getElementById("marketSearchInput").value || "").toLowerCase().trim();
-
-  const filtered = state.marketItems.filter(item => {
-    const matchCampus = (state.campus === 'Tutti' || item.polo === state.campus || item.polo === 'Tutti');
-    const matchQuery = !query || item.titolo.toLowerCase().includes(query) || item.categoria.toLowerCase().includes(query);
-    return matchCampus && matchQuery;
   });
 
-  if (filtered.length === 0) {
-    container.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 40px 16px; color: var(--text-muted); font-size: 13px;">
-        Nessun annuncio trovato nel Marketplace.
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = filtered.map(item => `
-    <div class="market-card" id="market-card-${item.id}">
-      <img class="market-img" src="${item.foto_url}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23110D18%22/><text x=%2250%%22 y=%2250%%22 fill=%22%23E2B49A%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2212%22>AURA</text></svg>';">
-      <div class="market-content">
-        <div style="font-size: 10.5px; color: var(--rose-gold); font-weight: 700; margin-bottom: 2px;">
-          ${item.categoria} • ${item.polo}
-        </div>
-        <div class="market-price">${item.prezzo}</div>
-        <div class="market-title">${item.titolo}</div>
-        <div class="market-footer">
-          <a href="https://ig.me/m/${item.contatto_ig}" target="_blank" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">
-            Contatta @${item.contatto_ig}
-          </a>
-          <button class="btn btn-danger" style="padding: 6px 10px; font-size: 10.5px;" onclick="promptDeleteMarket('${item.id}')">
-            Venduto? ✕
-          </button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-
-/* ==============================================
-   [JS: 06-MARKET-ACTIONS] - CREAZIONE & RIMOZIONE PIN
-   ============================================== */
-document.getElementById("btnSubmitMarket").addEventListener("click", async () => {
-  // Cooldown Anti-Spam (3 minuti)
-  const lastMarketTime = localStorage.getItem("aura_last_market_ts");
-  if (lastMarketTime && (Date.now() - parseInt(lastMarketTime)) < 3 * 60 * 1000) {
-    const minRestanti = Math.ceil((3 * 60 * 1000 - (Date.now() - parseInt(lastMarketTime))) / 60000);
-    alert(`Attendi ancora ${minRestanti} minuti prima di pubblicare un altro annuncio.`);
-    return;
-  }
-
-  const titolo = document.getElementById("marketTitoloInput").value.trim();
-  const categoria = document.getElementById("marketCatInput").value;
-  const polo = document.getElementById("marketPoloInput").value;
-  const prezzo = document.getElementById("marketPrezzoInput").value.trim();
-  const contatto_ig = document.getElementById("marketIgInput").value.trim().replace('@', '');
-  const foto_url = document.getElementById("marketFotoInput").value.trim();
-  const pin = document.getElementById("marketPinInput").value.trim();
-
-  if (!titolo || !prezzo || !contatto_ig || pin.length !== 4) {
-    alert("Compila tutti i campi richiesti e inserisci un PIN di 4 cifre!");
-    return;
-  }
-
-  const pinHash = await hashSHA256(pin);
-
-  try {
-    const { error } = await sbClient.from('annunci_market').insert([{
-      titolo,
-      categoria,
-      polo,
-      prezzo,
-      contatto_ig,
-      foto_url: foto_url || 'logo.png',
-      pin_hash: pinHash
-    }]);
-
-    if (!error) {
-      localStorage.setItem("aura_last_market_ts", Date.now().toString());
-      alert("Annuncio pubblicato!");
-      closeModal('modalMarketCreate');
-      document.getElementById("marketTitoloInput").value = '';
-      document.getElementById("marketPrezzoInput").value = '';
-      document.getElementById("marketIgInput").value = '';
-      document.getElementById("marketFotoInput").value = '';
-      document.getElementById("marketPinInput").value = '';
-      loadMarketItems();
-    } else {
-      alert("Errore salvataggio: " + error.message);
+  /* ==============================================
+     [JS: 07-REACT-FLAG-ACTIONS]
+     ============================================== */
+  window.reactVault = async function(id, type) {
+    const key = `aura_voted_${id}`;
+    if (localStorage.getItem(key)) {
+      showToast("Hai già votato questo post!");
+      return;
     }
-  } catch (err) {
-    console.error(err);
-  }
-});
+    
+    localStorage.setItem(key, "1");
+    triggerHaptic([35]);
+    const countSpan = document.getElementById(`cnt-${type}-${id}`);
+    if (countSpan) {
+      countSpan.innerText = parseInt(countSpan.innerText || "0", 10) + 1;
+    }
+    
+    const postObj = vaultPosts.find(p => p.id === id);
+    if (postObj) {
+      postObj.voti_totali = (postObj.voti_totali || 0) + 1;
+      if (type === 'fire') postObj.voti_fire = (postObj.voti_fire || 0) + 1;
+      if (type === 'skull') postObj.voti_skull = (postObj.voti_skull || 0) + 1;
+      if (type === 'redflag') postObj.voti_redflag = (postObj.voti_redflag || 0) + 1;
+      if (postObj.voti_totali >= postObj.soglia_sblocco) {
+        postObj.is_unlocked = true;
+      }
+    }
+    renderVault();
 
-// Apertura modale eliminazione annuncio con PIN
-window.promptDeleteMarket = function(id) {
-  state.pendingDeleteMarketId = id;
-  document.getElementById("deletePinInput").value = '';
-  openModal('modalMarketDelete');
-};
+    try {
+      const { data } = await sbClient.rpc('vota_vault_post', { p_id: id, p_vote_type: type });
+      if (data && data.success) {
+        showToast(data.is_unlocked ? "🎉 Dettagli censurati sbloccati!" : "Voto registrato! 🔥");
+        loadVaultData();
+      }
+    } catch (e) {}
+  };
 
-document.getElementById("btnConfirmDeleteMarket").addEventListener("click", async () => {
-  if (!state.pendingDeleteMarketId) return;
+  window.flagVault = async function(id) {
+    if (!confirm("Segnalare questo post per contenuto non appropriato?")) return;
+    try {
+      const { data } = await sbClient.rpc('segnala_vault_post', { p_id: id });
+      if (data && data.success) {
+        showToast("Segnalazione inviata. Grazie per il contributo!");
+        if (data.quarantined) loadVaultData();
+      }
+    } catch (e) {}
+  };
 
-  const pin = document.getElementById("deletePinInput").value.trim();
-  if (pin.length !== 4) {
-    alert("Inserisci il PIN di 4 cifre.");
-    return;
-  }
+  /* ==============================================
+     [JS: 08-MARKET-ENGINE]
+     ============================================== */
+  function renderMarketCards() {
+    const grid = document.getElementById("listingsGrid");
+    const query = (document.getElementById("searchInputMarket").value || "").trim().toLowerCase();
 
-  const enteredHash = await hashSHA256(pin);
+    const filtered = listings.filter(item => {
+      const campusMatch = (activeCampus === "ALL" || item.polo === activeCampus || item.polo === "Tutti");
+      const catMatch = (activeMarketCat === "ALL" || item.categoria === activeMarketCat);
+      const queryMatch = !query || (item.titolo && item.titolo.toLowerCase().includes(query));
+      return campusMatch && catMatch && queryMatch;
+    });
 
-  try {
-    const { data: item, error: fetchErr } = await sbClient
-      .from('annunci_market')
-      .select('pin_hash')
-      .eq('id', state.pendingDeleteMarketId)
-      .single();
-
-    if (fetchErr || !item) {
-      alert("Annuncio non trovato.");
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Nessun annuncio per questa ricerca.</div>`;
       return;
     }
 
-    if (item.pin_hash === enteredHash) {
-      await sbClient.from('annunci_market').delete().eq('id', state.pendingDeleteMarketId);
-      alert("Annuncio rimosso con successo!");
-      closeModal('modalMarketDelete');
-      state.pendingDeleteMarketId = null;
-      loadMarketItems();
-    } else {
-      alert("PIN errato! Impossibile rimuovere l'annuncio.");
-    }
-  } catch (err) {
-    console.error(err);
+    grid.innerHTML = filtered.map(item => `
+      <article class="card">
+        <div class="card-cover-wrap">
+          <span class="tag-campus">${escapeHTML(item.polo)}</span>
+          <img class="card-cover" src="${escapeHTML(item.foto_url)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="card-placeholder-fallback" style="display:none;">
+            <div class="card-placeholder-icon">${getCategoryIcon(item.categoria)}</div>
+            <div class="card-placeholder-text">${escapeHTML(item.categoria.toUpperCase())}</div>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="card-price">${escapeHTML(item.prezzo)}</div>
+          <div class="card-title">${escapeHTML(item.titolo)}</div>
+          <div class="card-footer-actions">
+            <a href="https://ig.me/m/${escapeHTML(item.contatto_ig)}" target="_blank" class="btn-contact">Contatta @${escapeHTML(item.contatto_ig)}</a>
+            <button class="btn-card-del" onclick="window.openDeleteMarketModal('${item.id}')" title="Hai venduto? Rimuovi annuncio">🗑️</button>
+          </div>
+        </div>
+      </article>
+    `).join('');
   }
-});
 
+  const modalMarketDelete = document.getElementById("modalMarketDelete");
+  window.openDeleteMarketModal = function(id) {
+    activeMarketIdToDelete = id;
+    document.getElementById("inputDeleteMarketPin").value = "";
+    modalMarketDelete.classList.add("open");
+  };
+  document.getElementById("btnCloseMarketDeleteModal").addEventListener("click", () => modalMarketDelete.classList.remove("open"));
 
-/* ==============================================
-   [JS: 07-MODALS-UTILS] - APERTURA, CHIUSURA MODALI
-   ============================================== */
-function initModals() {
-  // Toggle campi extra handshake su Spotted
-  document.querySelectorAll('input[name="vaultType"]').forEach(r => {
-    r.addEventListener("change", (e) => {
-      const extraFields = document.getElementById("spottedExtraFields");
-      if (extraFields) {
-        extraFields.style.display = (e.target.value === 'spotted') ? 'block' : 'none';
+  document.getElementById("btnConfirmMarketDelete").addEventListener("click", async () => {
+    const pin = document.getElementById("inputDeleteMarketPin").value.trim();
+    if (!pin || pin.length !== 4) {
+      alert("Inserisci il PIN a 4 cifre associato all'annuncio.");
+      return;
+    }
+
+    try {
+      const { data, error } = await sbClient.rpc('elimina_annuncio_utente', {
+        p_id: activeMarketIdToDelete,
+        p_pin: pin
+      });
+
+      if (!error && data && data.success) {
+        triggerHaptic([30, 40]);
+        modalMarketDelete.classList.remove("open");
+        showToast("Annuncio rimosso con successo! 🛍️");
+        loadMarketData();
+      } else {
+        triggerHaptic([60]);
+        alert("PIN non valido. Impossibile cancellare l'annuncio.");
       }
+    } catch (err) {
+      alert("Errore durante l'eliminazione: " + err.message);
+    }
+  });
+
+  const modalMarket = document.getElementById("modalMarketCreate");
+  document.getElementById("btnOpenMarketModal").addEventListener("click", () => modalMarket.classList.add("open"));
+  document.getElementById("btnCloseMarketModal").addEventListener("click", () => modalMarket.classList.remove("open"));
+
+  document.getElementById("createListingForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const payload = {
+      titolo: document.getElementById("fTitolo").value.trim(),
+      prezzo: document.getElementById("fPrezzo").value.trim(),
+      categoria: document.getElementById("fCategoria").value,
+      polo: document.getElementById("fPolo").value,
+      contatto_ig: document.getElementById("fIg").value.trim().replace(/^@+/, ''),
+      foto_url: document.getElementById("fFoto").value.trim(),
+      pin: document.getElementById("fPin").value.trim()
+    };
+
+    try {
+      const { error } = await sbClient.from('annunci').insert([payload]);
+      if (error) throw error;
+      document.getElementById("createListingForm").reset();
+      modalMarket.classList.remove("open");
+      triggerHaptic([30, 40]);
+      showToast("Annuncio pubblicato sul Market! 🛍️");
+      loadMarketData();
+    } catch (err) {
+      alert("Errore: " + err.message);
+    }
+  });
+
+  /* ==============================================
+     [JS: 09-PILLS-FILTERS-LISTENERS]
+     ============================================== */
+  document.querySelectorAll('#sectionMarket .pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('#sectionMarket .pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeMarketCat = pill.dataset.cat;
+      renderMarketCards();
     });
   });
 
-  // Tasti apertura modali
-  document.getElementById("btnOpenCreateMarket").addEventListener("click", () => openModal('modalMarketCreate'));
-  document.getElementById("btnOpenCreateVault").addEventListener("click", () => openModal('modalVaultCreate'));
-
-  // Tasti chiusura modali (X)
-  document.querySelectorAll(".modal-close").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const targetId = btn.getAttribute("data-close");
-      closeModal(targetId);
+  document.querySelectorAll('#sectionVault .pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('#sectionVault .pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFeedType = pill.dataset.feedType;
+      
+      const statusRow = document.getElementById("spottedStatusFilterRow");
+      if (activeFeedType === 'spotted') {
+        statusRow.style.display = 'flex';
+      } else {
+        statusRow.style.display = 'none';
+        activeSpottedStatus = 'ALL';
+        document.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
+        document.querySelector('.sub-pill[data-spotted-status="ALL"]').classList.add('active');
+      }
+      renderVault();
     });
   });
 
-  // Chiusura al click fuori dal popup
-  document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
-    backdrop.addEventListener("click", (e) => {
-      if (e.target === backdrop) backdrop.classList.remove("open");
+  document.querySelectorAll('.sub-pill').forEach(subPill => {
+    subPill.addEventListener('click', () => {
+      document.querySelectorAll('.sub-pill').forEach(sp => sp.classList.remove('active'));
+      subPill.classList.add('active');
+      activeSpottedStatus = subPill.dataset.spottedStatus;
+      renderVault();
     });
   });
-}
 
-function openModal(modalId) {
-  const el = document.getElementById(modalId);
-  if (el) el.classList.add("open");
-}
+  document.getElementById("searchInputMarket").addEventListener("input", debounce(renderMarketCards));
+  document.getElementById("searchInputFeed").addEventListener("input", debounce(renderVault));
 
-function closeModal(modalId) {
-  const el = document.getElementById(modalId);
-  if (el) el.classList.remove("open");
-}
+  /* ==============================================
+     [JS: 10-LOAD-DATA-REALTIME]
+     ============================================== */
+  async function loadMarketData() {
+    if (!sbClient) return;
+    try {
+      const { data } = await sbClient.from('annunci').select('*').order('created_at', { ascending: false });
+      if (data) listings = data;
+    } catch (e) {}
+    renderMarketCards();
+  }
+
+  async function loadVaultData() {
+    if (!sbClient) return;
+    try {
+      const { data } = await sbClient.from('vault_posts_public').select('*').order('created_at', { ascending: false });
+      if (data) vaultPosts = data;
+    } catch (e) {}
+    renderVault();
+  }
+
+  loadMarketData();
+  loadVaultData();
+  setInterval(renderVault, 10000);
+
+  if (sbClient) {
+    sbClient.channel('realtime_public_aura_student_v7')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, loadMarketData)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_posts' }, loadVaultData)
+      .subscribe();
+  }
+})();
