@@ -7,7 +7,7 @@
   
   <meta name="description" content="L'ecosistema digitale degli studenti UdA Chieti-Pescara: AURA Market, Gossip anonimi e Spotted di Campus.">
   <meta property="og:title" content="AURA • UdA Chieti & Pescara">
-  <meta property="og:description" content="Market compravendita tra studenti, 💣💅 Gossip con barre nere e 👀 Spotted di Campus.">
+  <meta property="og:description" content="Market compravendita tra studenti, 💣 Gossip con barre nere e 👀 Spotted di Campus.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="logo.png">
   <meta name="theme-color" content="#050407">
@@ -68,7 +68,7 @@
 
     header {
       position: relative;
-      padding: 22px 16px 14px;
+      padding: 22px 16px 12px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -92,7 +92,7 @@
       position: relative;
       z-index: 2;
       width: 100%;
-      max-width: 250px;
+      max-width: 240px;
       margin: 0 auto;
     }
 
@@ -106,9 +106,9 @@
       filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.25));
     }
 
-    /* SWITCHER SCHEDE PRINCIPALE */
+    /* SWITCHER SCHEDE PRINCIPALE (PERFETTAMENTE SIMMETRICO) */
     .app-tabs-wrap {
-      max-width: 440px;
+      max-width: 430px;
       margin: 6px auto 14px;
       padding: 0 16px;
       position: relative;
@@ -117,28 +117,35 @@
     .app-tabs-nav {
       display: flex;
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(226, 180, 154, 0.25);
+      border: 1px solid rgba(226, 180, 154, 0.22);
       border-radius: 40px;
       padding: 4px;
       backdrop-filter: blur(14px);
+      gap: 5px;
     }
     .app-tab-btn {
-      flex: 1;
+      flex: 1 1 0;
       border: none;
       background: transparent;
       color: var(--text-muted);
       font-family: var(--font-sans);
       font-size: 12.5px;
       font-weight: 700;
-      letter-spacing: 0.4px;
-      padding: 10px 14px;
+      letter-spacing: 0.2px;
+      padding: 10px 12px;
       border-radius: 30px;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 7px;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .app-tab-btn .tab-icon {
+      font-size: 15px;
+      line-height: 1;
     }
     .app-tab-btn.active {
       background: linear-gradient(135deg, rgba(226, 180, 154, 0.28), rgba(232, 121, 249, 0.22));
@@ -464,7 +471,7 @@
       word-break: break-word;
     }
 
-    /* BARRE DI CENSURA CON FEEDBACK SHAKE & TAP */
+    /* BARRE DI CENSURA */
     .redacted-bar {
       display: inline-block;
       background: #000;
@@ -802,14 +809,14 @@
     </div>
   </header>
 
-  <!-- SWITCHER SCHEDE PRINCIPALE -->
+  <!-- SWITCHER SCHEDE PRINCIPALE (PULITO, SENZA MANI SFALSATE) -->
   <div class="app-tabs-wrap">
     <div class="app-tabs-nav">
       <button class="app-tab-btn active" id="tabBtnMarket">
-        🛒 AURA Market
+        <span class="tab-icon">🛒</span> AURA Market
       </button>
       <button class="app-tab-btn" id="tabBtnVault">
-        💣💅 Gossip & 👀 Spotted
+        <span class="tab-icon">💣</span> Gossip & Spotted
       </button>
     </div>
   </div>
@@ -855,7 +862,7 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- SEZIONE 2: 💣💅 GOSSIP & 👀 SPOTTED        -->
+  <!-- SEZIONE 2: GOSSIP & SPOTTED                -->
   <!-- ========================================== -->
   <section id="sectionVault" style="display: none;">
     <div class="controls-wrapper" style="max-width: 680px;">
@@ -876,7 +883,7 @@
 
       <div class="filter-pills">
         <div class="pill active" data-feed-type="ALL">Tutti i Feed</div>
-        <div class="pill" data-feed-type="gossip">💣💅 Gossip</div>
+        <div class="pill" data-feed-type="gossip">💣 Gossip</div>
         <div class="pill" data-feed-type="spotted">👀 Spotted</div>
       </div>
 
@@ -904,7 +911,7 @@
         <div class="form-row">
           <label>Cosa vuoi condividere?</label>
           <select id="vTipo" required>
-            <option value="gossip">💣💅 Gossip / Drama (UdA)</option>
+            <option value="gossip">💣 Gossip / Drama (UdA)</option>
             <option value="spotted">👀 Spotted nel Campus</option>
           </select>
         </div>
@@ -957,35 +964,26 @@
     </div>
   </div>
 
-  <!-- MODALE VERIFICA SPOTTED (SECRET HANDSHAKE) -->
+  <!-- MODALE VERIFICA SPOTTED (UNIFICATA E PROTETTA SERVER-SIDE) -->
   <div class="modal-backdrop" id="modalHandshake">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseHandshakeModal">&times;</button>
       <div class="modal-header-title">TI SEI RICONOSCIUTO? 👀</div>
       <p id="handshakePromptText" style="font-size: 13.5px; color: #E7DEEA; margin-bottom: 14px; text-align: center; line-height: 1.5; white-space: pre-wrap;"></p>
       
-      <div id="handshakeStepAnswer">
+      <div>
         <div class="form-row">
           <label>Rispondi alla domanda per confermare che eri tu:</label>
-          <input type="text" id="inputHandshakeAnswer" placeholder="La tua risposta...">
+          <input type="text" id="inputHandshakeAnswer" placeholder="La tua risposta..." autocomplete="off">
           <small id="attemptsRemainingText" style="color:var(--aura-magenta); font-weight:600;"></small>
-        </div>
-        <button type="button" class="btn-create" id="btnVerifyHandshake" style="width: 100%; justify-content: center;">
-          Conferma Risposta 🔓
-        </button>
-      </div>
-
-      <div id="handshakeStepIg" style="display: none;">
-        <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10B981; color: #6EE7B7; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-size: 12.5px; text-align:center;">
-          🎉 Risposta Esatta! Eri proprio tu!
         </div>
         <div class="form-row">
           <label>Tuo Username Instagram (senza @):</label>
-          <input type="text" id="inputMyIg" placeholder="mario_rossi">
-          <small>Verrà mostrato SOLO all'autore dello spotted tramite il suo PIN privato, così potrà scriverti nei DM!</small>
+          <input type="text" id="inputMyIg" placeholder="mario_rossi" autocomplete="off">
+          <small>Verrà mostrato SOLO all'autore dello spotted se la risposta è corretta!</small>
         </div>
-        <button type="button" class="btn-create" id="btnSubmitMatchedIg" style="width: 100%; justify-content: center;">
-          Invia il mio Profilo all'Autore 🚀
+        <button type="button" class="btn-create" id="btnVerifyAndSubmitHandshake" style="width: 100%; justify-content: center; margin-top: 6px;">
+          Conferma & Invia Profilo 🚀
         </button>
       </div>
     </div>
@@ -1122,7 +1120,7 @@
         }[tag] || tag));
       }
 
-      // CRITTOGRAFIA SHA-256
+      // CRITTOGRAFIA CLIENT-SIDE PER INVIO SPOTTED (NON PER VERIFICA)
       async function sha256(str) {
         const buffer = new TextEncoder().encode(str.trim().toLowerCase());
         const hash = await crypto.subtle.digest("SHA-256", buffer);
@@ -1278,7 +1276,7 @@
           const isSpotted = (p.tipo === 'spotted');
           const isTrending = (!isSpotted && p.id === trendingId);
           const badgeClass = isSpotted ? 'spotted' : 'gossip';
-          const badgeIcon = isSpotted ? '👀 SPOTTED' : '💣💅 GOSSIP';
+          const badgeIcon = isSpotted ? '👀 SPOTTED' : '💣 GOSSIP';
           const textParsed = parseCensorship(p.testo, p.is_unlocked);
           const timeLabel = timeAgo(p.published_at || p.created_at);
 
@@ -1450,7 +1448,7 @@
         }
       }
 
-      // SPOTTED SECRET HANDSHAKE CON PROTEZIONE ANTI-BRUTE-FORCE
+      // SPOTTED SECRET HANDSHAKE CON RPC SERVER-SIDE
       const modalHandshake = document.getElementById("modalHandshake");
       window.openHandshakeModal = function(id) {
         const post = vaultPosts.find(p => p.id === id);
@@ -1473,67 +1471,62 @@
         document.getElementById("inputHandshakeAnswer").value = "";
         document.getElementById("inputMyIg").value = "";
         document.getElementById("attemptsRemainingText").innerText = `Tentativi rimasti: ${3 - bfData.attempts}`;
-        document.getElementById("handshakeStepAnswer").style.display = "block";
-        document.getElementById("handshakeStepIg").style.display = "none";
         modalHandshake.classList.add("open");
       };
       document.getElementById("btnCloseHandshakeModal").addEventListener("click", () => modalHandshake.classList.remove("open"));
 
-      document.getElementById("btnVerifyHandshake").addEventListener("click", async () => {
+      document.getElementById("btnVerifyAndSubmitHandshake").addEventListener("click", async () => {
         const ans = document.getElementById("inputHandshakeAnswer").value.trim();
-        if (!ans) return;
-
-        const bfKey = `aura_bf_${activePostForHandshake.id}`;
-        let bfData = JSON.parse(localStorage.getItem(bfKey) || '{"attempts":0, "lockedUntil":0}');
-        const hash = await sha256(ans);
-
-        if (hash === activePostForHandshake.handshake_hash) {
-          triggerHaptic([30, 40, 60]);
-          localStorage.removeItem(bfKey);
-          document.getElementById("handshakeStepAnswer").style.display = "none";
-          document.getElementById("handshakeStepIg").style.display = "block";
-        } else {
-          triggerHaptic([60, 50, 60]);
-          bfData.attempts += 1;
-          if (bfData.attempts >= 3) {
-            bfData.lockedUntil = Date.now() + 30 * 60 * 1000;
-            localStorage.setItem(bfKey, JSON.stringify(bfData));
-            alert("Risposta non corretta. Hai esaurito i 3 tentativi! Bloccato per 30 minuti.");
-            modalHandshake.classList.remove("open");
-          } else {
-            localStorage.setItem(bfKey, JSON.stringify(bfData));
-            document.getElementById("attemptsRemainingText").innerText = `Tentativi rimasti: ${3 - bfData.attempts}`;
-            alert(`Risposta non corretta! Ti rimangono ${3 - bfData.attempts} tentativi.`);
-          }
-        }
-      });
-
-      document.getElementById("btnSubmitMatchedIg").addEventListener("click", async () => {
         const rawIg = document.getElementById("inputMyIg").value.trim().replace(/^@+/, '');
+        
+        if (!ans) {
+          alert("Inserisci la risposta alla domanda segreta.");
+          return;
+        }
         if (!rawIg) {
           alert("Inserisci il tuo username Instagram.");
           return;
         }
 
+        const bfKey = `aura_bf_${activePostForHandshake.id}`;
+        let bfData = JSON.parse(localStorage.getItem(bfKey) || '{"attempts":0, "lockedUntil":0}');
+
+        const btn = document.getElementById("btnVerifyAndSubmitHandshake");
+        btn.disabled = true;
+        btn.innerText = "Verifica in corso...";
+
         try {
-          const ans = document.getElementById("inputHandshakeAnswer").value.trim();
-          const hash = await sha256(ans);
-          const { data, error } = await sbClient.rpc('invia_spotted_match', {
+          const { data, error } = await sbClient.rpc('verifica_e_invia_spotted', {
             p_id: activePostForHandshake.id,
-            p_hash: hash,
+            p_risposta: ans,
             p_target_ig: rawIg
           });
 
-          if (!error && data.success) {
-            triggerHaptic([40, 50]);
-            alert("Il tuo Instagram è stato salvato! L'autore potrà sbloccarlo con il suo PIN e scriverti nei DM!");
+          if (!error && data && data.success) {
+            triggerHaptic([30, 40, 60]);
+            localStorage.removeItem(bfKey);
+            alert("Risposta esatta! Il tuo profilo Instagram è stato recapitato all'autore!");
             modalHandshake.classList.remove("open");
             loadVaultData();
           } else {
-            alert("Errore invio: " + (data ? data.error : error.message));
+            triggerHaptic([60, 50, 60]);
+            bfData.attempts += 1;
+            if (bfData.attempts >= 3) {
+              bfData.lockedUntil = Date.now() + 30 * 60 * 1000;
+              localStorage.setItem(bfKey, JSON.stringify(bfData));
+              alert("Risposta non corretta. Hai esaurito i 3 tentativi! Bloccato per 30 minuti.");
+              modalHandshake.classList.remove("open");
+            } else {
+              localStorage.setItem(bfKey, JSON.stringify(bfData));
+              document.getElementById("attemptsRemainingText").innerText = `Tentativi rimasti: ${3 - bfData.attempts}`;
+              alert(`Risposta non corretta! Ti rimangono ${3 - bfData.attempts} tentativi.`);
+            }
           }
         } catch (e) {
           console.error(e);
+        } finally {
+          btn.disabled = false;
+          btn.innerText = "Conferma & Invia Profilo 🚀";
         }
       });
 
@@ -1562,7 +1555,7 @@
           });
 
           resBox.style.display = "block";
-          if (!error && data.success) {
+          if (!error && data && data.success) {
             triggerHaptic([50, 50]);
             const ig = data.matched_ig.replace('@','');
             resBox.style.background = "rgba(16, 185, 129, 0.15)";
@@ -1578,7 +1571,7 @@
             resBox.style.background = "rgba(239, 68, 68, 0.15)";
             resBox.style.border = "1px solid #EF4444";
             resBox.style.color = "#FCA5A5";
-            resBox.innerHTML = `❌ PIN non valido. Ricontrolla il codice inserito alla creazione.`;
+            resBox.innerHTML = `❌ PIN non valido o nessun contatto ancora registrato.`;
           }
         } catch (e) {
           console.error(e);
@@ -1753,7 +1746,7 @@
         `).join('');
       }
 
-      // SELF-DELETE MARKET ITEM CON PIN
+      // SELF-DELETE MARKET ITEM CON PIN (ALLINEATO A RPC SUPABASE)
       const modalMarketDelete = document.getElementById("modalMarketDelete");
       window.openDeleteMarketModal = function(id) {
         activeMarketIdToDelete = id;
@@ -1770,27 +1763,12 @@
         }
 
         try {
-          // Tentativo tramite RPC dedicata o eliminazione diretta
-          let success = false;
           const { data, error } = await sbClient.rpc('elimina_annuncio_utente', {
             p_id: activeMarketIdToDelete,
             p_pin: pin
           });
 
           if (!error && data && data.success) {
-            success = true;
-          } else {
-            // Fallback con query controllata da PIN
-            const { error: delError, count } = await sbClient
-              .from('annunci')
-              .delete({ count: 'exact' })
-              .eq('id', activeMarketIdToDelete)
-              .eq('pin', pin);
-
-            if (!delError && count > 0) success = true;
-          }
-
-          if (success) {
             triggerHaptic([30, 40]);
             modalMarketDelete.classList.remove("open");
             showToast("Annuncio rimosso con successo! 🛍️");
@@ -1885,7 +1863,7 @@
       document.getElementById("searchInputMarket").addEventListener("input", debounce(renderMarketCards));
       document.getElementById("searchInputFeed").addEventListener("input", debounce(renderVault));
 
-      // CARICAMENTO DATI SUPABASE
+      // CARICAMENTO DATI SUPABASE (QUERY ALLA VIEW PROTETTA)
       async function loadMarketData() {
         if (!sbClient) return;
         try {
@@ -1898,7 +1876,7 @@
       async function loadVaultData() {
         if (!sbClient) return;
         try {
-          const { data } = await sbClient.from('vault_posts').select('*').order('created_at', { ascending: false });
+          const { data } = await sbClient.from('vault_posts_public').select('*').order('created_at', { ascending: false });
           if (data) vaultPosts = data;
         } catch (e) {}
         renderVault();
@@ -1910,7 +1888,7 @@
 
       // REALTIME SUPABASE LISTENER
       if (sbClient) {
-        sbClient.channel('realtime_public_aura_student_v6')
+        sbClient.channel('realtime_public_aura_student_v7')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, loadMarketData)
           .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_posts' }, loadVaultData)
           .subscribe();
