@@ -1,232 +1,322 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <!-- ========================================== -->
-  <!-- [HTML: 01-HEAD]                           -->
-  <!-- ========================================== -->
+  <!-- [HTML: 01-HEAD] -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AURA • UdA Campus Ecosystem</title>
   
-  <meta name="theme-color" content="#07050A">
+  <meta name="description" content="L'ecosistema digitale degli studenti UdA Chieti-Pescara: AURA Market, Gossip anonimi e Spotted di Campus.">
+  <meta property="og:title" content="AURA • UdA Chieti & Pescara">
+  <meta property="og:description" content="Market compravendita tra studenti, 💣 Gossip con barre nere e 👀 Spotted di Campus.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="logo.png">
+  <meta name="theme-color" content="#050407">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AURA UdA">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- FOGLIO DI STILE DEDICATO -->
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- FOGLIO DI STILE ORIGINALE -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-
-    <!-- ========================================== -->
-    <!-- [HTML: 02-NAV]                             -->
-    <!-- ========================================== -->
-    <header class="app-header">
-      <div class="brand-title">AURA</div>
-      <div class="brand-subtitle">CAMPUS ECOSYSTEM • CHIETI & PESCARA</div>
-
-      <!-- SELETTORE POLO UNIVERSITARIO -->
-      <div class="campus-selector">
-        <button class="campus-btn active" data-campus="Tutti">🏛️ Tutti i Campus</button>
-        <button class="campus-btn" data-campus="Chieti Scalo">🏛️ Chieti Scalo</button>
-        <button class="campus-btn" data-campus="Pescara">🌊 Pescara</button>
-      </div>
-
-      <!-- SWITCH TRA LE FUNZIONALITÀ PRINCIPALI -->
-      <nav class="main-tabs">
-        <button class="tab-btn active" id="tabBtnMarket">
-          🛒 AURA Market
-        </button>
-        <button class="tab-btn" id="tabBtnVault">
-          💣 Gossip & 👀 Spotted
-        </button>
-      </nav>
-    </header>
-
-    <!-- ========================================== -->
-    <!-- [HTML: 03-CONTAINERS]                      -->
-    <!-- ========================================== -->
-    <main>
-      <!-- SEZIONE 1: MARKETPLACE -->
-      <section id="paneMarket" class="pane-active">
-        <div class="toolbar-market">
-          <input type="text" id="marketSearchInput" placeholder="Cerca appunti, libri, case, oggetti...">
-          <button class="btn btn-primary" id="btnOpenCreateMarket">+ Vendi Oggetto</button>
-        </div>
-        <div id="marketListContainer" class="market-grid"></div>
-      </section>
-
-      <!-- SEZIONE 2: GOSSIP & SPOTTED (VAULT) -->
-      <section id="paneVault" style="display: none;">
-        <div class="toolbar-vault">
-          <div class="vault-filters">
-            <button class="filter-chip active" data-filter="ALL">Tutti</button>
-            <button class="filter-chip" data-filter="gossip">💣 Solo Gossip</button>
-            <button class="filter-chip" data-filter="spotted">👀 Solo Spotted</button>
-          </div>
-          <button class="btn btn-accent" id="btnOpenCreateVault">+ Spia / Confessa</button>
-        </div>
-        <div id="vaultListContainer" class="vault-feed"></div>
-      </section>
-    </main>
-
-    <!-- ========================================== -->
-    <!-- [HTML: 04-FOOTER]                          -->
-    <!-- ========================================== -->
-    <footer class="app-footer">
-      © 2026 AURA • <a href="https://instagram.com/aura.uda" target="_blank" rel="noopener">@aura.uda</a>
-    </footer>
-
+  <!-- [HTML: 02-BANNER-HEADER] -->
+  <div class="promo-banner">
+    ✨ AURA • L'ecosistema studentesco ufficiale dell'Università Chieti-Pescara
   </div>
 
-  <!-- ========================================== -->
-  <!-- [HTML: 05-MODALS]                          -->
-  <!-- ========================================== -->
-
-  <!-- MODALE CREA POST (GOSSIP / SPOTTED) -->
-  <div class="modal-backdrop" id="modalVaultCreate">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3>Nuovo Post Anonimo</h3>
-        <button class="modal-close" data-close="modalVaultCreate">✕</button>
+  <header>
+    <div class="aura-ambient-glow"></div>
+    <div class="logo-container">
+      <img src="logo.png" alt="AURA UDA" class="logo-img" onerror="this.style.display='none'; document.getElementById('svgFallback').style.display='block';">
+      <div id="svgFallback" style="display:none; text-align:center; padding: 18px 0;">
+        <div style="font-family: var(--font-serif); font-size: 30px; font-weight: 700; letter-spacing: 12px; color: var(--rose-gold-light);">AURA</div>
+        <div style="font-size: 10px; letter-spacing: 5px; color: var(--rose-gold); margin-top: 4px;">UDA CHIETI PESCARA</div>
       </div>
-      <div class="modal-body">
-        <div class="input-group">
-          <label>Cosa vuoi condividere?</label>
-          <div class="radio-toggle">
-            <label><input type="radio" name="vaultType" value="gossip" checked> 💣 Gossip Anonimo</label>
-            <label><input type="radio" name="vaultType" value="spotted"> 👀 Spotted Studente</label>
-          </div>
+    </div>
+  </header>
+
+  <!-- [HTML: 03-APP-TABS] -->
+  <div class="app-tabs-wrap">
+    <div class="app-tabs-nav">
+      <button class="app-tab-btn active" id="tabBtnMarket">
+        <span class="tab-icon">🛒</span> AURA Market
+      </button>
+      <button class="app-tab-btn" id="tabBtnVault">
+        <span class="tab-icon">💣</span> Gossip & 👀 Spotted
+      </button>
+    </div>
+  </div>
+
+  <!-- COUNTDOWN DRIP-FEED IN ARRIVO -->
+  <div class="drip-countdown-banner" id="dripCountdown"></div>
+
+  <!-- [HTML: 04-SECTION-MARKET] -->
+  <section id="sectionMarket">
+    <div class="controls-wrapper">
+      <div class="search-row">
+        <div class="input-box">
+          <input type="text" id="searchInputMarket" placeholder="Cerca libro, stanza, abbigliamento...">
         </div>
-        <div class="input-group">
-          <label>Campus & Polo</label>
-          <select id="vaultPoloInput">
-            <option value="Chieti Scalo">Chieti Scalo</option>
-            <option value="Pescara">Pescara</option>
+        <!-- FILTRO CAMPUS INTEGRATO NELLA SEARCH BAR -->
+        <select class="select-campus-inline" id="campusFilterMarket">
+          <option value="ALL">🏛️🌊 Tutti i Campus</option>
+          <option value="Chieti Scalo">🏛️ Chieti Scalo</option>
+          <option value="Pescara">🌊 Polo Pescara</option>
+        </select>
+        <button class="btn-create" id="btnOpenMarketModal" type="button">
+          <span>+</span> Vendi / Affitta
+        </button>
+      </div>
+
+      <div class="filter-pills">
+        <div class="pill active" data-cat="ALL">Tutti</div>
+        <div class="pill" data-cat="Affitti">Affitti & Stanze</div>
+        <div class="pill" data-cat="Libri">Libri & Appunti</div>
+        <div class="pill" data-cat="Abbigliamento">Abbigliamento</div>
+        <div class="pill" data-cat="Biglietti">Biglietti & Serate</div>
+        <div class="pill" data-cat="Tech">Tech & Elettronica</div>
+        <div class="pill" data-cat="Altro">Altro</div>
+      </div>
+    </div>
+
+    <main class="listings-container" id="listingsGrid">
+      <div class="skeleton-card"><div class="skeleton-line" style="height:120px;"></div><div class="skeleton-line" style="width:50%;"></div><div class="skeleton-line"></div></div>
+      <div class="skeleton-card"><div class="skeleton-line" style="height:120px;"></div><div class="skeleton-line" style="width:50%;"></div><div class="skeleton-line"></div></div>
+    </main>
+  </section>
+
+  <!-- [HTML: 05-SECTION-VAULT] -->
+  <section id="sectionVault" style="display: none;">
+    <div class="controls-wrapper" style="max-width: 680px;">
+      <div class="search-row">
+        <div class="input-box">
+          <input type="text" id="searchInputFeed" placeholder="Cerca parole chiave, aula, corso...">
+        </div>
+        <!-- FILTRO CAMPUS INTEGRATO NELLA SEARCH BAR -->
+        <select class="select-campus-inline" id="campusFilterFeed">
+          <option value="ALL">🏛️🌊 Tutti i Campus</option>
+          <option value="Chieti Scalo">🏛️ Chieti Scalo</option>
+          <option value="Pescara">🌊 Polo Pescara</option>
+        </select>
+        <button class="btn-create" id="btnOpenVaultModal" type="button" style="background: linear-gradient(135deg, #FDE8E1, #C084FC);">
+          <span>✍️</span> Invia Anonimo
+        </button>
+      </div>
+
+      <div class="filter-pills">
+        <div class="pill active" data-feed-type="ALL">Tutti i Feed</div>
+        <div class="pill" data-feed-type="gossip">💣 Gossip</div>
+        <div class="pill" data-feed-type="spotted">👀 Spotted</div>
+      </div>
+
+      <!-- SUB-FILTRO DI STATO SPOTTED -->
+      <div class="spotted-status-row" id="spottedStatusFilterRow">
+        <div class="sub-pill active" data-spotted-status="ALL">Tutti gli Spotted</div>
+        <div class="sub-pill" data-spotted-status="waiting">In cerca 👀</div>
+        <div class="sub-pill" data-spotted-status="matched">Risolti 🎯</div>
+      </div>
+    </div>
+
+    <main class="vault-container" id="vaultFeed">
+      <div class="skeleton-card"><div class="skeleton-line" style="width:30%;"></div><div class="skeleton-line" style="width:70%;"></div><div class="skeleton-line" style="height:45px;"></div></div>
+      <div class="skeleton-card"><div class="skeleton-line" style="width:30%;"></div><div class="skeleton-line" style="width:70%;"></div><div class="skeleton-line" style="height:45px;"></div></div>
+    </main>
+  </section>
+
+  <!-- [HTML: 06-FOOTER] -->
+  <footer style="text-align: center; padding: 32px 16px 8px; font-size: 11px; color: var(--text-muted); border-top: 1px solid rgba(226, 180, 154, 0.12); max-width: 680px; margin: 24px auto 0;">
+    © 2026 AURA • <a href="https://instagram.com/aura.uda" target="_blank" rel="noopener" style="color: var(--rose-gold); text-decoration: none; font-weight: 600;">@aura.uda</a>
+  </footer>
+
+  <!-- [HTML: 07-MODALS] -->
+  <!-- MODALE CREAZIONE POST GOSSIP / SPOTTED -->
+  <div class="modal-backdrop" id="modalVaultCreate">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseVaultModal">&times;</button>
+      <div class="modal-header-title">INVIA IN ANONIMO</div>
+      
+      <form id="vaultCreateForm">
+        <div class="form-row">
+          <label>Cosa vuoi condividere?</label>
+          <select id="vTipo" required>
+            <option value="gossip">💣 Gossip / Drama (UdA)</option>
+            <option value="spotted">👀 Spotted nel Campus</option>
           </select>
         </div>
-        <div class="input-group">
-          <label>Luogo Esatto (es. Aula A, Bar Lettere, Mensa)</label>
-          <input type="text" id="vaultLuogoInput" placeholder="Dove è successo?">
+
+        <div class="form-row">
+          <label>Campus & Luogo Specifico</label>
+          <div style="display: flex; gap: 8px;">
+            <select id="vPolo" style="flex: 1;" required>
+              <option value="Chieti Scalo">Campus Chieti Scalo</option>
+              <option value="Pescara">Polo Pescara</option>
+              <option value="Tutti">Entrambi / Treno</option>
+            </select>
+            <input type="text" id="vLuogo" placeholder="Es. Biblioteca Medica, Aula 3" required style="flex: 1;">
+          </div>
         </div>
-        <div class="input-group">
-          <label>Titolo ad Effetto</label>
-          <input type="text" id="vaultTitoloInput" placeholder="Es. Ragazzo felpa verde a Medicina...">
+
+        <div class="form-row">
+          <label>Titolo del post</label>
+          <input type="text" id="vTitolo" placeholder="Es. Coinquilina e ladro di pasta..." required maxlength="70">
         </div>
-        <div class="input-group">
-          <label>Testo Completo</label>
-          <textarea id="vaultTestoInput" rows="4" placeholder="Scrivi i dettagli... I nomi reali verranno filtrati."></textarea>
+
+        <div class="form-row">
+          <label>Il Racconto / Descrizione</label>
+          <textarea id="vTesto" required placeholder="Racconta cosa è successo nei dettagli. Zero nomi reali: i punti più caldi verranno oscurati dal sistema con le barre nere per creare suspense!"></textarea>
+          <small>⚠️ Zero nomi reali o diffamazione: ogni post viene revisionato dal team prima della pubblicazione.</small>
         </div>
-        <!-- CAMPO OPZIONALE SPOTTED: DOMANDA HANDSHAKE -->
-        <div class="input-group" id="spottedExtraFields" style="display: none;">
-          <label>Domanda Segreta per Riconoscersi (Opzionale)</label>
-          <input type="text" id="vaultHandshakeQ" placeholder="Es. Di che colore era il mio zaino?">
-          <input type="text" id="vaultHandshakeA" placeholder="Risposta esatta (verrà cifrata)">
-          <input type="text" id="vaultContactIG" placeholder="Il tuo Instagram (rivelato solo a chi indovina)">
+
+        <!-- CAMPI SPOTTED PROTETTI -->
+        <div id="spottedFields" style="display: none; background: rgba(192, 132, 252, 0.08); border: 1px dashed rgba(192, 132, 252, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
+          <div class="form-row">
+            <label>Domanda Segreta Anti-Fake</label>
+            <input type="text" id="vHandshakeQ" placeholder="Es. Che colore aveva la mia borraccia sul tavolo?">
+            <small>Solo chi era davvero lì saprà rispondere per lasciarti il suo profilo Instagram.</small>
+          </div>
+          <div class="form-row">
+            <label>Risposta Esatta alla domanda</label>
+            <input type="text" id="vHandshakeA" placeholder="Es. Gialla">
+          </div>
+          <div class="form-row">
+            <label>Crea un PIN a 4 cifre per te (Autore)</label>
+            <input type="password" id="vAuthorPin" maxlength="4" pattern="[0-9]{4}" placeholder="1234">
+            <small>Ti servirà per visualizzare l'Instagram di chi risponde correttamente!</small>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" id="btnSubmitVault">Invia in Moderazione</button>
-      </div>
+
+        <button type="submit" class="btn-create" id="btnSubmitVault" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Invia alla Moderazione ✨
+        </button>
+      </form>
     </div>
   </div>
 
-  <!-- MODALE RISPONDI A SPOTTED (HANDSHAKE) -->
+  <!-- MODALE VERIFICA SPOTTED -->
   <div class="modal-backdrop" id="modalHandshake">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3>Sei tu la persona cercata?</h3>
-        <button class="modal-close" data-close="modalHandshake">✕</button>
-      </div>
-      <div class="modal-body">
-        <p id="handshakeQuestionText" class="handshake-q-box"></p>
-        <div class="input-group">
-          <label>La tua Risposta:</label>
-          <input type="text" id="handshakeAnswerInput" placeholder="Inserisci la parola esatta">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseHandshakeModal">&times;</button>
+      <div class="modal-header-title">TI SEI RICONOSCIUTO? 👀</div>
+      <p id="handshakePromptText" style="font-size: 13.5px; color: #E7DEEA; margin-bottom: 14px; text-align: center; line-height: 1.5; white-space: pre-wrap;"></p>
+      
+      <div>
+        <div class="form-row">
+          <label>Rispondi alla domanda per confermare che eri tu:</label>
+          <input type="text" id="inputHandshakeAnswer" placeholder="La tua risposta..." autocomplete="off">
+          <small id="attemptsRemainingText" style="color:var(--aura-magenta); font-weight:600;"></small>
         </div>
-        <div id="handshakeResultBox"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-accent" id="btnSubmitHandshake">Verifica e Sblocca Contatto</button>
+        <div class="form-row">
+          <label>Tuo Username Instagram (senza @):</label>
+          <input type="text" id="inputMyIg" placeholder="mario_rossi" autocomplete="off">
+          <small>Verrà mostrato SOLO all'autore dello spotted se la risposta è corretta!</small>
+        </div>
+        <button type="button" class="btn-create" id="btnVerifyAndSubmitHandshake" style="width: 100%; justify-content: center; margin-top: 6px;">
+          Conferma & Invia Profilo 🚀
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- MODALE CREA ANNUNCIO MARKETPLACE -->
-  <div class="modal-backdrop" id="modalMarketCreate">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3>Vendi su AURA Market</h3>
-        <button class="modal-close" data-close="modalMarketCreate">✕</button>
+  <!-- MODALE SBLOCCO AUTORE -->
+  <div class="modal-backdrop" id="modalAuthorUnlock">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseAuthorUnlock">&times;</button>
+      <div class="modal-header-title">CHI HA RISPOSTO? 🎯</div>
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 14px;">
+        Qualcuno si è riconosciuto ed ha superato la domanda segreta! Inserisci il tuo PIN a 4 cifre per visualizzare il suo Instagram.
+      </p>
+      <div class="form-row">
+        <label>PIN Autore (4 cifre):</label>
+        <input type="password" id="inputAuthorPinUnlock" maxlength="4" placeholder="••••">
       </div>
-      <div class="modal-body">
-        <div class="input-group">
+      <div id="authorResultBox" style="display:none; padding:12px; border-radius:8px; margin: 10px 0; text-align:center;"></div>
+      <button type="button" class="btn-create" id="btnConfirmAuthorUnlock" style="width: 100%; justify-content: center;">
+        Sblocca Contatto 🔓
+      </button>
+    </div>
+  </div>
+
+  <!-- MODALE CREAZIONE MARKET -->
+  <div class="modal-backdrop" id="modalMarketCreate">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseMarketModal">&times;</button>
+      <div class="modal-header-title">NUOVO ANNUNCIO</div>
+      <form id="createListingForm">
+        <div class="form-row">
           <label>Titolo Annuncio</label>
-          <input type="text" id="marketTitoloInput" placeholder="Es. Manuale Anatomia Netter 7a Ed.">
+          <input type="text" id="fTitolo" required placeholder="Es. Manuale Anatomia I o Stanza Singola Chieti">
         </div>
-        <div class="input-group">
+        <div class="form-row">
+          <label>Prezzo</label>
+          <input type="text" id="fPrezzo" required placeholder="Es. 25€ oppure 220€/mese">
+        </div>
+        <div class="form-row">
           <label>Categoria</label>
-          <select id="marketCatInput">
-            <option value="Libri & Appunti">Libri & Appunti</option>
-            <option value="Alloggi & Stanze">Alloggi & Stanze</option>
-            <option value="Tecnologia">Tecnologia</option>
+          <select id="fCategoria">
+            <option value="Affitti">Affitti & Stanze</option>
+            <option value="Libri">Libri & Appunti</option>
+            <option value="Abbigliamento">Abbigliamento</option>
+            <option value="Biglietti">Biglietti & Serate</option>
+            <option value="Tech">Tech & Elettronica</option>
             <option value="Altro">Altro</option>
           </select>
         </div>
-        <div class="input-group">
+        <div class="form-row">
           <label>Campus</label>
-          <select id="marketPoloInput">
-            <option value="Chieti Scalo">Chieti Scalo</option>
-            <option value="Pescara">Pescara</option>
-            <option value="Tutti">Entrambi</option>
+          <select id="fPolo">
+            <option value="Chieti Scalo">Campus Chieti Scalo</option>
+            <option value="Pescara">Polo Pindaro (Pescara)</option>
+            <option value="Tutti">Entrambi i Poli</option>
           </select>
         </div>
-        <div class="input-group">
-          <label>Prezzo (€)</label>
-          <input type="text" id="marketPrezzoInput" placeholder="Es. 25€ oppure Gratis">
+        <div class="form-row">
+          <label>Tuo Instagram (senza @)</label>
+          <input type="text" id="fIg" required placeholder="nome_utente">
         </div>
-        <div class="input-group">
-          <label>Tuo Profilo Instagram (Senza @)</label>
-          <input type="text" id="marketIgInput" placeholder="es. mario_rossi">
+        <div class="form-row">
+          <label>Foto (URL immagine o ImgBB link)</label>
+          <input type="text" id="fFoto" required placeholder="https://i.ibb.co/esempio.jpg">
         </div>
-        <div class="input-group">
-          <label>Link Foto (ImgBB, Postimages o URL diretto)</label>
-          <input type="url" id="marketFotoInput" placeholder="https://i.ibb.co/...">
+        <div class="form-row">
+          <label>PIN a 4 cifre (per rimuoverlo quando venduto)</label>
+          <input type="password" id="fPin" maxlength="4" pattern="[0-9]{4}" required placeholder="1234">
         </div>
-        <div class="input-group">
-          <label>Scegli un PIN a 4 cifre (ti servirà per rimuovere l'annuncio quando venduto)</label>
-          <input type="password" id="marketPinInput" maxlength="4" placeholder="••••">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" id="btnSubmitMarket">Pubblica Annuncio</button>
-      </div>
+        <button type="submit" class="btn-create" id="btnSubmitMarket" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Pubblica Subito (Gratis)
+        </button>
+      </form>
     </div>
   </div>
 
-  <!-- MODALE ELIMINA ANNUNCIO CON PIN -->
+  <!-- MODALE RIMOZIONE ANNUNCIO CON PIN -->
   <div class="modal-backdrop" id="modalMarketDelete">
-    <div class="modal-box modal-box-sm">
-      <div class="modal-header">
-        <h3>Rimuovi Annuncio</h3>
-        <button class="modal-close" data-close="modalMarketDelete">✕</button>
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseMarketDeleteModal">&times;</button>
+      <div class="modal-header-title">HAI VENDUTO IL TUO ARTICOLO? 🛍️</div>
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 14px;">
+        Inserisci il PIN a 4 cifre specificato durante la pubblicazione per eliminare definitivamente questo annuncio.
+      </p>
+      <div class="form-row">
+        <label>PIN proprietario (4 cifre):</label>
+        <input type="password" id="inputDeleteMarketPin" maxlength="4" placeholder="••••">
       </div>
-      <div class="modal-body">
-        <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">Hai già venduto l'oggetto? Inserisci il PIN a 4 cifre scelto alla creazione:</p>
-        <input type="password" id="deletePinInput" maxlength="4" placeholder="••••" style="text-align: center; font-size: 20px; letter-spacing: 6px;">
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-danger" id="btnConfirmDeleteMarket">Conferma ed Elimina</button>
-      </div>
+      <button type="button" class="btn-create" id="btnConfirmMarketDelete" style="width: 100%; justify-content: center; background: #EF4444; color: #fff;">
+        Elimina Annuncio 🗑️
+      </button>
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- [HTML: 06-SCRIPTS]                         -->
-  <!-- ========================================== -->
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <!-- [HTML: 08-SCRIPTS] -->
   <script src="app.js"></script>
 </body>
 </html>
