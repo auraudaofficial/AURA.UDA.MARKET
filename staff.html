@@ -22,6 +22,7 @@
       --rose-gold-light: #FDE8E1;
       --aura-magenta: #E879F9;
       --aura-purple: #C084FC;
+      --aura-green: #10B981;
       --text: #FAF5F8;
       --text-muted: #9E94A3;
       --font-serif: 'Cinzel', serif;
@@ -37,7 +38,7 @@
       padding: 18px 14px 80px;
     }
 
-    .container { max-width: 820px; margin: 0 auto; }
+    .container { max-width: 860px; margin: 0 auto; }
 
     /* LOGIN SCREEN */
     #loginScreen {
@@ -89,6 +90,7 @@
       padding: 4px;
       margin-bottom: 20px;
       gap: 4px;
+      overflow-x: auto;
     }
     .staff-tab-btn {
       flex: 1;
@@ -96,7 +98,7 @@
       border: none;
       color: var(--text-muted);
       font-weight: 700;
-      font-size: 12px;
+      font-size: 11.5px;
       padding: 10px 8px;
       border-radius: 10px;
       cursor: pointer;
@@ -104,6 +106,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      white-space: nowrap;
       transition: all 0.2s;
     }
     .staff-tab-btn.active {
@@ -114,6 +117,14 @@
     .badge-counter {
       background: #EF4444;
       color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+    .badge-counter-live {
+      background: var(--aura-magenta);
+      color: #07050A;
       font-size: 10px;
       font-weight: 800;
       padding: 2px 6px;
@@ -138,7 +149,7 @@
       color: #07050A;
       border: none;
       font-weight: 700;
-      padding: 11px 18px;
+      padding: 10px 16px;
       border-radius: 10px;
       cursor: pointer;
       font-size: 12px;
@@ -192,13 +203,18 @@
     .intel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .intel-content { font-size: 13.5px; line-height: 1.6; color: #E7DEEA; white-space: pre-wrap; }
 
-    /* CARDS PENDING & MARKET */
+    /* CARDS PENDING & POST ATTIVI */
     .item-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 14px;
+      position: relative;
+    }
+    .item-card.top-trending {
+      border-color: var(--rose-gold);
+      box-shadow: 0 0 20px rgba(226, 180, 154, 0.25);
     }
     .item-card.ai-safe { border-color: #10B981; background: rgba(16, 185, 129, 0.05); }
     .item-card.ai-danger { border-color: #EF4444; background: rgba(239, 68, 68, 0.08); }
@@ -226,6 +242,38 @@
     .btn-act-queue { background: linear-gradient(135deg, var(--rose-gold), var(--aura-magenta)); color: #050407; }
     .btn-act-story { background: linear-gradient(135deg, #E879F9, #C084FC); color: #050407; }
     .btn-act-del { background: rgba(239, 68, 68, 0.2); border: 1px solid #EF4444; color: #FCA5A5; }
+
+    /* BOX REAZIONI LIVE NEI POST ATTIVI */
+    .reactions-bar-staff {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 10px 0;
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+    .react-chip {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      color: var(--rose-gold-light);
+    }
+    .badge-trending-tag {
+      background: linear-gradient(135deg, #E2B49A, #E879F9);
+      color: #07050A;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
 
     /* MARKET CARD STAFF */
     .market-admin-item {
@@ -266,21 +314,25 @@
         </div>
       </div>
 
-      <!-- NAVIGAZIONE A 3 SCHEDE -->
+      <!-- NAVIGAZIONE A SCHEDE (FILTRATA PER RUOLO) -->
       <div class="staff-nav">
         <button class="staff-tab-btn active" id="tabBtnMod">
           📥 Coda <span class="badge-counter" id="badgePendingCount">0</span>
         </button>
-        <button class="staff-tab-btn" id="tabBtnStats">
-          📊 Trend & Intelligence
+        <button class="staff-tab-btn" id="tabBtnActive">
+          🔥 Post Live & Reazioni <span class="badge-counter-live" id="badgeActiveCount">0</span>
         </button>
-        <button class="staff-tab-btn" id="tabBtnMarket">
-          🛒 Gestione Market
+        <!-- I SEGUENTI DUE TAB SONO RISERVATI SOLO AL MASTER ADMIN -->
+        <button class="staff-tab-btn" id="tabBtnStats" style="display: none;">
+          📊 Trend & Intelligence 🔒
+        </button>
+        <button class="staff-tab-btn" id="tabBtnMarket" style="display: none;">
+          🛒 Gestione Market 🔒
         </button>
       </div>
 
       <!-- ============================================== -->
-      <!-- SCHEDA 1: CODA DI MODERAZIONE (GOSSIP & SPOTTED)-->
+      <!-- SCHEDA 1: CODA DI MODERAZIONE (PENDING)        -->
       <!-- ============================================== -->
       <div id="paneMod">
         <!-- TOOLBAR GEMINI CONDIVISA -->
@@ -307,7 +359,27 @@
       </div>
 
       <!-- ============================================== -->
-      <!-- SCHEDA 2: STATISTICHE COMPLETE & TRENDS AI     -->
+      <!-- SCHEDA 2: POST LIVE, REAZIONI & ELIMINAZIONE   -->
+      <!-- ============================================== -->
+      <div id="paneActive" style="display: none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px; flex-wrap:wrap;">
+          <input type="text" id="inputSearchActive" placeholder="Cerca tra i post live..." style="flex:1; min-width:180px;">
+          <select id="filterCampusActive" style="width:auto; min-width:130px;">
+            <option value="ALL">Tutti i Campus</option>
+            <option value="Chieti Scalo">Chieti Scalo</option>
+            <option value="Pescara">Pescara</option>
+          </select>
+          <select id="filterSortActive" style="width:auto; min-width:130px;">
+            <option value="votes">🔥 Più Gettonati</option>
+            <option value="recent">⏱️ Più Recenti</option>
+          </select>
+        </div>
+
+        <div id="activePostsContainer"></div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- SCHEDA 3: STATISTICHE (SOLO MASTER ADMIN)      -->
       <!-- ============================================== -->
       <div id="paneStats" style="display: none;">
         <!-- CAMPUS INTELLIGENCE REPORT -->
@@ -362,7 +434,7 @@
       </div>
 
       <!-- ============================================== -->
-      <!-- SCHEDA 3: GESTIONE MARKETPLACE                 -->
+      <!-- SCHEDA 4: GESTIONE MARKET (SOLO MASTER ADMIN)  -->
       <!-- ============================================== -->
       <div id="paneMarket" style="display: none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px;">
@@ -397,11 +469,12 @@
       let currentAuthKey = localStorage.getItem("aura_staff_session_key") || null;
       let sharedGeminiKey = "";
       let pendingList = [];
+      let activeList = [];
       let allMarketList = [];
       let currentStats = null;
       let aiResults = {};
 
-      // VERIFICA LOGIN
+      // VERIFICA LOGIN E SEGREGAZIONE RUOLI
       async function checkAuth() {
         if (currentAuthKey === MASTER_KEY || currentAuthKey === STAFF_KEY) {
           document.getElementById("loginScreen").style.display = "none";
@@ -412,10 +485,23 @@
           badge.innerText = isMaster ? "MASTER ADMIN" : "STAFF COLLABORATORE";
           badge.className = `badge-role ${isMaster ? "badge-master" : "badge-staff"}`;
 
+          // Se è Staff normale, nasconde del tutto le schede Market e Statistiche
+          if (isMaster) {
+            document.getElementById("tabBtnStats").style.display = "flex";
+            document.getElementById("tabBtnMarket").style.display = "flex";
+          } else {
+            document.getElementById("tabBtnStats").style.display = "none";
+            document.getElementById("tabBtnMarket").style.display = "none";
+          }
+
           await fetchSharedGeminiKey();
           await loadPendingQueue();
-          await loadStats();
-          await loadMarketAdmin();
+          await loadActivePosts();
+          
+          if (isMaster) {
+            await loadStats();
+            await loadMarketAdmin();
+          }
         } else {
           document.getElementById("loginScreen").style.display = "flex";
           document.getElementById("dashboardScreen").style.display = "none";
@@ -441,22 +527,26 @@
 
       // SWITCHER SCHEDE DASHBOARD
       const tabBtnMod = document.getElementById("tabBtnMod");
+      const tabBtnActive = document.getElementById("tabBtnActive");
       const tabBtnStats = document.getElementById("tabBtnStats");
       const tabBtnMarket = document.getElementById("tabBtnMarket");
       const paneMod = document.getElementById("paneMod");
+      const paneActive = document.getElementById("paneActive");
       const paneStats = document.getElementById("paneStats");
       const paneMarket = document.getElementById("paneMarket");
 
       function activateTab(tab) {
-        [tabBtnMod, tabBtnStats, tabBtnMarket].forEach(b => b.classList.remove("active"));
-        [paneMod, paneStats, paneMarket].forEach(p => p.style.display = "none");
+        [tabBtnMod, tabBtnActive, tabBtnStats, tabBtnMarket].forEach(b => b.classList.remove("active"));
+        [paneMod, paneActive, paneStats, paneMarket].forEach(p => p.style.display = "none");
 
         if (tab === 'mod') { tabBtnMod.classList.add("active"); paneMod.style.display = "block"; }
+        if (tab === 'active') { tabBtnActive.classList.add("active"); paneActive.style.display = "block"; loadActivePosts(); }
         if (tab === 'stats') { tabBtnStats.classList.add("active"); paneStats.style.display = "block"; loadStats(); }
         if (tab === 'market') { tabBtnMarket.classList.add("active"); paneMarket.style.display = "block"; loadMarketAdmin(); }
       }
 
       tabBtnMod.addEventListener("click", () => activateTab('mod'));
+      tabBtnActive.addEventListener("click", () => activateTab('active'));
       tabBtnStats.addEventListener("click", () => activateTab('stats'));
       tabBtnMarket.addEventListener("click", () => activateTab('market'));
 
@@ -497,7 +587,7 @@
           });
           if (!error && data.success) {
             sharedGeminiKey = val;
-            alert("Chiave Google Gemini salvata nel cloud! Tutti i tuoi collaboratori possono usarla ora.");
+            alert("Chiave Google Gemini salvata nel cloud! Tutti i collaboratori possono usarla ora.");
             fetchSharedGeminiKey();
           } else {
             alert("Errore salvataggio: " + (error ? error.message : data.error));
@@ -508,7 +598,7 @@
       });
 
       // ==============================================
-      // CODA MODERAZIONE
+      // 1. CODA MODERAZIONE (PENDING)
       // ==============================================
       async function loadPendingQueue() {
         if (!sbClient || !currentAuthKey) return;
@@ -577,7 +667,7 @@
               <div class="card-actions">
                 <button class="btn btn-act-now" onclick="window.approveItem('${p.id}', 0)">✅ Live Subito</button>
                 <button class="btn btn-act-queue" onclick="window.approveItem('${p.id}', 60)">⏱️ In Coda (+1 min)</button>
-                <button class="btn btn-act-story" onclick="window.generateStory('${p.id}')">📸 Story IG</button>
+                <button class="btn btn-act-story" onclick="window.generateStory('${p.id}', 'pending')">📸 Story IG</button>
                 <button class="btn btn-act-del" onclick="window.rejectItem('${p.id}')">❌ Rifiuta</button>
               </div>
             </div>
@@ -666,6 +756,7 @@ Rispondi ESCLUSIVAMENTE con questo JSON:
 
         alert("Post approvati e programmati!");
         await loadPendingQueue();
+        await loadActivePosts();
       });
 
       window.approveItem = async function(id, delaySeconds) {
@@ -683,6 +774,7 @@ Rispondi ESCLUSIVAMENTE con questo JSON:
             const timeStr = pubDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             alert(delaySeconds > 0 ? `Post in coda! Live alle ${timeStr}` : "Post pubblicato subito live!");
             await loadPendingQueue();
+            await loadActivePosts();
           } else {
             alert("Errore: " + (error ? error.message : data.error));
           }
@@ -692,7 +784,7 @@ Rispondi ESCLUSIVAMENTE con questo JSON:
       };
 
       window.rejectItem = async function(id) {
-        if (!confirm("Rifiutare ed eliminare questo post?")) return;
+        if (!confirm("Rifiutare ed eliminare questo post dalla coda?")) return;
         try {
           await sbClient.rpc('rifiuta_vault_post', { p_id: id, p_auth_key: currentAuthKey });
           await loadPendingQueue();
@@ -700,10 +792,137 @@ Rispondi ESCLUSIVAMENTE con questo JSON:
       };
 
       // ==============================================
-      // STATISTICHE & CAMPUS INTELLIGENCE
+      // 2. GESTIONE POST LIVE, REAZIONI ED ELIMINAZIONE
+      // ==============================================
+      async function loadActivePosts() {
+        if (!sbClient) return;
+        try {
+          const { data, error } = await sbClient
+            .from('vault_posts')
+            .select('*')
+            .eq('status', 'active')
+            .order('created_at', { ascending: false });
+
+          if (!error && data) {
+            activeList = data;
+            document.getElementById("badgeActiveCount").innerText = activeList.length;
+            renderActivePosts();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function renderActivePosts() {
+        const container = document.getElementById("activePostsContainer");
+        const query = (document.getElementById("inputSearchActive").value || "").toLowerCase();
+        const campus = document.getElementById("filterCampusActive").value;
+        const sort = document.getElementById("filterSortActive").value;
+
+        // Calcola l'ID del post più votato in assoluto
+        let maxVotes = -1;
+        let topPostId = null;
+        activeList.forEach(p => {
+          const tot = p.voti_totali || 0;
+          if (tot > maxVotes && tot > 0) {
+            maxVotes = tot;
+            topPostId = p.id;
+          }
+        });
+
+        let filtered = activeList.filter(p => {
+          const campusMatch = (campus === 'ALL' || p.polo === campus || p.polo === 'Tutti');
+          const searchMatch = !query || 
+            (p.titolo && p.titolo.toLowerCase().includes(query)) ||
+            (p.testo && p.testo.toLowerCase().includes(query)) ||
+            (p.luogo && p.luogo.toLowerCase().includes(query));
+          return campusMatch && searchMatch;
+        });
+
+        // Ordinamento
+        if (sort === 'votes') {
+          filtered.sort((a, b) => (b.voti_totali || 0) - (a.voti_totali || 0));
+        } else {
+          filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        }
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:40px 20px; background:rgba(255,255,255,0.02); border-radius:16px;">
+              <div style="font-size:30px; margin-bottom:8px;">📭</div>
+              <h4 style="color:var(--rose-gold-light);">Nessun post live corrispondente</h4>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(p => {
+          const isTop = (p.id === topPostId);
+          const isSpotted = (p.tipo === 'spotted');
+          const topTag = isTop ? `<div class="badge-trending-tag">👑 #1 PIÙ GETTONATO DEL CAMPUS (${p.voti_totali} VOTI)</div>` : '';
+          const statusText = p.is_unlocked ? '🔓 Sbloccato' : `🔒 Censurato (${p.voti_totali || 0}/${p.soglia_sblocco || 25})`;
+
+          let matchInfo = '';
+          if (isSpotted) {
+            matchInfo = p.has_match 
+              ? `<span style="color:#10B981; font-weight:700;">🎯 Risolto (Match avvenuto)</span>`
+              : `<span style="color:#C084FC;">👀 In attesa di risposta</span>`;
+          }
+
+          return `
+            <div class="item-card ${isTop ? 'top-trending' : ''}">
+              ${topTag}
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <span style="font-size:11px; font-weight:800; color:var(--rose-gold);">${p.tipo.toUpperCase()} • ${p.polo}</span>
+                <span style="font-size:10.5px; color:var(--text-muted);">${p.luogo}</span>
+              </div>
+              <div style="font-weight:700; font-size:14px; color:#fff; margin-bottom:6px;">${p.titolo}</div>
+              <div style="font-size:12.5px; color:#DDD4E2; margin-bottom:8px; line-height:1.5;">${p.testo}</div>
+
+              <!-- STATISTICHE REAZIONI LIVE VISIBILI ALLO STAFF -->
+              <div class="reactions-bar-staff">
+                <span class="react-chip">🔥 ${p.voti_fire || 0}</span>
+                <span class="react-chip">💀 ${p.voti_skull || 0}</span>
+                <span class="react-chip">🚩 ${p.voti_redflag || 0}</span>
+                <span style="color:var(--rose-gold); font-weight:700; margin-left:4px;">Totale: ${p.voti_totali || 0}</span>
+                <span style="color:var(--text-muted); margin-left:auto;">${isSpotted ? matchInfo : statusText}</span>
+              </div>
+
+              <div class="card-actions">
+                <button class="btn btn-act-story" onclick="window.generateStory('${p.id}', 'active')">📸 Story IG</button>
+                <button class="btn btn-act-del" onclick="window.deleteActivePost('${p.id}')">🗑️ Elimina dal Feed</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById("inputSearchActive").addEventListener("input", renderActivePosts);
+      document.getElementById("filterCampusActive").addEventListener("change", renderActivePosts);
+      document.getElementById("filterSortActive").addEventListener("change", renderActivePosts);
+
+      // CANCELLAZIONE POST LIVE DA PARTE DI STAFF O MASTER ADMIN
+      window.deleteActivePost = async function(id) {
+        if (!confirm("Sei sicuro di voler eliminare definitivamente questo post dal feed pubblico?")) return;
+        try {
+          const { error: rpcErr } = await sbClient.rpc('rifiuta_vault_post', { p_id: id, p_auth_key: currentAuthKey });
+          if (rpcErr) {
+            // Fallback se la funzione non esiste
+            await sbClient.from('vault_posts').update({ status: 'rejected' }).eq('id', id);
+          }
+          alert("Post rimosso dal feed pubblico con successo!");
+          await loadActivePosts();
+          if (currentAuthKey === MASTER_KEY) loadStats();
+        } catch (e) {
+          alert("Errore eliminazione: " + e.message);
+        }
+      };
+
+      // ==============================================
+      // 3. STATISTICHE (SOLO MASTER ADMIN)
       // ==============================================
       async function loadStats() {
-        if (!sbClient || !currentAuthKey) return;
+        if (!sbClient || currentAuthKey !== MASTER_KEY) return;
         try {
           const { data, error } = await sbClient.rpc('get_staff_stats', { p_auth_key: currentAuthKey });
           if (!error && data.success) {
@@ -722,7 +941,6 @@ Rispondi ESCLUSIVAMENTE con questo JSON:
             document.getElementById("statMarketTotal").innerText = data.market.total;
             document.getElementById("statMarketCampus").innerText = `Chieti: ${data.market.chieti} | Pescara: ${data.market.pescara}`;
 
-            // Trova top categoria
             let topCat = "Nessuna";
             let topCatVal = 0;
             for (const [k, v] of Object.entries(data.market.categories)) {
@@ -746,7 +964,6 @@ Rispondi ESCLUSIVAMENTE con questo JSON:
         box.innerText = "⏳ Gemini sta analizzando i post e i trend del campus...";
 
         try {
-          // Recupera ultimi 30 post attivi per dare contesto reale all'AI
           const { data: posts } = await sbClient.from('vault_posts').select('tipo, polo, luogo, titolo, testo, voti_totali').order('created_at', { ascending: false }).limit(30);
 
           const prompt = `Sei il Direttore Editoriale e Social Strategist di AURA (community studentesca dell'Università Chieti-Pescara UdA).
@@ -776,10 +993,10 @@ Genera un REPORT STRATEGICO sintetico, divertente e utile per lo staff, diviso e
       });
 
       // ==============================================
-      // GESTIONE MARKETPLACE (STAFF MODERATION)
+      // 4. GESTIONE MARKET (SOLO MASTER ADMIN)
       // ==============================================
       async function loadMarketAdmin() {
-        if (!sbClient || !currentAuthKey) return;
+        if (!sbClient || currentAuthKey !== MASTER_KEY) return;
         try {
           const { data, error } = await sbClient.rpc('get_all_annunci_staff', { p_auth_key: currentAuthKey });
           if (!error && data) {
@@ -845,11 +1062,19 @@ Genera un REPORT STRATEGICO sintetico, divertente e utile per lo staff, diviso e
         }
       };
 
+      // ==============================================
       // GENERATORE STORY INSTAGRAM (1080x1920)
-      window.generateStory = function(id) {
-        const post = pendingList.find(p => p.id === id);
+      // ==============================================
+      window.generateStory = function(id, source = 'pending') {
+        const post = (source === 'pending') 
+          ? pendingList.find(p => p.id === id)
+          : activeList.find(p => p.id === id);
+
         if (!post) return;
-        const textVal = document.getElementById(`edit-testo-${id}`).value.trim();
+        
+        let textVal = post.testo;
+        const editEl = document.getElementById(`edit-testo-${id}`);
+        if (editEl) textVal = editEl.value.trim();
 
         const canvas = document.getElementById("storyCanvas");
         const ctx = canvas.getContext("2d");
@@ -866,7 +1091,7 @@ Genera un REPORT STRATEGICO sintetico, divertente e utile per lo staff, diviso e
         ctx.font = "bold 46px 'Cinzel', serif";
         ctx.fillStyle = "#FDE8E1";
         ctx.textAlign = "center";
-        const brandTag = (post.tipo === 'spotted') ? "AURA • 👀 SPOTTED UDA" : "AURA • 💣💅 GOSSIP UDA";
+        const brandTag = (post.tipo === 'spotted') ? "AURA • 👀 SPOTTED UDA" : "AURA • 💣 GOSSIP UDA";
         ctx.fillText(brandTag, 540, 260);
 
         ctx.font = "bold 28px 'Plus Jakarta Sans', sans-serif";
