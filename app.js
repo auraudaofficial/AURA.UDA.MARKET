@@ -780,9 +780,10 @@
   document.getElementById("searchInputMarket").addEventListener("input", debounce(renderMarketCards));
   document.getElementById("searchInputFeed").addEventListener("input", debounce(renderVault));
 
+  
   /* ==============================================
-     [JS: 10-LOAD-DATA-REALTIME]
-     ============================================== */
+   [JS: 10-LOAD-DATA-REALTIME & SMART LIFECYCLE]
+   ============================================== */
   async function loadMarketData() {
     if (!sbClient) return;
     try {
@@ -801,14 +802,22 @@
     renderVault();
   }
 
+  // 1. Caricamento iniziale all'apertura
   loadMarketData();
   loadVaultData();
-  setInterval(renderVault, 10000);
 
-  if (sbClient) {
-    sbClient.channel('realtime_public_aura_student_v7')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, loadMarketData)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_posts' }, loadVaultData)
-      .subscribe();
-  }
+  // 2. Ricarica automatica quando lo studente sblocca lo schermo o riapre la scheda
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      loadMarketData();
+      loadVaultData();
+    }
+  });
+
+  // 3. Controllo leggero ogni 60 secondi solo se lo schermo è attivo
+  setInterval(() => {
+    if (!document.hidden) {
+      loadVaultData();
+    }
+  }, 60000);
 })();
