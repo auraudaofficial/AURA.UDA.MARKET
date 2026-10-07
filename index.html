@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AURA • UdA Campus Ecosystem</title>
   
+  <meta name="description" content="L'ecosistema digitale degli studenti UdA Chieti-Pescara: AURA Market, Gossip anonimi e Spotted di Campus.">
   <meta property="og:title" content="AURA • UdA Chieti & Pescara">
-  <meta property="og:description" content="L'ecosistema studentesco ufficiale UdA: Market compravendita, 💣💅 Gossip anonimi e 👀 Spotted di campus.">
+  <meta property="og:description" content="Market compravendita tra studenti, 💣💅 Gossip con barre nere e 👀 Spotted di Campus.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="logo.png">
   <meta name="theme-color" content="#050407">
@@ -23,14 +24,15 @@
   <style>
     :root {
       --bg: #050407;
-      --card-bg: rgba(16, 12, 22, 0.85);
-      --card-border: rgba(226, 180, 154, 0.16);
-      --card-border-hover: rgba(232, 121, 249, 0.45);
+      --card-bg: rgba(16, 12, 22, 0.88);
+      --card-border: rgba(226, 180, 154, 0.18);
+      --card-border-hover: rgba(232, 121, 249, 0.5);
       --rose-gold: #E2B49A;
       --rose-gold-light: #FDE8E1;
       --rose-gold-dark: #96614D;
       --aura-purple: #C084FC;
       --aura-magenta: #E879F9;
+      --aura-green: #10B981;
       --text-main: #FAF5F8;
       --text-muted: #A39BA8;
       --font-serif: 'Cinzel', serif;
@@ -44,7 +46,7 @@
       color: var(--text-main);
       font-family: var(--font-sans);
       min-height: 100vh;
-      padding-bottom: 90px;
+      padding-bottom: 95px;
       overflow-x: hidden;
       background-image: 
         radial-gradient(ellipse 70% 360px at 50% 0%, rgba(217, 70, 239, 0.14) 0%, transparent 75%),
@@ -150,9 +152,9 @@
       display: none;
       max-width: 680px;
       margin: 0 auto 12px;
-      padding: 8px 16px;
+      padding: 9px 16px;
       background: rgba(232, 121, 249, 0.12);
-      border: 1px solid rgba(232, 121, 249, 0.35);
+      border: 1px solid rgba(232, 121, 249, 0.38);
       border-radius: 12px;
       font-size: 11.5px;
       color: #F5D0FE;
@@ -162,10 +164,10 @@
     }
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.85; }
-      50% { opacity: 1; box-shadow: 0 0 16px rgba(232, 121, 249, 0.3); }
+      50% { opacity: 1; box-shadow: 0 0 16px rgba(232, 121, 249, 0.35); }
     }
 
-    /* BARRA DI CONTROLLO CON SELETTORE CAMPUS INTEGRATO (VARIANTE 2) */
+    /* CONTROLLI E SEARCH ROW */
     .controls-wrapper {
       max-width: 1050px;
       margin: 0 auto 12px;
@@ -183,7 +185,7 @@
     }
     .input-box { position: relative; flex: 1; }
 
-    /* SELETTORE CAMPUS COMPATTO NELLA SEARCH BAR */
+    /* SELETTORE CAMPUS COMPATTO INTEGRATO (VARIANTE 2) */
     .select-campus-inline {
       width: auto;
       min-width: 145px;
@@ -217,7 +219,7 @@
       outline: none;
       transition: all 0.25s ease;
     }
-    textarea { resize: vertical; min-height: 85px; line-height: 1.5; }
+    textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     input:focus, textarea:focus {
       border-color: var(--rose-gold);
       box-shadow: 0 0 16px rgba(226, 180, 154, 0.25);
@@ -228,7 +230,7 @@
       color: #08060A;
       border: none;
       font-weight: 700;
-      padding: 13px 20px;
+      padding: 13px 18px;
       border-radius: 12px;
       font-size: 12px;
       letter-spacing: 0.4px;
@@ -308,18 +310,56 @@
     }
     .card-cover-wrap { position: relative; width: 100%; padding-top: 105%; background: #09070D; overflow: hidden; }
     .card-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .card-placeholder-fallback {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(226, 180, 154, 0.08), rgba(232, 121, 249, 0.06));
+      color: var(--rose-gold);
+    }
+    .card-placeholder-icon { font-size: 38px; margin-bottom: 6px; }
+    .card-placeholder-text { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--rose-gold-light); }
     .tag-campus {
       position: absolute; top: 9px; left: 9px; background: rgba(7, 5, 10, 0.85);
       backdrop-filter: blur(8px); border: 1px solid rgba(226, 180, 154, 0.35);
       color: var(--rose-gold-light); padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 700;
     }
     .card-content { padding: 14px; display: flex; flex-direction: column; flex: 1; }
-    .card-price { font-family: var(--font-serif); font-size: 19px; font-weight: 700; color: var(--rose-gold-light); margin-bottom: 5px; }
-    .card-title { font-size: 13px; color: #E7DEEA; line-height: 1.4; margin-bottom: 12px; flex: 1; }
+    .card-price { font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: var(--rose-gold-light); margin-bottom: 4px; }
+    .card-title { font-size: 13px; color: #E7DEEA; line-height: 1.4; margin-bottom: 12px; flex: 1; word-break: break-word; }
+    
+    .card-footer-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
     .btn-contact {
+      flex: 1;
       display: block; text-align: center; background: rgba(226, 180, 154, 0.08);
       border: 1px solid rgba(226, 180, 154, 0.28); color: var(--rose-gold-light);
       text-decoration: none; font-size: 11px; font-weight: 700; padding: 9px 0; border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .btn-contact:hover {
+      background: rgba(226, 180, 154, 0.18);
+      border-color: var(--rose-gold);
+    }
+    .btn-card-del {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-card-del:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: #EF4444;
+      color: #FCA5A5;
     }
 
     /* FEED GOSSIP & SPOTTED */
@@ -413,6 +453,7 @@
       color: #fff;
       margin-bottom: 8px;
       line-height: 1.35;
+      word-break: break-word;
     }
     .vault-body {
       font-size: 13.5px;
@@ -420,6 +461,7 @@
       line-height: 1.6;
       white-space: pre-wrap;
       margin-bottom: 14px;
+      word-break: break-word;
     }
 
     /* BARRE DI CENSURA CON FEEDBACK SHAKE & TAP */
@@ -433,11 +475,12 @@
       user-select: none;
       cursor: pointer;
       letter-spacing: 3px;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
     .redacted-bar.shake {
       animation: shakeAnim 0.4s ease-in-out;
       border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.15);
     }
     @keyframes shakeAnim {
       0%, 100% { transform: translateX(0); }
@@ -496,14 +539,18 @@
       flex-wrap: wrap;
     }
     .btn-unlock-author {
-      background: #10B981;
+      background: var(--aura-green);
       color: #050407;
       border: none;
       font-weight: 700;
       font-size: 11px;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 7px 13px;
+      border-radius: 7px;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-unlock-author:hover {
+      filter: brightness(1.1);
     }
 
     .vault-actions-bar {
@@ -534,6 +581,11 @@
       border-color: var(--aura-magenta);
       transform: scale(1.04);
     }
+    .btn-react.voted {
+      background: rgba(226, 180, 154, 0.2);
+      border-color: var(--rose-gold);
+      color: var(--rose-gold-light);
+    }
 
     .share-actions-group {
       display: flex;
@@ -558,7 +610,7 @@
       background: rgba(37, 211, 102, 0.25);
       transform: scale(1.03);
     }
-    .btn-copy-link {
+    .btn-share-general {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.12);
       color: var(--rose-gold-light);
@@ -572,7 +624,7 @@
       gap: 4px;
       transition: all 0.2s;
     }
-    .btn-copy-link:hover {
+    .btn-share-general:hover {
       border-color: var(--rose-gold);
       background: rgba(226, 180, 154, 0.12);
     }
@@ -581,7 +633,7 @@
       background: linear-gradient(135deg, rgba(192, 132, 252, 0.25), rgba(232, 121, 249, 0.25));
       border: 1px solid var(--aura-purple);
       color: #fff;
-      padding: 6px 14px;
+      padding: 7px 14px;
       border-radius: 20px;
       font-size: 11.5px;
       font-weight: 700;
@@ -589,8 +641,14 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      transition: all 0.2s;
+    }
+    .btn-spotted-handshake:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(192, 132, 252, 0.3);
     }
 
+    /* CARD MARKET INTERLEAVED */
     .interleaved-market-card {
       background: linear-gradient(135deg, rgba(226, 180, 154, 0.12), rgba(16, 12, 22, 0.9));
       border: 1px solid var(--rose-gold);
@@ -601,6 +659,11 @@
       gap: 14px;
       cursor: pointer;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: all 0.2s ease;
+    }
+    .interleaved-market-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--aura-magenta);
     }
     .interleaved-market-img {
       width: 70px;
@@ -624,12 +687,42 @@
       color: #fff;
       margin-bottom: 4px;
       line-height: 1.3;
+      word-break: break-word;
     }
     .interleaved-market-price {
       font-family: var(--font-serif);
       font-size: 15px;
       color: var(--rose-gold-light);
       font-weight: 700;
+    }
+
+    /* SKELETON LOADER ANIMATION */
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .skeleton-line {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .skeleton-line::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(226, 180, 154, 0.1), transparent);
+      animation: skeletonShimmer 1.5s infinite;
+    }
+    @keyframes skeletonShimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     /* MODALI */
@@ -674,6 +767,7 @@
     .form-row label { font-size: 11px; font-weight: 600; color: var(--rose-gold); }
     .form-row small { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
 
+    /* TOAST */
     .toast-msg {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
       background: linear-gradient(135deg, #FDE8E1, #E2B49A); color: #07050A; font-weight: 700;
@@ -686,6 +780,8 @@
       .search-row { flex-direction: column; align-items: stretch; }
       .select-campus-inline { width: 100%; }
       .listings-container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .vault-actions-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .share-actions-group { width: 100%; justify-content: space-between; }
     }
   </style>
 </head>
@@ -752,7 +848,10 @@
       </div>
     </div>
 
-    <main class="listings-container" id="listingsGrid"></main>
+    <main class="listings-container" id="listingsGrid">
+      <div class="skeleton-card"><div class="skeleton-line" style="height:120px;"></div><div class="skeleton-line" style="width:50%;"></div><div class="skeleton-line"></div></div>
+      <div class="skeleton-card"><div class="skeleton-line" style="height:120px;"></div><div class="skeleton-line" style="width:50%;"></div><div class="skeleton-line"></div></div>
+    </main>
   </section>
 
   <!-- ========================================== -->
@@ -789,7 +888,10 @@
       </div>
     </div>
 
-    <main class="vault-container" id="vaultFeed"></main>
+    <main class="vault-container" id="vaultFeed">
+      <div class="skeleton-card"><div class="skeleton-line" style="width:30%;"></div><div class="skeleton-line" style="width:70%;"></div><div class="skeleton-line" style="height:45px;"></div></div>
+      <div class="skeleton-card"><div class="skeleton-line" style="width:30%;"></div><div class="skeleton-line" style="width:70%;"></div><div class="skeleton-line" style="height:45px;"></div></div>
+    </main>
   </section>
 
   <!-- MODALE CREAZIONE POST GOSSIP / SPOTTED -->
@@ -826,8 +928,8 @@
 
         <div class="form-row">
           <label>Il Racconto / Descrizione</label>
-          <textarea id="vTesto" required placeholder="Racconta cosa è successo nei dettagli. Scrivi liberamente: le parti più calde verranno oscurate con le barre nere dal sistema per creare suspense!"></textarea>
-          <small>⚠️ Zero nomi e cognomi reali o diffamazione: ogni post viene verificato prima della pubblicazione.</small>
+          <textarea id="vTesto" required placeholder="Racconta cosa è successo nei dettagli. Zero nomi reali: i punti più caldi verranno oscurati dal sistema con le barre nere per creare suspense!"></textarea>
+          <small>⚠️ Zero nomi reali o diffamazione: ogni post viene revisionato dal team prima della pubblicazione.</small>
         </div>
 
         <!-- CAMPI SPOTTED PROTETTI -->
@@ -855,12 +957,12 @@
     </div>
   </div>
 
-  <!-- MODALE VERIFICA SPOTTED -->
+  <!-- MODALE VERIFICA SPOTTED (SECRET HANDSHAKE) -->
   <div class="modal-backdrop" id="modalHandshake">
     <div class="modal-window">
       <button class="btn-close-modal" id="btnCloseHandshakeModal">&times;</button>
       <div class="modal-header-title">TI SEI RICONOSCIUTO? 👀</div>
-      <p id="handshakePromptText" style="font-size: 13.5px; color: #E7DEEA; margin-bottom: 14px; text-align: center; line-height: 1.5;"></p>
+      <p id="handshakePromptText" style="font-size: 13.5px; color: #E7DEEA; margin-bottom: 14px; text-align: center; line-height: 1.5; white-space: pre-wrap;"></p>
       
       <div id="handshakeStepAnswer">
         <div class="form-row">
@@ -920,7 +1022,7 @@
         </div>
         <div class="form-row">
           <label>Prezzo</label>
-          <input type="text" id="fPrezzo" required placeholder="Es. 25 oppure 220/mese">
+          <input type="text" id="fPrezzo" required placeholder="Es. 25€ oppure 220€/mese">
         </div>
         <div class="form-row">
           <label>Categoria</label>
@@ -950,13 +1052,31 @@
           <input type="text" id="fFoto" required placeholder="https://i.ibb.co/esempio.jpg">
         </div>
         <div class="form-row">
-          <label>PIN a 4 cifre per rimuoverlo</label>
+          <label>PIN a 4 cifre (per rimuoverlo quando venduto)</label>
           <input type="password" id="fPin" maxlength="4" pattern="[0-9]{4}" required placeholder="1234">
         </div>
         <button type="submit" class="btn-create" id="btnSubmitMarket" style="width: 100%; justify-content: center; margin-top: 10px;">
           Pubblica Subito (Gratis)
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- MODALE RIMOZIONE ANNUNCIO CON PIN -->
+  <div class="modal-backdrop" id="modalMarketDelete">
+    <div class="modal-window">
+      <button class="btn-close-modal" id="btnCloseMarketDeleteModal">&times;</button>
+      <div class="modal-header-title">HAI VENDUTO IL TUO ARTICOLO? 🛍️</div>
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 14px;">
+        Inserisci il PIN a 4 cifre specificato durante la pubblicazione per eliminare definitivamente questo annuncio.
+      </p>
+      <div class="form-row">
+        <label>PIN proprietario (4 cifre):</label>
+        <input type="password" id="inputDeleteMarketPin" maxlength="4" placeholder="••••">
+      </div>
+      <button type="button" class="btn-create" id="btnConfirmMarketDelete" style="width: 100%; justify-content: center; background: #EF4444; color: #fff;">
+        Elimina Annuncio 🗑️
+      </button>
     </div>
   </div>
 
@@ -978,20 +1098,45 @@
       let activeFeedType = "ALL";
       let activeSpottedStatus = "ALL";
       let activeMarketCat = "ALL";
+      
       let activePostForHandshake = null;
       let activePostForAuthorUnlock = null;
+      let activeMarketIdToDelete = null;
 
+      // FEEDBACK APTICO MOBILE
+      function triggerHaptic(pattern = [30]) {
+        if (navigator.vibrate) {
+          try { navigator.vibrate(pattern); } catch (e) {}
+        }
+      }
+
+      // SANITIZZAZIONE XSS
+      function escapeHTML(str) {
+        if (!str) return "";
+        return String(str).replace(/[&<>'"]/g, tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag));
+      }
+
+      // CRITTOGRAFIA SHA-256
       async function sha256(str) {
         const buffer = new TextEncoder().encode(str.trim().toLowerCase());
         const hash = await crypto.subtle.digest("SHA-256", buffer);
         return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
       }
 
+      // NOTIFICHE TOAST
+      let toastTimer = null;
       function showToast(text) {
         const toast = document.getElementById("toastMsg");
         toast.innerText = text;
         toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 2600);
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
       }
 
       // FORMATTATORE RELATIVO UMANO DEL TEMPO
@@ -1010,7 +1155,7 @@
         return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
       }
 
-      // SINCRONIZZAZIONE SELETTORI CAMPUS
+      // SINCRONIZZAZIONE SELETTORI CAMPUS (VARIANTE 2)
       const campusSelMarket = document.getElementById("campusFilterMarket");
       const campusSelFeed = document.getElementById("campusFilterFeed");
       campusSelMarket.value = activeCampus;
@@ -1051,7 +1196,8 @@
       // CENSURA TESTO CON BARRE NERE
       function parseCensorship(text, isUnlocked) {
         if (!text) return "";
-        return text.replace(/\[(.*?)\]/g, (match, p1) => {
+        const clean = escapeHTML(text);
+        return clean.replace(/\[(.*?)\]/g, (match, p1) => {
           if (isUnlocked) {
             return `<span class="unlocked-text">${p1}</span>`;
           } else {
@@ -1060,8 +1206,9 @@
         });
       }
 
-      // FEEDBACK TATTIL TAP & SHAKE SULLA BARRA NERA
+      // FEEDBACK TAP TO SHAKE SULLA BARRA NERA
       window.onRedactedTap = function(e) {
+        triggerHaptic([40, 30, 40]);
         const bar = e.currentTarget;
         bar.classList.add("shake");
         setTimeout(() => bar.classList.remove("shake"), 400);
@@ -1071,12 +1218,12 @@
       // RENDERING FEED GOSSIP & SPOTTED
       function renderVault() {
         const feed = document.getElementById("vaultFeed");
-        const searchQuery = (document.getElementById("searchInputFeed").value || "").toLowerCase();
+        const searchQuery = (document.getElementById("searchInputFeed").value || "").trim().toLowerCase();
         const now = new Date();
 
         updateDripCountdown(now);
 
-        // Calcola Post Trending (#1 nelle ultime 24 ore)
+        // Calcola Post #1 Trending UdA
         let maxVotes = -1;
         let trendingId = null;
         vaultPosts.forEach(p => {
@@ -1100,9 +1247,9 @@
           }
 
           const searchMatch = !searchQuery || 
-            p.titolo.toLowerCase().includes(searchQuery) || 
-            p.testo.toLowerCase().includes(searchQuery) || 
-            p.luogo.toLowerCase().includes(searchQuery);
+            (p.titolo && p.titolo.toLowerCase().includes(searchQuery)) || 
+            (p.testo && p.testo.toLowerCase().includes(searchQuery)) || 
+            (p.luogo && p.luogo.toLowerCase().includes(searchQuery));
 
           return campusMatch && typeMatch && spottedStatusMatch && searchMatch;
         });
@@ -1174,7 +1321,7 @@
             }
           }
 
-          // Link WhatsApp & Copia Link
+          const hasVoted = !!localStorage.getItem(`aura_voted_${p.id}`);
           const deepLink = `${window.location.origin}${window.location.pathname}#post-${p.id}`;
           const waText = encodeURIComponent(`Regà leggete questo drama su AURA, mancano poche reazioni per sbloccare la parte censurata! 👀👇\n${deepLink}`);
           
@@ -1183,13 +1330,13 @@
               <a href="https://api.whatsapp.com/send?text=${waText}" target="_blank" class="btn-share-wa">
                 📲 WhatsApp
               </a>
-              <button class="btn-copy-link" onclick="window.copyPostLink('${p.id}')">
-                🔗 Copia
+              <button class="btn-share-general" onclick="window.shareOrCopyPost('${p.id}', '${escapeHTML(p.titolo)}')">
+                🔗 Condividi
               </button>
             </div>
           ` : `
             <div class="share-actions-group">
-              <button class="btn-copy-link" onclick="window.copyPostLink('${p.id}')">
+              <button class="btn-share-general" onclick="window.shareOrCopyPost('${p.id}', '${escapeHTML(p.titolo)}')">
                 🔗 Condividi
               </button>
             </div>
@@ -1201,19 +1348,19 @@
               <div class="vault-header">
                 <span class="vault-badge ${badgeClass}">${badgeIcon}</span>
                 <div class="vault-meta">
-                  <span class="loc">📍 ${p.polo} • ${p.luogo}</span>
+                  <span class="loc">📍 ${escapeHTML(p.polo)} • ${escapeHTML(p.luogo)}</span>
                   <span>• ${timeLabel}</span>
                 </div>
               </div>
-              <h3 class="vault-title">${p.titolo}</h3>
+              <h3 class="vault-title">${escapeHTML(p.titolo)}</h3>
               <div class="vault-body">${textParsed}</div>
               ${unlockBar}
               ${spottedBox}
               <div class="vault-actions-bar">
                 <div class="reaction-btns-group">
-                  <button class="btn-react" onclick="window.reactVault('${p.id}', 'fire')">🔥 ${p.voti_fire || 0}</button>
-                  <button class="btn-react" onclick="window.reactVault('${p.id}', 'skull')">💀 ${p.voti_skull || 0}</button>
-                  <button class="btn-react" onclick="window.reactVault('${p.id}', 'redflag')">🚩 ${p.voti_redflag || 0}</button>
+                  <button class="btn-react ${hasVoted ? 'voted' : ''}" onclick="window.reactVault('${p.id}', 'fire')">🔥 <span id="cnt-fire-${p.id}">${p.voti_fire || 0}</span></button>
+                  <button class="btn-react ${hasVoted ? 'voted' : ''}" onclick="window.reactVault('${p.id}', 'skull')">💀 <span id="cnt-skull-${p.id}">${p.voti_skull || 0}</span></button>
+                  <button class="btn-react ${hasVoted ? 'voted' : ''}" onclick="window.reactVault('${p.id}', 'redflag')">🚩 <span id="cnt-redflag-${p.id}">${p.voti_redflag || 0}</span></button>
                 </div>
                 ${shareGroup}
                 <button style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;" onclick="window.flagVault('${p.id}')">Segnala</button>
@@ -1226,11 +1373,11 @@
             const randomListing = listings[Math.floor(Math.random() * listings.length)];
             html += `
               <div class="interleaved-market-card" onclick="document.getElementById('tabBtnMarket').click();">
-                <img class="interleaved-market-img" src="${randomListing.foto_url}">
+                <img class="interleaved-market-img" src="${escapeHTML(randomListing.foto_url)}" onerror="this.src='logo.png';">
                 <div class="interleaved-market-info">
-                  <div class="interleaved-market-tag">Dall'AURA Market • ${randomListing.polo}</div>
-                  <div class="interleaved-market-title">${randomListing.titolo}</div>
-                  <div class="interleaved-market-price">${randomListing.prezzo}</div>
+                  <div class="interleaved-market-tag">Dall'AURA Market • ${escapeHTML(randomListing.polo)}</div>
+                  <div class="interleaved-market-title">${escapeHTML(randomListing.titolo)}</div>
+                  <div class="interleaved-market-price">${escapeHTML(randomListing.prezzo)}</div>
                 </div>
                 <div style="font-size: 18px; color: var(--rose-gold);">➔</div>
               </div>
@@ -1242,17 +1389,29 @@
         checkDeepLinkScroll();
       }
 
-      // COPIA LINK DIRETTO CON TOAST
-      window.copyPostLink = function(id) {
+      // CONDIVISIONE UNIVERSALE (WEB SHARE API + FALLBACK CLIPBOARD)
+      window.shareOrCopyPost = async function(id, title) {
         const link = `${window.location.origin}${window.location.pathname}#post-${id}`;
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: `AURA UdA • ${title}`,
+              text: `Guarda questo post su AURA UdA:`,
+              url: link
+            });
+            return;
+          } catch (e) {}
+        }
+
         navigator.clipboard.writeText(link).then(() => {
+          triggerHaptic([30]);
           showToast("Link copiato negli appunti! 📋");
         }).catch(() => {
           showToast("Impossibile copiare il link.");
         });
       };
 
-      // COUNTDOWN DRIP FEED
+      // COUNTDOWN DRIP-FEED IN TEMPO REALE
       function updateDripCountdown(now) {
         const banner = document.getElementById("dripCountdown");
         const upcoming = vaultPosts
@@ -1273,7 +1432,7 @@
         banner.style.display = "none";
       }
 
-      // DEEP LINKING SCROLL
+      // DEEP LINKING SCROLL & GLOW
       let hasScrolledToDeepLink = false;
       function checkDeepLinkScroll() {
         if (hasScrolledToDeepLink) return;
@@ -1291,7 +1450,7 @@
         }
       }
 
-      // SPOTTED SECRET HANDSHAKE CON PROTEZIONE BRUTE-FORCE
+      // SPOTTED SECRET HANDSHAKE CON PROTEZIONE ANTI-BRUTE-FORCE
       const modalHandshake = document.getElementById("modalHandshake");
       window.openHandshakeModal = function(id) {
         const post = vaultPosts.find(p => p.id === id);
@@ -1329,10 +1488,12 @@
         const hash = await sha256(ans);
 
         if (hash === activePostForHandshake.handshake_hash) {
+          triggerHaptic([30, 40, 60]);
           localStorage.removeItem(bfKey);
           document.getElementById("handshakeStepAnswer").style.display = "none";
           document.getElementById("handshakeStepIg").style.display = "block";
         } else {
+          triggerHaptic([60, 50, 60]);
           bfData.attempts += 1;
           if (bfData.attempts >= 3) {
             bfData.lockedUntil = Date.now() + 30 * 60 * 1000;
@@ -1364,6 +1525,7 @@
           });
 
           if (!error && data.success) {
+            triggerHaptic([40, 50]);
             alert("Il tuo Instagram è stato salvato! L'autore potrà sbloccarlo con il suo PIN e scriverti nei DM!");
             modalHandshake.classList.remove("open");
             loadVaultData();
@@ -1401,6 +1563,7 @@
 
           resBox.style.display = "block";
           if (!error && data.success) {
+            triggerHaptic([50, 50]);
             const ig = data.matched_ig.replace('@','');
             resBox.style.background = "rgba(16, 185, 129, 0.15)";
             resBox.style.border = "1px solid #10B981";
@@ -1411,6 +1574,7 @@
               <div style="font-size:11px; margin-top:6px; color:#E7DEEA;">Tocca per aprire direttamente la chat Instagram!</div>
             `;
           } else {
+            triggerHaptic([60]);
             resBox.style.background = "rgba(239, 68, 68, 0.15)";
             resBox.style.border = "1px solid #EF4444";
             resBox.style.color = "#FCA5A5";
@@ -1421,7 +1585,7 @@
         }
       });
 
-      // INVIO POST CON RATE-LIMITING 10 MIN
+      // INVIO POST CON ANTI-SPAM COOLDOWN 10 MIN
       const modalVault = document.getElementById("modalVaultCreate");
       document.getElementById("btnOpenVaultModal").addEventListener("click", () => modalVault.classList.add("open"));
       document.getElementById("btnCloseVaultModal").addEventListener("click", () => modalVault.classList.remove("open"));
@@ -1480,6 +1644,7 @@
           localStorage.setItem("aura_last_post_ts", Date.now().toString());
           document.getElementById("vaultCreateForm").reset();
           modalVault.classList.remove("open");
+          triggerHaptic([30, 40]);
           alert("Post inviato alla moderazione! Verrà revisionato e rilasciato a breve ✨");
           await loadVaultData();
         } catch (err) {
@@ -1489,18 +1654,38 @@
         }
       });
 
-      // REAZIONI & SEGNALAZIONI
+      // REAZIONI OTTIMISTICHE & SEGNALAZIONI
       window.reactVault = async function(id, type) {
         const key = `aura_voted_${id}`;
         if (localStorage.getItem(key)) {
           showToast("Hai già votato questo post!");
           return;
         }
+        
+        // Optimistic UI update
         localStorage.setItem(key, "1");
+        triggerHaptic([35]);
+        const countSpan = document.getElementById(`cnt-${type}-${id}`);
+        if (countSpan) {
+          countSpan.innerText = parseInt(countSpan.innerText || "0", 10) + 1;
+        }
+        
+        const postObj = vaultPosts.find(p => p.id === id);
+        if (postObj) {
+          postObj.voti_totali = (postObj.voti_totali || 0) + 1;
+          if (type === 'fire') postObj.voti_fire = (postObj.voti_fire || 0) + 1;
+          if (type === 'skull') postObj.voti_skull = (postObj.voti_skull || 0) + 1;
+          if (type === 'redflag') postObj.voti_redflag = (postObj.voti_redflag || 0) + 1;
+          if (postObj.voti_totali >= postObj.soglia_sblocco) {
+            postObj.is_unlocked = true;
+          }
+        }
+        renderVault();
+
         try {
           const { data } = await sbClient.rpc('vota_vault_post', { p_id: id, p_vote_type: type });
           if (data && data.success) {
-            showToast(data.is_unlocked ? "🎉 Dettagli sbloccati!" : "Voto registrato! 🔥");
+            showToast(data.is_unlocked ? "🎉 Dettagli censurati sbloccati!" : "Voto registrato! 🔥");
             loadVaultData();
           }
         } catch (e) {}
@@ -1517,38 +1702,109 @@
         } catch (e) {}
       };
 
-      // MARKETPLACE
+      // ICONE FALLBACK CATEGORIA MARKET
+      function getCategoryIcon(cat) {
+        switch(cat) {
+          case 'Libri': return '📚';
+          case 'Affitti': return '🏠';
+          case 'Abbigliamento': return '👗';
+          case 'Biglietti': return '🎟️';
+          case 'Tech': return '💻';
+          default: return '🛍️';
+        }
+      }
+
+      // RENDERING MARKETPLACE
       function renderMarketCards() {
         const grid = document.getElementById("listingsGrid");
-        const query = (document.getElementById("searchInputMarket").value || "").toLowerCase();
+        const query = (document.getElementById("searchInputMarket").value || "").trim().toLowerCase();
 
         const filtered = listings.filter(item => {
           const campusMatch = (activeCampus === "ALL" || item.polo === activeCampus || item.polo === "Tutti");
           const catMatch = (activeMarketCat === "ALL" || item.categoria === activeMarketCat);
-          const queryMatch = (item.titolo || "").toLowerCase().includes(query);
+          const queryMatch = !query || (item.titolo && item.titolo.toLowerCase().includes(query));
           return campusMatch && catMatch && queryMatch;
         });
 
         if (filtered.length === 0) {
-          grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Nessun annuncio per questo campus.</div>`;
+          grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Nessun annuncio per questa ricerca.</div>`;
           return;
         }
 
         grid.innerHTML = filtered.map(item => `
           <article class="card">
             <div class="card-cover-wrap">
-              <span class="tag-campus">${item.polo}</span>
-              <img class="card-cover" src="${item.foto_url}">
+              <span class="tag-campus">${escapeHTML(item.polo)}</span>
+              <img class="card-cover" src="${escapeHTML(item.foto_url)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="card-placeholder-fallback" style="display:none;">
+                <div class="card-placeholder-icon">${getCategoryIcon(item.categoria)}</div>
+                <div class="card-placeholder-text">${escapeHTML(item.categoria.toUpperCase())}</div>
+              </div>
             </div>
             <div class="card-content">
-              <div class="card-price">${item.prezzo}</div>
-              <div class="card-title">${item.titolo}</div>
-              <a href="https://ig.me/m/${item.contatto_ig}" target="_blank" class="btn-contact">Contatta @${item.contatto_ig}</a>
+              <div class="card-price">${escapeHTML(item.prezzo)}</div>
+              <div class="card-title">${escapeHTML(item.titolo)}</div>
+              <div class="card-footer-actions">
+                <a href="https://ig.me/m/${escapeHTML(item.contatto_ig)}" target="_blank" class="btn-contact">Contatta @${escapeHTML(item.contatto_ig)}</a>
+                <button class="btn-card-del" onclick="window.openDeleteMarketModal('${item.id}')" title="Hai venduto? Rimuovi annuncio">🗑️</button>
+              </div>
             </div>
           </article>
         `).join('');
       }
 
+      // SELF-DELETE MARKET ITEM CON PIN
+      const modalMarketDelete = document.getElementById("modalMarketDelete");
+      window.openDeleteMarketModal = function(id) {
+        activeMarketIdToDelete = id;
+        document.getElementById("inputDeleteMarketPin").value = "";
+        modalMarketDelete.classList.add("open");
+      };
+      document.getElementById("btnCloseMarketDeleteModal").addEventListener("click", () => modalMarketDelete.classList.remove("open"));
+
+      document.getElementById("btnConfirmMarketDelete").addEventListener("click", async () => {
+        const pin = document.getElementById("inputDeleteMarketPin").value.trim();
+        if (!pin || pin.length !== 4) {
+          alert("Inserisci il PIN a 4 cifre associato all'annuncio.");
+          return;
+        }
+
+        try {
+          // Tentativo tramite RPC dedicata o eliminazione diretta
+          let success = false;
+          const { data, error } = await sbClient.rpc('elimina_annuncio_utente', {
+            p_id: activeMarketIdToDelete,
+            p_pin: pin
+          });
+
+          if (!error && data && data.success) {
+            success = true;
+          } else {
+            // Fallback con query controllata da PIN
+            const { error: delError, count } = await sbClient
+              .from('annunci')
+              .delete({ count: 'exact' })
+              .eq('id', activeMarketIdToDelete)
+              .eq('pin', pin);
+
+            if (!delError && count > 0) success = true;
+          }
+
+          if (success) {
+            triggerHaptic([30, 40]);
+            modalMarketDelete.classList.remove("open");
+            showToast("Annuncio rimosso con successo! 🛍️");
+            loadMarketData();
+          } else {
+            triggerHaptic([60]);
+            alert("PIN non valido. Impossibile cancellare l'annuncio.");
+          }
+        } catch (err) {
+          alert("Errore durante l'eliminazione: " + err.message);
+        }
+      });
+
+      // CREAZIONE ANNUNCIO MARKET
       const modalMarket = document.getElementById("modalMarketCreate");
       document.getElementById("btnOpenMarketModal").addEventListener("click", () => modalMarket.classList.add("open"));
       document.getElementById("btnCloseMarketModal").addEventListener("click", () => modalMarket.classList.remove("open"));
@@ -1570,6 +1826,7 @@
           if (error) throw error;
           document.getElementById("createListingForm").reset();
           modalMarket.classList.remove("open");
+          triggerHaptic([30, 40]);
           showToast("Annuncio pubblicato sul Market! 🛍️");
           loadMarketData();
         } catch (err) {
@@ -1577,6 +1834,7 @@
         }
       });
 
+      // GESTIONE FILTRI PILLOLE MARKET
       document.querySelectorAll('#sectionMarket .pill').forEach(pill => {
         pill.addEventListener('click', () => {
           document.querySelectorAll('#sectionMarket .pill').forEach(p => p.classList.remove('active'));
@@ -1586,6 +1844,7 @@
         });
       });
 
+      // GESTIONE FILTRI PILLOLE FEED & SUB-FILTRI SPOTTED
       document.querySelectorAll('#sectionVault .pill').forEach(pill => {
         pill.addEventListener('click', () => {
           document.querySelectorAll('#sectionVault .pill').forEach(p => p.classList.remove('active'));
@@ -1614,9 +1873,19 @@
         });
       });
 
-      document.getElementById("searchInputMarket").addEventListener("input", renderMarketCards);
-      document.getElementById("searchInputFeed").addEventListener("input", renderVault);
+      // DEBOUNCE RICERCA
+      function debounce(func, wait = 150) {
+        let timeout;
+        return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+      }
 
+      document.getElementById("searchInputMarket").addEventListener("input", debounce(renderMarketCards));
+      document.getElementById("searchInputFeed").addEventListener("input", debounce(renderVault));
+
+      // CARICAMENTO DATI SUPABASE
       async function loadMarketData() {
         if (!sbClient) return;
         try {
@@ -1639,8 +1908,9 @@
       loadVaultData();
       setInterval(renderVault, 10000);
 
+      // REALTIME SUPABASE LISTENER
       if (sbClient) {
-        sbClient.channel('realtime_public_aura_v5')
+        sbClient.channel('realtime_public_aura_student_v6')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'annunci' }, loadMarketData)
           .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_posts' }, loadVaultData)
           .subscribe();
